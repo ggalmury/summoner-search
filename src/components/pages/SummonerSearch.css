@@ -1,0 +1,12 @@
+* {
+  text-align: center;
+}
+
+#summoner-id-search {
+  width: 500px;
+  height: 35px;
+  outline: none;
+  background-color: rgb(253, 240, 240);
+  font-size: 25px;
+  border-radius: 20px;
+}
