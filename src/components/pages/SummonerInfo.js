@@ -1,48 +1,41 @@
 import { React, useEffect, useState } from "react";
-import "./SummonerInfo.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
+import Loading from "./Loading.js";
+import "./SummonerInfo.css";
 
 const ResultPage = () => {
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const [userProfile, setUserProfile] = useState(location.state.profile);
-  const [ingameInfo, setIngameInfo] = useState("");
+  const [summonerName, setSummonerName] = useState(localStorage.getItem("summoner_name"));
+  const [loading, setLoading] = useState();
+  const [isMain, setIsMain] = useState(true);
 
   useEffect(() => {
-    axios
-      .get("/api/spectatorV4", { params: { encryptedSummonerId: userProfile.id } })
-      .then((response) => {
-        setIngameInfo(response);
-        console.log(response);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  }, []);
+    // TODO: LeagueV4 API를 이용해 유저 티어정보 얻기
+    console.log(summonerName);
+  });
 
-  // TODO : 메뉴 선택시 페이지 전환 구현
-  const goToInfo = (event) => {
-    navigate("/result");
+  // 종합으로 이동
+  const goToHistory = (event) => {
+    navigate("/summoner/history");
+    setIsMain(true);
   };
 
+  // 인게임 정보로 이동
   const goToIngameInfo = (event) => {
-    navigate("/ingame", { state: { ingameInfo: ingameInfo } });
+    navigate("/summoner/ingame");
+    setIsMain(false);
   };
 
   return (
     <div>
-      {ingameInfo.status === 200 ? (
-        <div>
-          <h2>이름 : {userProfile.name}</h2>
-          <h2>레벨 : {userProfile.summonerLevel}</h2>
-          <button onClick={goToInfo}>종합</button>
-          <button onClick={goToIngameInfo}>인게임 정보 보기</button>
-        </div>
+      {loading === true ? (
+        <Loading />
       ) : (
         <div>
-          <h2>loading</h2>
+          <button onClick={goToHistory}>전적 보기</button>
+          <button onClick={goToIngameInfo}>인게임</button>
         </div>
       )}
     </div>

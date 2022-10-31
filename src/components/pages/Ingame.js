@@ -1,38 +1,54 @@
 import { React, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import "./Ingame.css";
+import Loading from "./Loading.js";
 
+//진행중인 게임이 있어야 접근할 수 있는 페이지(게임중이 아닌데 들어온거면 버그)
 const Ingame = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [encryptedSummonerId, setEncryptedSummonerId] = useState(JSON.parse(localStorage.getItem("summoner_info")).id);
+  const [loading, setLoading] = useState();
+  const [ingameInfo, setIngameInfo] = useState({});
 
-  // const [encryptedSummonerId, setEncryptedSummonerId] = useState(location.state.encryptedSummonerId);
-  const [participantsList, setparticipantsList] = useState([]);
-  const [ingameInfo, setIngameInfo] = useState(location.state.ingameInfo);
-
-  const test = (event) => {
-    // TODO :: ingameInfo 빈값 수정
-    console.log(ingameInfo);
-
-    // const ul = document.querySelector("#now-gaming");
-
-    // participantsList.map((player) => {
-    //   const li = document.createElement("li");
-    //   li.textContent = player.summonerName;
-    //   ul.appendChild(li);
-    // });
-  };
-
-  const goToInfo = (event) => {
-    // navigate("/result");
-    console.log(participantsList);
-  };
+  useEffect(() => {
+    setLoading(true);
+    axios
+      .get("/api/spectatorV4", { params: { encryptedSummonerId } })
+      .then((response) => {
+        setIngameInfo(response);
+        console.log(response);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }, []);
 
   return (
     <div>
-      <button onClick={goToInfo}>종합</button>
-      <button onClick={test}>참여자 목록</button>
-      <ul id="now-gaming"></ul>
+      {loading === true ? (
+        <Loading />
+      ) : ingameInfo.data?.gameId === undefined ? (
+        <div>
+          <h2>게임중이 아닙니다</h2>
+        </div>
+      ) : (
+        <div>
+          <ul id="banned-champions">
+            {ingameInfo.data.bannedChampions.map((value, idx) => {
+              return <li key={idx}>{value.championId}</li>;
+            })}
+          </ul>
+          <ul id="ingame-player">
+            {ingameInfo.data.participants.map((value, idx) => {
+              return (
+                <li key={idx}>
+                  <h2>{value.summonerName}</h2>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

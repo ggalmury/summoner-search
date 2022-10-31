@@ -5,20 +5,21 @@ import { useNavigate } from "react-router-dom";
 import "./SummonerSearch.css";
 
 const SearchPage = () => {
-  const [userName, setUserName] = useState("");
+  const [summonerName, setSummonerName] = useState("");
   const navigate = useNavigate();
 
   const userData = (event) => {
     axios
-      .get("/api/summonerV4", { params: { userName } })
+      .get("/api/summonerV4", { params: { summonerName } })
       .then((response) => {
         // summonerProfileResult(=response.data) include summoner's id, name, puuid, level, etc..
-        let summonerProfileResult = response.data;
-        console.log(summonerProfileResult);
-        navigate("/result", { state: { profile: summonerProfileResult } });
+        let summonerInfo = response.data[0];
+        localStorage.setItem("summoner_name", summonerInfo.name);
+        console.log(summonerInfo);
+        navigate("/summoner");
       })
       .catch((err) => {
-        if (userName === "") {
+        if (summonerName === "") {
           alert("Please input username");
         } else {
           alert(err);
@@ -27,14 +28,14 @@ const SearchPage = () => {
   };
 
   const searchUserName = (event) => {
-    setUserName(event.target.value);
+    setSummonerName(event.target.value);
   };
 
   return (
     <div>
-      <input id="summoner-id-search" placeholder="info" value={userName} onChange={searchUserName}></input>
+      <input id="summoner-id-search" placeholder="info" value={summonerName} onChange={searchUserName}></input>
       <button onClick={userData}>검색</button>
-      <h1>{userName}</h1>
+      <h1>{summonerName}</h1>
     </div>
   );
 };
