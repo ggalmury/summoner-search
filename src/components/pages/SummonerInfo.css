@@ -2,8 +2,22 @@
   text-align: center;
 }
 
-#now-gaming {
+#content-box {
   display: flex;
-  flex-direction: column;
-  background-color: yellow;
+}
+
+#summoner-info {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.summoner-league-info {
+  padding: 20px;
+}
+
+#profile-icon {
+  width: 200px;
+  height: 200px;
 }

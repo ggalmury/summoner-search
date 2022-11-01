@@ -9,22 +9,12 @@ const SearchPage = () => {
   const navigate = useNavigate();
 
   const userData = (event) => {
-    axios
-      .get("/api/summonerV4", { params: { summonerName } })
-      .then((response) => {
-        // summonerProfileResult(=response.data) include summoner's id, name, puuid, level, etc..
-        let summonerInfo = response.data[0];
-        localStorage.setItem("summoner_name", summonerInfo.name);
-        console.log(summonerInfo);
-        navigate("/summoner");
-      })
-      .catch((err) => {
-        if (summonerName === "") {
-          alert("Please input username");
-        } else {
-          alert(err);
-        }
-      });
+    if (summonerName === "") {
+      alert("소환사명을 입력하세요.");
+      return;
+    }
+    localStorage.setItem("summoner_name", summonerName);
+    navigate("/summoner");
   };
 
   const searchUserName = (event) => {

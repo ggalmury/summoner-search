@@ -3,6 +3,25 @@ const util = require("../../util.js");
 const db = require("../../mysql.js");
 const router = express.Router();
 
+// snake_case -> camelCase 변환 함수
+const chgCamelExpForList = (targetList) => {
+  let retArr = [];
+
+  // 리스트.
+  targetList.forEach((targetObj) => {
+    let retObj = new Object();
+
+    for (let key in targetObj) {
+      let name = key.toLowerCase().replace(/_[a-z]/g, (str) => {
+        return str[1].toUpperCase();
+      });
+      retObj[name] = targetObj[key];
+    }
+    retArr.push(retObj);
+  });
+  return retArr;
+};
+
 router.get("/", (req, res) => {
   res.send({ test: "hi" });
 });
@@ -17,21 +36,41 @@ router.get("/summonerV4", async (req, res) => {
   try {
     // mysql2 returns array
     summonerInfo = await db.query(`SELECT * FROM summoner_info WHERE name=?`, [summonerName.toUpperCase()]);
+    const summonerInfoCamel = chgCamelExpForList(summonerInfo);
+
     if (summonerInfo.length <= 0) {
       util.axiosToRiot(fullUrl, async (success, data) => {
         if (success === true) {
           await db.query(`INSERT INTO summoner_info VALUES(?, ?, ?, ?, ?, ?, ?)`, [data.name, data.accountId, data.profileIconId, data.revisionDate, data.id, data.puuid, data.summonerLevel]);
           summonerInfo = [data];
-          res.json(summonerInfo);
+          console.log(summonerInfo);
+          util.success(res, summonerInfo);
+        } else {
+          util.fail(res, []);
         }
-        // TODO : add logic about "success === false"
       });
     } else {
-      res.json(summonerInfo);
+      console.log(summonerInfoCamel);
+      util.success(res, summonerInfoCamel);
+      // res.json(summonerInfo);
     }
   } catch (err) {
     console.log(err);
   }
+});
+
+router.get("/leagueV4", async (req, res) => {
+  // TODO : db 거쳐 응답하는 로직 구현
+  const { summonerName } = req.query;
+  const url = process.env.LEAGUEV4;
+  const dbRequest = await db.query(`SELECT id FROM summoner_info where name=?`, [summonerName]);
+  const encryptedSummonerId = dbRequest[0].id;
+  const fullUrl = `${url}${encryptedSummonerId}`;
+
+  util.axiosToRiot(fullUrl, (success, data) => {
+    console.log(data);
+    util.success(res, data);
+  });
 });
 
 // 현재 진행중인 게임 조회
@@ -41,7 +80,7 @@ router.get("/spectatorV4", (req, res) => {
   const fullUrl = `${url}${encryptedSummonerId}`;
 
   util.axiosToRiot(fullUrl, (success, data) => {
-    res.json(data);
+    util.success(res, data);
   });
 });
 
@@ -62,7 +101,7 @@ router.get("/matchV5", (req, res) => {
         setTimeout(() => {
           riotRes.push(data.info);
           if (riotRes.length === 10) {
-            res.json(riotRes);
+            util.success(res, riotRes);
           }
         }, 100);
       });

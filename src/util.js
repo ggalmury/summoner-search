@@ -23,4 +23,13 @@ module.exports = {
         resolve(false, err);
       });
   },
+  success: function (res, data) {
+    let result = { success: true, data };
+    res.json(result);
+  },
+
+  fail: function (res, data) {
+    let result = { success: false, data };
+    res.json(result);
+  },
 };
