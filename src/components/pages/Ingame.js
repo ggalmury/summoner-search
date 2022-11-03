@@ -1,6 +1,6 @@
 import { React, useEffect, useState } from "react";
 import axios from "axios";
-import "./Ingame.css";
+import "./Ingame.scss";
 import Loading from "./Loading.js";
 
 //진행중인 게임이 있어야 접근할 수 있는 페이지(게임중이 아닌데 들어온거면 버그)

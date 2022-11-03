@@ -12,7 +12,7 @@ const MainRouter = () => {
       <Header></Header>
       <Routes>
         <Route path="/" element={<SummonerSearch />}></Route>
-        <Route path="/summoner/*" element={<SummonerInfo />}>
+        <Route path="/summoner/:summonerName/*" element={<SummonerInfo />}>
           <Route path="history" element={<MatchHistory />}></Route>
           <Route path="ingame" element={<Ingame />}></Route>
         </Route>

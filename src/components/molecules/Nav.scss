@@ -1,11 +1,12 @@
 #nav {
-  display: flex;
-  flex-direction: column;
+  height: 60px;
+  float: left;
 }
 
-#nav button {
-  height: 50px;
+button {
+  height: 40px;
   margin: 10px;
+  margin-left: 50px;
   border: none;
   background-color: rgba(0, 0, 0, 0); /* rgba(0, 0, 0, 0) */
   cursor: pointer;

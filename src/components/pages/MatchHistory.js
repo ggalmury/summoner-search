@@ -1,6 +1,7 @@
 import React from "react";
 
 const MatchHistory = (props) => {
+  // 게임 전적 조회
   // useEffect(() => {
   //   setLoading(true);
   //   axios
