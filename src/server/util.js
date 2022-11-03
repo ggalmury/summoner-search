@@ -32,4 +32,22 @@ module.exports = {
     let result = { success: false, data };
     res.json(result);
   },
+  // snake_case -> camelCase 변환 함수
+  chgCamelExpForList: function (targetList) {
+    let retArr = [];
+
+    // 리스트를 순회하며 변환 진행
+    targetList.forEach((targetObj) => {
+      let retObj = new Object();
+
+      for (let key in targetObj) {
+        let name = key.toLowerCase().replace(/_[a-z]/g, (str) => {
+          return str[1].toUpperCase();
+        });
+        retObj[name] = targetObj[key];
+      }
+      retArr.push(retObj);
+    });
+    return retArr;
+  },
 };
