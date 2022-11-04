@@ -1,8 +1,7 @@
 const axios = require("axios");
 
 module.exports = {
-  axiosToRiot: function (url, resolve) {
-    const apiKey = process.env.APIKEY;
+  riotRes: (url, resolve) => {
     axios
       .get(url, {
         headers: {
@@ -10,7 +9,7 @@ module.exports = {
           "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
           "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
           Origin: "https://developer.riotgames.com",
-          "X-Riot-Token": apiKey,
+          "X-Riot-Token": process.env.APIKEY,
         },
       })
       .then((response) => {
@@ -20,23 +19,24 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
+        alert("소환사 정보 요청 에러");
         resolve(false, err);
       });
   },
-  success: function (res, data) {
+  success: (res, data) => {
     let result = { success: true, data };
     res.json(result);
   },
 
-  fail: function (res, data) {
+  fail: (res, data) => {
     let result = { success: false, data };
     res.json(result);
   },
+
   // snake_case -> camelCase 변환 함수
-  chgCamelExpForList: function (targetList) {
+  chgCamelExpForList: (targetList) => {
     let retArr = [];
 
-    // 리스트를 순회하며 변환 진행
     targetList.forEach((targetObj) => {
       let retObj = new Object();
 

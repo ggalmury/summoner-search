@@ -36,6 +36,7 @@ const ResultPage = () => {
       try {
         const infoResultRaw = await axios.get("/api/summonerV4", { params: { summonerName } });
         const infoResult = infoResultRaw.data;
+        console.log(infoResult);
         if (infoResult.success === false) {
           alert("존재하지 않는 소환사입니다.");
           return;
@@ -53,9 +54,9 @@ const ResultPage = () => {
         const rankResult = rankResultRaw.data;
         console.log(rankResult);
 
-        // 랭크 정보를 unranked로 초기화 => 랭크 기록이 없을 경우 unranked로 표시
-        setSoloLeagueInfo({ tier: "unranked" });
-        setFlexLeagueInfo({ tier: "unranked" });
+        // 랭크 정보를 unranked로 초기화 => 랭크 기록이 없을 경우 Unranked로 표시
+        setSoloLeagueInfo({ tier: "Unranked" });
+        setFlexLeagueInfo({ tier: "Unranked" });
 
         rankResult.data.forEach((rank) => {
           // 큐 타입에 따라 분류(솔로랭크, 자유랭크)
@@ -70,7 +71,7 @@ const ResultPage = () => {
         });
       } catch (err) {
         console.log(err);
-        alert("소환사 리그 검색 오류");
+        alert("소환사 랭크 정보 검색 오류");
       }
       setLoading(false);
     };
@@ -95,7 +96,7 @@ const ResultPage = () => {
             </div>
             <div className="summoner-league-info">
               <h1>솔로랭크</h1>
-              {soloLeagueInfo.tier !== "unranked" ? (
+              {soloLeagueInfo.tier !== "Unranked" ? (
                 <Fragment>
                   <img id="rank-emblem" src={getRankEmblem(soloLeagueInfo.tier)} alt="rank emblem"></img>
                   <h2>티어 : {getTier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</h2>
@@ -111,10 +112,10 @@ const ResultPage = () => {
             </div>
             <div className="summoner-league-info">
               <h1>자유랭크</h1>
-              {flexLeagueInfo.tier !== "unranked" ? (
+              {flexLeagueInfo.tier !== "Unranked" ? (
                 <Fragment>
                   <img id="rank-emblem" src={getRankEmblem(flexLeagueInfo.tier)} alt="rank emblem"></img>
-                  <h2>티어 : {getTier(soloLeagueInfo.tier, flexLeagueInfo.rank)}</h2>
+                  <h2>티어 : {getTier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</h2>
                   <h2>{flexLeagueInfo.leaguePoints}LP</h2>
                   <h2>
                     {flexLeagueInfo.wins}승 {flexLeagueInfo.losses}패

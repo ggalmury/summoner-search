@@ -17,6 +17,7 @@ const Nav = (props) => {
   };
   return (
     <div id="nav">
+      <button onClick={goToHistory}>소환사 정보 갱신</button>
       <button onClick={goToHistory}>전적 보기</button>
       <button onClick={goToIngameInfo}>인게임</button>
     </div>
