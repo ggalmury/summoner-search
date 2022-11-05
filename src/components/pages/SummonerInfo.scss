@@ -1,7 +1,11 @@
-#content-box {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+button {
+  height: 40px;
+  margin: 10px;
+  margin-left: 50px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0); /* rgba(0, 0, 0, 0) */
+  cursor: pointer;
+  font-size: 20px;
 }
 
 #summoner-info {
@@ -9,6 +13,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+}
+
+#nav {
+  height: 60px;
+  float: left;
+}
+
+#content-box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .summoner-league-info {

@@ -1,7 +1,6 @@
 import { Fragment, React, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Nav from "../molecules/Nav.js";
 import Loading from "./Loading.js";
 import "./SummonerInfo.scss";
 
@@ -12,6 +11,22 @@ const ResultPage = () => {
   const [soloLeagueInfo, setSoloLeagueInfo] = useState({});
   const [flexLeagueInfo, setFlexLeagueInfo] = useState({});
   const [loading, setLoading] = useState();
+
+  const updateHistory = async (event) => {
+    await axios.get("/api/update", { params: { encryptedSummonerId: summonerInfo.id } });
+  };
+
+  // 종합으로 이동
+  const goToHistory = (event) => {
+    alert("test1");
+    // navigate("/summoner/history");
+  };
+
+  // 인게임 정보로 이동
+  const goToIngameInfo = (event) => {
+    alert("test2");
+    // navigate("/summoner/ingame");
+  };
 
   const getTier = (tier, rank) => {
     return tier + " " + rank;
@@ -46,6 +61,7 @@ const ResultPage = () => {
       } catch (err) {
         console.log(err);
         alert("소환사 정보 검색 오류");
+        return;
       }
 
       // 소환사 리그 정보 요청
@@ -81,8 +97,10 @@ const ResultPage = () => {
 
   return (
     <div id="content-box">
-      <div>
-        <Nav />
+      <div id="nav">
+        <button onClick={updateHistory}>소환사 정보 갱신</button>
+        <button onClick={goToHistory}>전적 보기</button>
+        <button onClick={goToIngameInfo}>인게임</button>
       </div>
       <div id="summoner-info">
         {loading === true ? (

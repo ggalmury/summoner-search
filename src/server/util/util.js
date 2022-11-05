@@ -2,16 +2,10 @@ const axios = require("axios");
 
 module.exports = {
   riotRes: (url, resolve) => {
+    const headers = { "X-Riot-Token": process.env.APIKEY };
+
     axios
-      .get(url, {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36",
-          "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-          "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
-          Origin: "https://developer.riotgames.com",
-          "X-Riot-Token": process.env.APIKEY,
-        },
-      })
+      .get(url, { headers })
       .then((response) => {
         resolve(true, response.data);
         // must be removed after test
@@ -19,7 +13,6 @@ module.exports = {
       })
       .catch((err) => {
         console.log(err);
-        alert("소환사 정보 요청 에러");
         resolve(false, err);
       });
   },
