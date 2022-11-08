@@ -1,0 +1,8 @@
+$main-color: rgb(94, 130, 225);
+$sub-color: rgb(145, 145, 254);
+
+@mixin centering {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

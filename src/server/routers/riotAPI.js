@@ -105,6 +105,7 @@ router.get("/leagueV4", async (req, res) => {
   }
 });
 
+// 소환사 정보 갱신
 router.get("/update", (req, res) => {
   const { encryptedSummonerId } = req.query;
   const url1 = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/${encryptedSummonerId}`;
@@ -114,13 +115,12 @@ router.get("/update", (req, res) => {
   axios
     .all([axios.get(url1, { headers }), axios.get(url2, { headers })])
     .then(
-      axios.spread(async (infoResult, rankResult) => {
-        const infoResultRaw = [infoResult.data];
-        const rankResultRaw = rankResult.data;
-        console.log(infoResultRaw);
-        console.log(rankResultRaw);
+      axios.spread(async (infoResultRaw, rankResultRaw) => {
+        const infoResult = [infoResultRaw.data];
+        const rankResult = rankResultRaw.data;
+        util.success(res, [infoResult, rankResult]);
         // TODO : DB에 정보 update
-        await db.query();
+        // await db.query();
       })
     )
     .catch((err) => {
@@ -129,13 +129,20 @@ router.get("/update", (req, res) => {
 });
 
 // 현재 진행중인 게임 조회
-router.get("/spectatorV4", (req, res) => {
+router.get("/spectatorV4", async (req, res) => {
   const { encryptedSummonerId } = req.query;
-  const url = process.env.SPECTATORV4;
-  const fullUrl = `${url}${encryptedSummonerId}`;
+  const url = `https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${encryptedSummonerId}`;
 
-  util.riotRes(fullUrl, (success, data) => {
-    util.success(res, data);
+  util.riotRes(url, (success, data) => {
+    switch (success) {
+      case true:
+        util.success(res, data);
+        console.log(data);
+        return;
+      case false:
+        util.fail(res, {});
+        break;
+    }
   });
 });
 

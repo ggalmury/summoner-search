@@ -1,9 +1,11 @@
+@import "common";
+
 body {
   width: 100vw;
   height: 100vh;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  background: linear-gradient(to bottom, rgb(94, 130, 225), rgb(145, 145, 254));
+  background: linear-gradient(to bottom, $main-color, $sub-color);
 }
 
 code {

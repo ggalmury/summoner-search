@@ -1,10 +1,13 @@
-import { Fragment, React, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Fragment, React, useEffect, useState, createContext } from "react";
+import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading.js";
 import "./SummonerInfo.scss";
 
+export const SummonerInfoContext = createContext({});
+
 const ResultPage = () => {
+  const navigate = useNavigate();
   const params = useParams();
   const summonerName = params.summonerName;
   const [summonerInfo, setSummonerInfo] = useState({});
@@ -12,8 +15,28 @@ const ResultPage = () => {
   const [flexLeagueInfo, setFlexLeagueInfo] = useState({});
   const [loading, setLoading] = useState();
 
+  // 소환사 정보 갱신
   const updateHistory = async (event) => {
-    await axios.get("/api/update", { params: { encryptedSummonerId: summonerInfo.id } });
+    const updatedInfoRaw = await axios.get("/api/update", { params: { encryptedSummonerId: summonerInfo.id } });
+    const updatedInfo = updatedInfoRaw.data;
+
+    if (updatedInfo.success === undefined) {
+      alert("소환사 정보 갱신 실패");
+      return;
+    }
+
+    setSummonerInfo(updatedInfo.data[0][0]);
+
+    updatedInfo.data[1].forEach((rank) => {
+      switch (rank.queueType) {
+        case "RANKED_FLEX_SR":
+          setFlexLeagueInfo(rank);
+          break;
+        case "RANKED_SOLO_5x5":
+          setSoloLeagueInfo(rank);
+          break;
+      }
+    });
   };
 
   // 종합으로 이동
@@ -24,8 +47,7 @@ const ResultPage = () => {
 
   // 인게임 정보로 이동
   const goToIngameInfo = (event) => {
-    alert("test2");
-    // navigate("/summoner/ingame");
+    navigate(`/summoner/${summonerName}/ingame`);
   };
 
   const getTier = (tier, rank) => {
@@ -54,6 +76,7 @@ const ResultPage = () => {
         console.log(infoResult);
         if (infoResult.success === false) {
           alert("존재하지 않는 소환사입니다.");
+          navigate(-1);
           return;
         }
         // mysql2 => 배열 반환
@@ -151,10 +174,14 @@ const ResultPage = () => {
         onClick={() => {
           console.log(soloLeagueInfo);
           console.log(flexLeagueInfo);
+          console.log(summonerInfo);
         }}
       >
         test
       </button>
+      <SummonerInfoContext.Provider value={summonerInfo}>
+        <Outlet />
+      </SummonerInfoContext.Provider>
     </div>
   );
 };
