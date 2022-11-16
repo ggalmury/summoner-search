@@ -3,10 +3,12 @@ const axios = require("axios");
 module.exports = {
   riotRes: (url, resolve) => {
     const headers = { "X-Riot-Token": process.env.APIKEY };
+    let test;
 
     axios
       .get(url, { headers })
       .then((response) => {
+        test = response;
         resolve(true, response.data);
         // must be removed after test
         // console.log(response.data);
@@ -42,5 +44,9 @@ module.exports = {
       retArr.push(retObj);
     });
     return retArr;
+  },
+
+  toLowerRegexp: (str) => {
+    return str.toLowerCase().replace(/\s/gi, "");
   },
 };

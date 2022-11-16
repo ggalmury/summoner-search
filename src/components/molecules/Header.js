@@ -7,6 +7,7 @@ const Header = (props) => {
   const navigate = useNavigate();
 
   const goToMain = (event) => {
+    setSummonerName("");
     navigate("/");
   };
 
@@ -15,6 +16,8 @@ const Header = (props) => {
       alert("소환사명을 입력하세요.");
       return;
     }
+
+    setSummonerName("");
     navigate("/summoner/" + summonerName);
   };
 

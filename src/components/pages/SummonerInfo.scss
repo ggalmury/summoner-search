@@ -9,7 +9,6 @@ button {
 }
 
 #summoner-info {
-  width: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,11 +22,12 @@ button {
 
 #content-box {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   width: 100%;
 }
 
 .summoner-league-info {
+  width: 200px;
   padding: 20px;
 }
 
