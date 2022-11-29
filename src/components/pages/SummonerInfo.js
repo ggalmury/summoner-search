@@ -2,7 +2,6 @@ import { Fragment, React, useEffect, useState, createContext } from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading.js";
-import "./SummonerInfo.scss";
 
 export const SummonerInfoContext = createContext({});
 
@@ -136,10 +135,18 @@ const ResultPage = () => {
   return (
     <Fragment>
       <div id="nav">
-        <button onClick={updateHistory}>소환사 정보 갱신</button>
-        <button onClick={goToMain}>종합</button>
-        <button onClick={goToHistory}>전적 보기</button>
-        <button onClick={goToIngameInfo}>인게임</button>
+        <button className="btn-category" onClick={updateHistory}>
+          소환사 정보 갱신
+        </button>
+        <button className="btn-category" onClick={goToMain}>
+          종합
+        </button>
+        <button className="btn-category" onClick={goToHistory}>
+          전적 보기
+        </button>
+        <button className="btn-category" onClick={goToIngameInfo}>
+          인게임
+        </button>
       </div>
       <div id="content-box">
         <Fragment>

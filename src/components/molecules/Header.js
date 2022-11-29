@@ -1,8 +1,7 @@
-import "./Header.scss";
 import { useNavigate } from "react-router-dom";
 import { Fragment, React, useEffect, useState } from "react";
 
-const Header = (props) => {
+const Header = () => {
   const [summonerName, setSummonerName] = useState("");
   const navigate = useNavigate();
 
@@ -31,7 +30,9 @@ const Header = (props) => {
         API TEST
       </div>
       <input id="summoner-id-search" placeholder="info" value={summonerName} onChange={searchUserName}></input>
-      <button onClick={userData}>검색</button>
+      <button className="btn-search" onClick={userData}>
+        검색
+      </button>
     </div>
   );
 };

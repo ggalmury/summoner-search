@@ -1,6 +1,5 @@
 import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
-import "./Ingame.scss";
 import Loading from "./Loading.js";
 import { SummonerInfoContext } from "./SummonerInfo";
 
@@ -36,7 +35,7 @@ const Ingame = () => {
         <Loading />
       ) : ingameInfo.success === true ? (
         <div id="ingame-box">
-          <h2>게임중입니다</h2>
+          <div>게임중입니다</div>
           <ul id="banned-champions">
             {ingameInfo.data.bannedChampions.map((value, idx) => {
               return <li key={idx}>{value.championId}</li>;
@@ -46,7 +45,7 @@ const Ingame = () => {
             {ingameInfo.data.participants.map((value, idx) => {
               return (
                 <li key={idx}>
-                  <h2>{value.summonerName}</h2>
+                  <div>{value.summonerName}</div>
                 </li>
               );
             })}
@@ -54,9 +53,9 @@ const Ingame = () => {
         </div>
       ) : (
         <div>
-          <h2>{summonerInfo.name}</h2>
-          <h2>{summonerInfo.id}</h2>
-          <h2>게임중이 아닙니다</h2>
+          <div>{summonerInfo.name}</div>
+          <div>{summonerInfo.id}</div>
+          <div>게임중이 아닙니다</div>
         </div>
       )}
     </Fragment>

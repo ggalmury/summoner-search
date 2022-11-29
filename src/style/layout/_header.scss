@@ -4,6 +4,7 @@
   display: flex;
   float: left;
   align-items: center;
+  padding: 20px;
 }
 
 #web-title {
@@ -20,6 +21,7 @@
   outline: none;
   background-color: rgb(253, 240, 240);
   font-size: 25px;
-  border-radius: 20px;
   text-align: center;
+  border: 3px solid black;
+  border-radius: 20px;
 }

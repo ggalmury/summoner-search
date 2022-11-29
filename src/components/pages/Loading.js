@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 import { PulseLoader } from "react-spinners";
-import "./Loading.scss";
 
 const Loading = (props) => {
   return (

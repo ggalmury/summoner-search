@@ -1,0 +1,64 @@
+button {
+  height: 40px;
+  margin: 10px;
+  margin-left: 50px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0); /* rgba(0, 0, 0, 0) */
+  cursor: pointer;
+  font-size: 20px;
+}
+
+#nav {
+  width: 100%;
+  height: 60px;
+  float: left;
+}
+
+#content-box {
+  // @include centering;
+  display: flex;
+  flex-direction: row;
+  width: 45%;
+  margin-left: 70px;
+}
+
+#summoner-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.summoner-detail {
+  width: 200px;
+  padding: 10px;
+  margin-top: 50px;
+
+  #profile-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 100px;
+    border: 2px solid rgb(248, 225, 151);
+  }
+
+  #rank-emblem {
+    width: 100px;
+    height: 100px;
+    border: 40px gray;
+  }
+
+  .outcome {
+    @include centering;
+    display: flex;
+    flex-direction: row;
+
+    &-win {
+      color: $win-color;
+      margin-right: 5px;
+    }
+    &-lose {
+      color: $lose-color;
+      margin-left: 5px;
+    }
+  }
+}

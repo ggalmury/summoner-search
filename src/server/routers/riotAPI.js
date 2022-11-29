@@ -110,7 +110,7 @@ router.get("/leagueV4", async (req, res) => {
           try {
             util.success(res, data);
 
-            data.forEach(async (data) => {
+            data.forEach((data) => {
               setRankInfoToDB(
                 data.summonerName,
                 data.queueType,
@@ -151,15 +151,76 @@ router.get("/update", (req, res) => {
   let infoResult = {};
   let rankResult = {};
 
+  const updateSummonerInfoToDB = (profileIconId, revisionDate, summonerLevel) => {
+    db.query(`UPDATE summoner_info SET profile_icon_id=?, revision_date=?, summoner_level=? WHERE id=?`, [profileIconId, revisionDate, summonerLevel, encryptedSummonerId]);
+  };
+
+  const updateSummonerRankToDB = (name, queueType, id, leagueId, tier, rank, leaguePoints, wins, losses, hotStreak, veteran, freshBlood, inactive) => {
+    db.query(
+      `INSERT INTO summoner_rank 
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE summoner_name=?, league_id=?, tier=?, \`rank\`=?, league_points=?, wins=?, losses=?, hot_streak=?, veteran=?, fresh_blood=?, inactive=?`,
+      [
+        name,
+        queueType,
+        id,
+        leagueId,
+        tier,
+        rank,
+        leaguePoints,
+        wins,
+        losses,
+        hotStreak,
+        veteran,
+        freshBlood,
+        inactive,
+        name,
+        leagueId,
+        tier,
+        rank,
+        leaguePoints,
+        wins,
+        losses,
+        hotStreak,
+        veteran,
+        freshBlood,
+        inactive,
+      ]
+    );
+  };
+
   axios
     .all([axios.get(url1, { headers }), axios.get(url2, { headers })])
     .then(
       axios.spread(async (infoResultRaw, rankResultRaw) => {
         infoResult = [infoResultRaw.data];
         rankResult = rankResultRaw.data;
-        util.success(res, [infoResult, rankResult]);
-        // TODO : DB에 정보 update
-        // await db.query();
+        console.log(rankResult);
+
+        try {
+          util.success(res, [infoResult, rankResult]);
+
+          updateSummonerInfoToDB(infoResult[0].profileIconId, infoResult[0].revisionDate, infoResult[0].summonerLevel);
+
+          rankResult.forEach((data) => {
+            updateSummonerRankToDB(
+              data.summonerName,
+              data.queueType,
+              data.summonerId,
+              data.leagueId,
+              data.tier,
+              data.rank,
+              data.leaguePoints,
+              data.wins,
+              data.losses,
+              data.hotStreak,
+              data.veteran,
+              data.freshBlood,
+              data.inactive
+            );
+          });
+        } catch (err) {
+          console.log(err);
+        }
       })
     )
     .catch((err) => {
