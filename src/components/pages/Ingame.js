@@ -1,4 +1,4 @@
-import { React, useEffect, useState, useContext } from "react";
+import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
 import "./Ingame.scss";
 import Loading from "./Loading.js";
@@ -31,7 +31,7 @@ const Ingame = () => {
   }, [summonerInfo]);
 
   return (
-    <div>
+    <Fragment>
       {loading === true ? (
         <Loading />
       ) : ingameInfo.success === true ? (
@@ -59,7 +59,7 @@ const Ingame = () => {
           <h2>게임중이 아닙니다</h2>
         </div>
       )}
-    </div>
+    </Fragment>
   );
 };
 

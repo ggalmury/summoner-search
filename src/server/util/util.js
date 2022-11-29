@@ -47,6 +47,6 @@ module.exports = {
   },
 
   toLowerRegexp: (str) => {
-    return str.toLowerCase().replace(/\s/gi, "");
+    return str?.toLowerCase()?.replace(/\s/gi, "");
   },
 };

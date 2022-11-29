@@ -1,10 +1,14 @@
-import React from "react";
+import React, { Fragment } from "react";
+import { PulseLoader } from "react-spinners";
+import "./Loading.scss";
 
 const Loading = (props) => {
   return (
-    <div>
-      <h2>Loading..</h2>
-    </div>
+    <Fragment>
+      <div className="loading">
+        <PulseLoader color="rgb(30, 241, 250)" />
+      </div>
+    </Fragment>
   );
 };
 

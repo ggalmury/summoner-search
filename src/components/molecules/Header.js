@@ -27,9 +27,9 @@ const Header = (props) => {
 
   return (
     <div id="header">
-      <h1 id="web-title" onClick={goToMain}>
+      <div id="web-title" onClick={goToMain}>
         API TEST
-      </h1>
+      </div>
       <input id="summoner-id-search" placeholder="info" value={summonerName} onChange={searchUserName}></input>
       <button onClick={userData}>검색</button>
     </div>
