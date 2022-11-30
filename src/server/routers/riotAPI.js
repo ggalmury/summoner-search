@@ -76,7 +76,22 @@ router.get("/summonerV4", async (req, res) => {
   }
 });
 
-// 소환사 랭크 정보 조회
+router.get("/masteryV4", (req, res) => {
+  const { encryptedSummonerId } = req.query;
+  const url = `https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${encryptedSummonerId}/top?count=3`;
+
+  util.riotRes(url, (success, data) => {
+    switch (success) {
+      case true:
+        util.success(res, data);
+        break;
+      case false:
+        util.fail(res, []);
+        break;
+    }
+  });
+});
+
 router.get("/leagueV4", async (req, res) => {
   const { encryptedSummonerId } = req.query;
   const url = `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}`;
@@ -141,7 +156,6 @@ router.get("/leagueV4", async (req, res) => {
   }
 });
 
-// 소환사 정보 갱신
 router.get("/update", (req, res) => {
   const { encryptedSummonerId } = req.query;
   const url1 = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/${encryptedSummonerId}`;
@@ -228,7 +242,6 @@ router.get("/update", (req, res) => {
     });
 });
 
-// 현재 진행중인 게임 조회
 router.get("/spectatorV4", async (req, res) => {
   const { encryptedSummonerId } = req.query;
   const url = `https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${encryptedSummonerId}`;
@@ -246,7 +259,6 @@ router.get("/spectatorV4", async (req, res) => {
   });
 });
 
-// 게임 전적 조회
 router.get("/matchV5", (req, res) => {
   const { puuid, start, count } = req.query;
   let riotRes = []; // matchId로 게임의 detail info 조회, 최종적으로 클라에 응답

@@ -2,6 +2,7 @@ import { Fragment, React, useEffect, useState, createContext } from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading.js";
+import util from "util/util.js";
 
 export const SummonerInfoContext = createContext({});
 
@@ -12,6 +13,7 @@ const ResultPage = () => {
   const [summonerInfo, setSummonerInfo] = useState({});
   const [soloLeagueInfo, setSoloLeagueInfo] = useState({});
   const [flexLeagueInfo, setFlexLeagueInfo] = useState({});
+  const [championInfo, setChampionInfo] = useState({});
   const [loading, setLoading] = useState(true);
 
   // 소환사 정보 갱신
@@ -73,6 +75,10 @@ const ResultPage = () => {
     return `http://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/${category}/${code}.png`;
   };
 
+  const getChampName = (id) => {
+    return util.champNumToName(id);
+  };
+
   useEffect(() => {
     console.log("render info");
     const fetchData = async () => {
@@ -81,7 +87,6 @@ const ResultPage = () => {
       setSoloLeagueInfo({ tier: "Unranked" });
       setFlexLeagueInfo({ tier: "Unranked" });
 
-      // 소환사 정보 요청(이름, 레벨, 암호화된 id, etc..)
       try {
         const infoResultRaw = await axios.get("/api/summonerV4", { params: { summonerName } });
         infoResult = infoResultRaw.data;
@@ -94,7 +99,6 @@ const ResultPage = () => {
           return;
         }
 
-        // mysql2 => 배열 반환
         setSummonerInfo(infoResult.data[0]);
       } catch (err) {
         console.log(err);
@@ -102,30 +106,35 @@ const ResultPage = () => {
         return;
       }
 
-      // 소환사 리그 정보 요청
-      try {
-        const rankResultRaw = await axios.get("/api/leagueV4", { params: { encryptedSummonerId: infoResult.data[0].id } });
-        const rankResult = rankResultRaw.data;
+      axios
+        .all([axios.get("/api/masteryV4", { params: { encryptedSummonerId: infoResult.data[0].id } }), axios.get("/api/leagueV4", { params: { encryptedSummonerId: infoResult.data[0].id } })])
+        .then(
+          axios.spread((champResultRaw, rankResultRaw) => {
+            const rankResult = rankResultRaw.data;
+            const champResult = champResultRaw.data;
+            console.log(champResult.data);
 
-        console.log(rankResult);
+            setChampionInfo(champResult);
 
-        rankResult.data.forEach((rank) => {
-          // 큐 타입에 따라 분류(솔로랭크, 자유랭크)
-          switch (rank.queueType) {
-            case "RANKED_FLEX_SR":
-              setFlexLeagueInfo(rank);
-              break;
-            case "RANKED_SOLO_5x5":
-              setSoloLeagueInfo(rank);
-              break;
-          }
+            rankResult.data.forEach((rank) => {
+              switch (rank.queueType) {
+                case "RANKED_FLEX_SR":
+                  setFlexLeagueInfo(rank);
+                  break;
+                case "RANKED_SOLO_5x5":
+                  setSoloLeagueInfo(rank);
+                  break;
+                default:
+                  break;
+              }
+            });
+            setLoading(false);
+          })
+        )
+        .catch((err) => {
+          console.log(err);
+          alert("소환사 정보 검색 오류");
         });
-      } catch (err) {
-        console.log(err);
-        alert("소환사 랭크 정보 검색 오류");
-      }
-
-      setLoading(false);
     };
 
     setLoading(true);
@@ -153,54 +162,55 @@ const ResultPage = () => {
           {loading === true ? (
             <Loading />
           ) : (
-            <div id="summoner-info">
-              <div className="summoner-detail">
-                <img id="profile-icon" src={getImage("profileicon", summonerInfo.profileIconId)} alt="profile"></img>
-                <div>{summonerInfo.name}</div>
-                <div>Level {summonerInfo.summonerLevel}</div>
+            <div id="summoner">
+              <div id="summoner-info">
+                <div className="summoner-detail">
+                  <img id="profile-icon" src={getImage("profileicon", summonerInfo.profileIconId)} alt="profile"></img>
+                  <div>{summonerInfo.name}</div>
+                  <div>Level {summonerInfo.summonerLevel}</div>
+                </div>
+                <div className="summoner-detail">
+                  <div>솔로랭크</div>
+                  {soloLeagueInfo.tier === "Unranked" ? (
+                    <div>{soloLeagueInfo.tier}</div>
+                  ) : (
+                    <Fragment>
+                      <img id="rank-emblem" src={getRankEmblem(soloLeagueInfo.tier)} alt="rank emblem"></img>
+                      <div>{getTier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</div>
+                      <div>{soloLeagueInfo.leaguePoints}LP</div>
+                      <div className="outcome">
+                        <div className="outcome-win">{soloLeagueInfo.wins}W </div>
+                        <div className="outcome-lose">{soloLeagueInfo.losses}L</div>
+                      </div>
+                      <div>승률 {getWinRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
+                    </Fragment>
+                  )}
+                </div>
+                <div className="summoner-detail">
+                  <div>자유랭크</div>
+                  {flexLeagueInfo.tier === "Unranked" ? (
+                    <div>{flexLeagueInfo.tier}</div>
+                  ) : (
+                    <Fragment>
+                      <img id="rank-emblem" src={getRankEmblem(flexLeagueInfo.tier)} alt="rank emblem"></img>
+                      <div>{getTier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</div>
+                      <div>{flexLeagueInfo.leaguePoints}LP</div>
+                      <div className="outcome">
+                        <div className="outcome-win">{flexLeagueInfo.wins}W</div>
+                        <div className="outcome-lose">{flexLeagueInfo.losses}L</div>
+                      </div>
+                      <div>승률 {getWinRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
+                    </Fragment>
+                  )}
+                </div>
               </div>
-              <div className="summoner-detail">
-                <div>솔로랭크</div>
-                {soloLeagueInfo.tier === "Unranked" ? (
-                  <div>{soloLeagueInfo.tier}</div>
-                ) : (
-                  <Fragment>
-                    <img id="rank-emblem" src={getRankEmblem(soloLeagueInfo.tier)} alt="rank emblem"></img>
-                    <div>{getTier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</div>
-                    <div>{soloLeagueInfo.leaguePoints}LP</div>
-                    <div className="outcome">
-                      <div className="outcome-win">{soloLeagueInfo.wins}W </div>
-                      <div className="outcome-lose">{soloLeagueInfo.losses}L</div>
-                    </div>
-                    <div>승률 {getWinRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
-                  </Fragment>
-                )}
-              </div>
-              <div className="summoner-detail">
-                <div>자유랭크</div>
-                {flexLeagueInfo.tier === "Unranked" ? (
-                  <div>{flexLeagueInfo.tier}</div>
-                ) : (
-                  <Fragment>
-                    <img id="rank-emblem" src={getRankEmblem(flexLeagueInfo.tier)} alt="rank emblem"></img>
-                    <div>{getTier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</div>
-                    <div>{flexLeagueInfo.leaguePoints}LP</div>
-                    <div className="outcome">
-                      <div className="outcome-win">{flexLeagueInfo.wins}W</div>
-                      <div className="outcome-lose">{flexLeagueInfo.losses}L</div>
-                    </div>
-                    <div>승률 {getWinRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
-                  </Fragment>
-                )}
-              </div>
+              <div id="summoner-champ">{getChampName(championInfo.data[0].championId)}</div>
             </div>
           )}
         </Fragment>
-        <div>
-          <SummonerInfoContext.Provider value={summonerInfo}>
-            <Outlet />
-          </SummonerInfoContext.Provider>
-        </div>
+        <SummonerInfoContext.Provider value={summonerInfo}>
+          <Outlet />
+        </SummonerInfoContext.Provider>
       </div>
     </Fragment>
   );

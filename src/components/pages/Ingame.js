@@ -16,7 +16,6 @@ const Ingame = () => {
       try {
         const ingameResultRaw = await axios.get("/api/spectatorV4", { params: { encryptedSummonerId: summonerInfo.id } });
         const ingameResult = ingameResultRaw.data;
-        console.log(ingameResult);
         setIngameInfo(ingameResult);
       } catch (err) {
         console.log(err);

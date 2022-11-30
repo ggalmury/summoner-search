@@ -6,6 +6,13 @@ body {
   background: linear-gradient(to bottom, $main-color, $sub-color);
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }

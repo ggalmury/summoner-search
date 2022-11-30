@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { PulseLoader } from "react-spinners";
 
-const Loading = (props) => {
+const Loading = () => {
   return (
     <Fragment>
       <div className="loading">
