@@ -1,6 +1,6 @@
 .btn {
   &-category {
-    height: 40px;
+    height: 32px;
     margin: 10px;
     margin-left: 50px;
     border: none;
@@ -12,6 +12,16 @@
       transition: 0.3s;
       background-color: rgb(163, 163, 255);
       border-radius: 20px;
+    }
+
+    &::after {
+      content: "|";
+      float: right;
+      margin-right: -38px;
+    }
+
+    &:last-child::after {
+      content: "";
     }
   }
 

@@ -3,3 +3,16 @@
   text-align: center;
   justify-content: center;
 }
+
+@mixin infoBox {
+  background-color: $info-box;
+  border-radius: 20px;
+  border: $info-box-border;
+}
+
+@mixin champMasteryImg($width) {
+  width: $width;
+  border-radius: 20px;
+  border: $image-box-gold;
+  margin-top: 20px;
+}

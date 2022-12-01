@@ -5,23 +5,23 @@
   float: left;
   align-items: center;
   padding: 20px;
-}
 
-#web-title {
-  display: inline-block;
-  padding: 20px;
-  margin-left: 40px;
-  font-size: 50px;
-  cursor: pointer;
-}
+  #web-title {
+    display: inline-block;
+    padding: 20px;
+    margin-left: 40px;
+    font-size: 40px;
+    cursor: pointer;
+  }
 
-#summoner-id-search {
-  width: 300px;
-  height: 50px;
-  outline: none;
-  background-color: rgb(253, 240, 240);
-  font-size: 25px;
-  text-align: center;
-  border: 3px solid black;
-  border-radius: 20px;
+  #summoner-id-search {
+    width: 300px;
+    height: 50px;
+    outline: none;
+    background-color: rgb(253, 240, 240);
+    font-size: 25px;
+    text-align: center;
+    border: 3px solid black;
+    border-radius: 20px;
+  }
 }

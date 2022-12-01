@@ -3,6 +3,7 @@ import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading.js";
 import util from "util/util.js";
+import champ from "util/champion.json";
 
 export const SummonerInfoContext = createContext({});
 
@@ -13,7 +14,7 @@ const ResultPage = () => {
   const [summonerInfo, setSummonerInfo] = useState({});
   const [soloLeagueInfo, setSoloLeagueInfo] = useState({});
   const [flexLeagueInfo, setFlexLeagueInfo] = useState({});
-  const [championInfo, setChampionInfo] = useState({});
+  const [champMasteryInfo, setChampMasteryInfo] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // 소환사 정보 갱신
@@ -49,7 +50,7 @@ const ResultPage = () => {
 
   const goToHistory = () => {
     alert("test1");
-    console.log(summonerInfo);
+    console.log(champMasteryInfo);
     // navigate("/summoner/history");
   };
 
@@ -75,8 +76,19 @@ const ResultPage = () => {
     return `http://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/${category}/${code}.png`;
   };
 
-  const getChampName = (id) => {
-    return util.champNumToName(id);
+  const getChampName = (num) => {
+    switch (num) {
+      case 0:
+        return util.champNumToName(champMasteryInfo[0].championId);
+      case 1:
+        return util.champNumToName(champMasteryInfo[1].championId);
+      case 2:
+        return util.champNumToName(champMasteryInfo[2].championId);
+    }
+  };
+
+  const getChampImage = (name) => {
+    return `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${name}_0.jpg`;
   };
 
   useEffect(() => {
@@ -112,9 +124,8 @@ const ResultPage = () => {
           axios.spread((champResultRaw, rankResultRaw) => {
             const rankResult = rankResultRaw.data;
             const champResult = champResultRaw.data;
-            console.log(champResult.data);
 
-            setChampionInfo(champResult);
+            setChampMasteryInfo(champResult.data);
 
             rankResult.data.forEach((rank) => {
               switch (rank.queueType) {
@@ -204,7 +215,32 @@ const ResultPage = () => {
                   )}
                 </div>
               </div>
-              <div id="summoner-champ">{getChampName(championInfo.data[0].championId)}</div>
+              <div id="summoner-champ">
+                <div className="champ-mastery">
+                  <img className="champ-mastery-img1" src={getChampImage(getChampName(1))} alt="champion"></img>
+                  <div className="champ-mastery-info">
+                    <div>{getChampName(1)}</div>
+                    <div>{champMasteryInfo[1].championLevel} LV</div>
+                    <div>{champMasteryInfo[1].championPoints} P</div>
+                  </div>
+                </div>
+                <div className="champ-mastery">
+                  <img className="champ-mastery-img2" src={getChampImage(getChampName(0))} alt="champion"></img>
+                  <div className="champ-mastery-info">
+                    <div>{getChampName(0)}</div>
+                    <div>{champMasteryInfo[0].championLevel} LV</div>
+                    <div>{champMasteryInfo[0].championPoints} P</div>
+                  </div>
+                </div>
+                <div className="champ-mastery">
+                  <img className="champ-mastery-img1" src={getChampImage(getChampName(2))} alt="champion"></img>
+                  <div className="champ-mastery-info">
+                    <div>{getChampName(2)}</div>
+                    <div>{champMasteryInfo[2].championLevel} LV</div>
+                    <div>{champMasteryInfo[2].championPoints} P</div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </Fragment>

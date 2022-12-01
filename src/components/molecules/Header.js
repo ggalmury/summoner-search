@@ -27,7 +27,7 @@ const Header = () => {
   return (
     <div id="header">
       <div id="web-title" onClick={goToMain}>
-        API TEST
+        ZzangGa.GG
       </div>
       <input id="summoner-id-search" placeholder="info" value={summonerName} onChange={searchUserName}></input>
       <button className="btn-search" onClick={userData}>
