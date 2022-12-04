@@ -8,12 +8,12 @@ const axios = require("axios");
 // 2. 정보가 있다면 클라이언트에 응답
 // 3. 정보가 없다면 riot api서버에 요청 후 받은 응답을 db에 저장 후 클라이언트에 응답
 
-router.get("/", (req, res) => {
+router.post("/", (req, res) => {
   res.send({ test: "hi" });
 });
 
-router.get("/summonerV4", async (req, res) => {
-  const { summonerName } = req.query;
+router.post("/summonerV4", async (req, res) => {
+  const { summonerName } = req.body;
   const summonerNameRegexp = util.toLowerRegexp(summonerName);
   const url = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}`;
 
@@ -76,8 +76,8 @@ router.get("/summonerV4", async (req, res) => {
   }
 });
 
-router.get("/masteryV4", (req, res) => {
-  const { encryptedSummonerId } = req.query;
+router.post("/masteryV4", (req, res) => {
+  const { encryptedSummonerId } = req.body;
   const url = `https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${encryptedSummonerId}/top?count=3`;
 
   util.riotRes(url, (success, data) => {
@@ -92,8 +92,8 @@ router.get("/masteryV4", (req, res) => {
   });
 });
 
-router.get("/leagueV4", async (req, res) => {
-  const { encryptedSummonerId } = req.query;
+router.post("/leagueV4", async (req, res) => {
+  const { encryptedSummonerId } = req.body;
   const url = `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}`;
 
   let rankInfo = {};
@@ -156,8 +156,8 @@ router.get("/leagueV4", async (req, res) => {
   }
 });
 
-router.get("/update", (req, res) => {
-  const { encryptedSummonerId } = req.query;
+router.post("/update", (req, res) => {
+  const { encryptedSummonerId } = req.body;
   const url1 = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/${encryptedSummonerId}`;
   const url2 = `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}`;
   const headers = { "X-Riot-Token": process.env.APIKEY };
@@ -242,8 +242,8 @@ router.get("/update", (req, res) => {
     });
 });
 
-router.get("/spectatorV4", async (req, res) => {
-  const { encryptedSummonerId } = req.query;
+router.post("/spectatorV4", async (req, res) => {
+  const { encryptedSummonerId } = req.body;
   const url = `https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${encryptedSummonerId}`;
 
   util.riotRes(url, (success, data) => {
@@ -259,8 +259,8 @@ router.get("/spectatorV4", async (req, res) => {
   });
 });
 
-router.get("/matchV5", (req, res) => {
-  const { puuid, start, count } = req.query;
+router.post("/matchV5", (req, res) => {
+  const { puuid, start, count } = req.body;
   let riotRes = []; // matchId로 게임의 detail info 조회, 최종적으로 클라에 응답
   const url1 = process.env.MATCHV5;
   const url2 = process.env.MATCHV5DETAIL;

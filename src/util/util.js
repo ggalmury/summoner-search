@@ -1,6 +1,14 @@
 module.exports = {
-  champNumToName: (number) => {
-    switch (number) {
+  ddragonVersion: () => {
+    return "12.22.1";
+  },
+
+  champSquareImg: (name, version) => {
+    return `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${name}.png`;
+  },
+
+  champNumToName: (id) => {
+    switch (id) {
       case 1:
         return "Annie";
       case 2:
@@ -325,6 +333,8 @@ module.exports = {
         return "Nilah";
       case 897:
         return "KSante";
+      default:
+        return "no result";
     }
   },
 };

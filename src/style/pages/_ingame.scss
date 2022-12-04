@@ -1,9 +1,48 @@
 #ingame-box {
-  background-color: yellow;
+  @include infoBox;
+
+  display: flex;
+  flex-direction: column;
+  width: 46%;
+  height: 90%;
+  margin-left: 5%;
+  overflow: hidden;
+
+  .ingame-status {
+    font-size: 120%;
+    height: 6%;
+  }
+
+  #ingame-info {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    #first-team {
+      display: flex;
+      flex-direction: column;
+      height: 47%;
+      background-color: gray;
+    }
+  }
 }
 
-#banned-champions {
-  li {
-    float: left;
+.ingame-tb {
+  display: flex;
+  flex-direction: column;
+
+  .champ-square {
+    width: 30px;
+
+    &-img {
+      width: 100%;
+    }
   }
+}
+
+.ingame-player-list {
+  background-color: yellow;
+  height: 100%;
+  font-size: 15px;
 }

@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
-const riotAPI = require("./routers/riotAPI.js");
+const sumInfo = require("./routers/SumInfo.js");
 
 const app = express();
 const port = 4000;
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", express.static(path.join(__dirname, "public")));
-app.use("/api", riotAPI);
+app.use("/api", sumInfo);
 
 app.use(cors({ origin: ["http://localhost:4000"], methods: "GET,POST,HEAD", preflightContinue: false, credentials: true }));
 

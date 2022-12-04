@@ -19,7 +19,7 @@ const ResultPage = () => {
 
   // 소환사 정보 갱신
   const updateHistory = async (event) => {
-    const updatedInfoRaw = await axios.get("/api/update", { params: { encryptedSummonerId: summonerInfo.id } });
+    const updatedInfoRaw = await axios.post("/api/update", { encryptedSummonerId: summonerInfo.id });
     const updatedInfo = updatedInfoRaw.data;
 
     if (updatedInfo.success === undefined) {
@@ -64,7 +64,7 @@ const ResultPage = () => {
   };
 
   const getRankEmblem = (tier) => {
-    return `${process.env.PUBLIC_URL}/ranked-emblems/Emblem_${tier}.png`;
+    return `${process.env.PUBLIC_URL}/images/ranked-emblems/Emblem_${tier}.png`;
   };
 
   const getWinRate = (win, lose) => {
@@ -72,22 +72,24 @@ const ResultPage = () => {
   };
 
   const getImage = (category, code) => {
-    const ddragonVersion = "12.22.1";
+    const ddragonVersion = util.ddragonVersion();
     return `http://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/${category}/${code}.png`;
   };
 
   const getChampName = (num) => {
-    switch (num) {
-      case 0:
-        return util.champNumToName(champMasteryInfo[0].championId);
-      case 1:
-        return util.champNumToName(champMasteryInfo[1].championId);
-      case 2:
-        return util.champNumToName(champMasteryInfo[2].championId);
+    // TODO : 정보가 없을 때 예외처리
+    if (champMasteryInfo.length <= num) {
+      return null;
     }
+
+    return util.champNumToName(champMasteryInfo[num].championId);
   };
 
   const getChampImage = (name) => {
+    if (name === null) {
+      return `${process.env.PUBLIC_URL}/images/question_mark.jpeg`;
+    }
+
     return `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${name}_0.jpg`;
   };
 
@@ -100,10 +102,8 @@ const ResultPage = () => {
       setFlexLeagueInfo({ tier: "Unranked" });
 
       try {
-        const infoResultRaw = await axios.get("/api/summonerV4", { params: { summonerName } });
+        const infoResultRaw = await axios.post("/api/summonerV4", { summonerName });
         infoResult = infoResultRaw.data;
-
-        console.log(infoResult);
 
         if (infoResult.success === false) {
           alert("존재하지 않는 소환사입니다.");
@@ -119,11 +119,13 @@ const ResultPage = () => {
       }
 
       axios
-        .all([axios.get("/api/masteryV4", { params: { encryptedSummonerId: infoResult.data[0].id } }), axios.get("/api/leagueV4", { params: { encryptedSummonerId: infoResult.data[0].id } })])
+        .all([axios.post("/api/masteryV4", { encryptedSummonerId: infoResult.data[0].id }), axios.post("/api/leagueV4", { encryptedSummonerId: infoResult.data[0].id })])
         .then(
           axios.spread((champResultRaw, rankResultRaw) => {
             const rankResult = rankResultRaw.data;
             const champResult = champResultRaw.data;
+
+            console.log(rankResult);
 
             setChampMasteryInfo(champResult.data);
 
@@ -219,25 +221,43 @@ const ResultPage = () => {
                 <div className="champ-mastery">
                   <img className="champ-mastery-img1" src={getChampImage(getChampName(1))} alt="champion"></img>
                   <div className="champ-mastery-info">
-                    <div>{getChampName(1)}</div>
-                    <div>{champMasteryInfo[1].championLevel} LV</div>
-                    <div>{champMasteryInfo[1].championPoints} P</div>
+                    {champMasteryInfo[1] !== undefined ? (
+                      <Fragment>
+                        <div>{getChampName(1)}</div>
+                        <div>{champMasteryInfo[1].championLevel} LV</div>
+                        <div>{champMasteryInfo[1].championPoints} P</div>
+                      </Fragment>
+                    ) : (
+                      <div>no result</div>
+                    )}
                   </div>
                 </div>
                 <div className="champ-mastery">
                   <img className="champ-mastery-img2" src={getChampImage(getChampName(0))} alt="champion"></img>
                   <div className="champ-mastery-info">
-                    <div>{getChampName(0)}</div>
-                    <div>{champMasteryInfo[0].championLevel} LV</div>
-                    <div>{champMasteryInfo[0].championPoints} P</div>
+                    {champMasteryInfo[0] !== undefined ? (
+                      <Fragment>
+                        <div>{getChampName(0)}</div>
+                        <div>{champMasteryInfo[0].championLevel} LV</div>
+                        <div>{champMasteryInfo[0].championPoints} P</div>
+                      </Fragment>
+                    ) : (
+                      <div>no result</div>
+                    )}
                   </div>
                 </div>
                 <div className="champ-mastery">
                   <img className="champ-mastery-img1" src={getChampImage(getChampName(2))} alt="champion"></img>
                   <div className="champ-mastery-info">
-                    <div>{getChampName(2)}</div>
-                    <div>{champMasteryInfo[2].championLevel} LV</div>
-                    <div>{champMasteryInfo[2].championPoints} P</div>
+                    {champMasteryInfo[2] !== undefined ? (
+                      <Fragment>
+                        <div>{getChampName(2)}</div>
+                        <div>{champMasteryInfo[2].championLevel} LV</div>
+                        <div>{champMasteryInfo[2].championPoints} P</div>
+                      </Fragment>
+                    ) : (
+                      <div>no result</div>
+                    )}
                   </div>
                 </div>
               </div>

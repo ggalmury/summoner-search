@@ -8,30 +8,32 @@
 #summoner {
   display: flex;
   flex-direction: column;
-  max-width: 45%;
+  width: 45%;
   height: 90%;
 
   &-info {
     @include infoBox;
 
     display: flex;
-    width: 80%;
+    width: 90%;
     height: 47%;
-    margin-left: 60px;
+    margin-left: 10%;
   }
 
   &-champ {
     @include infoBox;
-
     display: flex;
     flex-grow: 1;
+    width: 90%;
     margin-top: 30px;
-    margin-left: 20px;
+    margin-left: 10%;
+
     .champ-mastery {
       @include centering;
+      flex-grow: 1;
 
       &-img1 {
-        @include champMasteryImg(30%);
+        @include champMasteryImg(33%);
       }
 
       &-img2 {
@@ -48,20 +50,19 @@
 .summoner-detail {
   @include centering;
 
+  width: 30%;
   padding: 20px;
-  margin-top: 30px;
+  margin-top: 3%;
   margin-inline: 20px;
 
   #profile-icon {
-    width: 110px;
-    height: 110px;
+    width: 100%;
     border-radius: 100px;
     border: $image-box-gold;
   }
 
   #rank-emblem {
-    width: 80px;
-    height: 80px;
+    width: 70%;
     border: 40px gray;
   }
 
