@@ -3,30 +3,30 @@
   flex-grow: 1;
   width: 100%;
   align-items: center;
+  justify-content: center;
 }
 
 #summoner {
   display: flex;
   flex-direction: column;
-  width: 45%;
-  height: 90%;
+  width: 670px;
+  height: 550px;
 
   &-info {
     @include infoBox;
 
     display: flex;
-    width: 90%;
-    height: 47%;
-    margin-left: 10%;
+    width: 620px;
+    height: 250px;
   }
 
   &-champ {
     @include infoBox;
+
     display: flex;
-    flex-grow: 1;
-    width: 90%;
+    width: 620px;
+    height: 280px;
     margin-top: 30px;
-    margin-left: 10%;
 
     .champ-mastery {
       @include centering;
@@ -52,7 +52,6 @@
 
   width: 30%;
   padding: 20px;
-  margin-top: 3%;
   margin-inline: 20px;
 
   #profile-icon {

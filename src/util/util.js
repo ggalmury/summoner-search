@@ -7,6 +7,18 @@ module.exports = {
     return `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${name}.png`;
   },
 
+  rankEmblem1: (tier) => {
+    return `${process.env.PUBLIC_URL}/images/rank_emblems1/Emblem_${tier}.png`;
+  },
+
+  rankEmblem2: (tier) => {
+    return `${process.env.PUBLIC_URL}/images/rank_emblems2/${tier}.png`;
+  },
+
+  winRate: (win, lose) => {
+    return Math.round((win / (win + lose)) * 100);
+  },
+
   champNumToName: (id) => {
     switch (id) {
       case 1:

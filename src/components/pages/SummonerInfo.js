@@ -43,7 +43,6 @@ const ResultPage = () => {
     alert("갱신되었습니다");
   };
 
-  // 종합으로 이동
   const goToMain = () => {
     navigate(`/summoner/${summonerName}`);
   };
@@ -54,7 +53,6 @@ const ResultPage = () => {
     // navigate("/summoner/history");
   };
 
-  // 인게임 정보로 이동
   const goToIngameInfo = () => {
     navigate(`/summoner/${summonerName}/ingame`);
   };
@@ -64,11 +62,11 @@ const ResultPage = () => {
   };
 
   const getRankEmblem = (tier) => {
-    return `${process.env.PUBLIC_URL}/images/ranked-emblems/Emblem_${tier}.png`;
+    return util.rankEmblem1(tier);
   };
 
   const getWinRate = (win, lose) => {
-    return Math.round((win / (win + lose)) * 100);
+    return util.winRate(win, lose);
   };
 
   const getImage = (category, code) => {
@@ -77,7 +75,6 @@ const ResultPage = () => {
   };
 
   const getChampName = (num) => {
-    // TODO : 정보가 없을 때 예외처리
     if (champMasteryInfo.length <= num) {
       return null;
     }
@@ -94,7 +91,6 @@ const ResultPage = () => {
   };
 
   useEffect(() => {
-    console.log("render info");
     const fetchData = async () => {
       let infoResult;
 
@@ -124,8 +120,6 @@ const ResultPage = () => {
           axios.spread((champResultRaw, rankResultRaw) => {
             const rankResult = rankResultRaw.data;
             const champResult = champResultRaw.data;
-
-            console.log(rankResult);
 
             setChampMasteryInfo(champResult.data);
 
