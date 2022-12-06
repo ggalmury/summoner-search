@@ -49,7 +49,6 @@ const ResultPage = () => {
 
   const goToHistory = () => {
     alert("test1");
-    console.log(champMasteryInfo);
     // navigate("/summoner/history");
   };
 
@@ -59,14 +58,6 @@ const ResultPage = () => {
 
   const getTier = (tier, rank) => {
     return tier + " " + rank;
-  };
-
-  const getRankEmblem = (tier) => {
-    return util.rankEmblem1(tier);
-  };
-
-  const getWinRate = (win, lose) => {
-    return util.winRate(win, lose);
   };
 
   const getImage = (category, code) => {
@@ -94,8 +85,8 @@ const ResultPage = () => {
     const fetchData = async () => {
       let infoResult;
 
-      setSoloLeagueInfo({ tier: "Unranked" });
-      setFlexLeagueInfo({ tier: "Unranked" });
+      setSoloLeagueInfo({ tier: "UNRANKED" });
+      setFlexLeagueInfo({ tier: "UNRANKED" });
 
       try {
         const infoResultRaw = await axios.post("/api/summonerV4", { summonerName });
@@ -178,35 +169,35 @@ const ResultPage = () => {
                 </div>
                 <div className="summoner-detail">
                   <div>솔로랭크</div>
-                  {soloLeagueInfo.tier === "Unranked" ? (
-                    <div>{soloLeagueInfo.tier}</div>
+                  <img className="rank-emblem" src={util.rankEmblem1(soloLeagueInfo.tier)} alt="rank emblem"></img>
+                  {soloLeagueInfo.tier === "UNRANKED" ? (
+                    <div className="rank-emblem-unranked">{soloLeagueInfo.tier}</div>
                   ) : (
                     <Fragment>
-                      <img id="rank-emblem" src={getRankEmblem(soloLeagueInfo.tier)} alt="rank emblem"></img>
                       <div>{getTier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</div>
                       <div>{soloLeagueInfo.leaguePoints}LP</div>
                       <div className="outcome">
                         <div className="outcome-win">{soloLeagueInfo.wins}W </div>
                         <div className="outcome-lose">{soloLeagueInfo.losses}L</div>
                       </div>
-                      <div>승률 {getWinRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
+                      <div>승률 {util.winRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
                     </Fragment>
                   )}
                 </div>
                 <div className="summoner-detail">
                   <div>자유랭크</div>
-                  {flexLeagueInfo.tier === "Unranked" ? (
-                    <div>{flexLeagueInfo.tier}</div>
+                  <img className="rank-emblem" src={util.rankEmblem1(flexLeagueInfo.tier)} alt="rank emblem"></img>
+                  {flexLeagueInfo.tier === "UNRANKED" ? (
+                    <div className="rank-emblem-unranked">{flexLeagueInfo.tier}</div>
                   ) : (
                     <Fragment>
-                      <img id="rank-emblem" src={getRankEmblem(flexLeagueInfo.tier)} alt="rank emblem"></img>
                       <div>{getTier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</div>
                       <div>{flexLeagueInfo.leaguePoints}LP</div>
                       <div className="outcome">
                         <div className="outcome-win">{flexLeagueInfo.wins}W</div>
                         <div className="outcome-lose">{flexLeagueInfo.losses}L</div>
                       </div>
-                      <div>승률 {getWinRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
+                      <div>승률 {util.winRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
                     </Fragment>
                   )}
                 </div>

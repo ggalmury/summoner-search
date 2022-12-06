@@ -15,8 +15,72 @@ module.exports = {
     return `${process.env.PUBLIC_URL}/images/rank_emblems2/${tier}.png`;
   },
 
+  summonerSpellImg: (spellId) => {
+    let spellName = "";
+
+    switch (spellId) {
+      case 1:
+        spellName = "cleans";
+        break;
+      case 3:
+        spellName = "exhaust";
+        break;
+      case 4:
+        spellName = "flash";
+        break;
+      case 6:
+        spellName = "ghost";
+        break;
+      case 7:
+        spellName = "heal";
+        break;
+      case 11:
+        spellName = "smite";
+        break;
+      case 12:
+        spellName = "teleport";
+        break;
+      case 13:
+        spellName = "clarity";
+        break;
+      case 14:
+        spellName = "ignite";
+        break;
+      case 21:
+        spellName = "barrier";
+        break;
+      case 32:
+        spellName = "mark";
+        break;
+    }
+
+    return `${process.env.PUBLIC_URL}/images/summoner_spells/summoner_${spellName}.png`;
+  },
+
   winRate: (win, lose) => {
     return Math.round((win / (win + lose)) * 100);
+  },
+
+  gameType: (gameId) => {
+    switch (gameId) {
+      case 0:
+        return "사용자 설정 게임";
+      case 420:
+        return "개인/2인 랭크 게임";
+      case 440:
+        return "자유 랭크 게임";
+      case 450:
+        return "무작위 총력전";
+    }
+  },
+
+  mapType: (mapId) => {
+    switch (mapId) {
+      case 11:
+        return "소환사의 협곡";
+      case 12:
+        return "칼바람 나락";
+    }
   },
 
   champNumToName: (id) => {

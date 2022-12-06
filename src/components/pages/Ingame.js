@@ -2,7 +2,7 @@ import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
 import Loading from "./Loading.js";
 import { SummonerInfoContext } from "./SummonerInfo";
-import util from "util/util.js";
+import util, { summonerSpellImg } from "util/util.js";
 
 // TODO: 밴된 챔피언 테이블 수정(table => div)
 
@@ -71,6 +71,7 @@ const Ingame = () => {
 
     promise
       .then((arr) => {
+        console.log(arr);
         setSummRankInfo(arr);
       })
       .catch((err) => {
@@ -87,7 +88,6 @@ const Ingame = () => {
         const ingameResultRaw = await axios.post("/api/spectatorV4", { encryptedSummonerId: summonerInfo.id });
         ingameResult = ingameResultRaw.data;
 
-        console.log(ingameResultRaw);
         setIngameInfo(ingameResult);
       } catch (err) {
         console.log(err);
@@ -100,7 +100,7 @@ const Ingame = () => {
 
       setTimeout(() => {
         setLoading(false);
-      }, 500);
+      }, 600);
     };
 
     setLoading(true);
@@ -115,30 +115,34 @@ const Ingame = () => {
         <div id="ingame-box">
           {ingameInfo.success === true ? (
             <Fragment>
-              <div className="ingame-status">게임중입니다</div>
+              <div className="ingame-status">
+                <div id="now-gaming">게임중입니다</div>
+                <div id="game-detail">
+                  <div id="game-detail-type">{util.gameType(ingameInfo.data.gameQueueConfigId)}</div>
+                  <div id="game-detail-map">{util.mapType(ingameInfo.data.mapId)}</div>
+                </div>
+              </div>
               <div id="ingame-info">
-                <div id="first-team">
-                  <table className="ingame-tb">
-                    <thead>
-                      <td colSpan={5}>
-                        {bannedChampImg.map((value, idx) => {
-                          if (idx >= 5) {
-                            return;
-                          }
+                <div id="team-b">
+                  <div className="banned-champ-list">
+                    {bannedChampImg.map((value, idx) => {
+                      if (idx >= 5) {
+                        return;
+                      }
 
-                          return (
-                            <th className="champ-square" key={idx}>
-                              <img className="champ-square-img" src={value}></img>
-                            </th>
-                          );
-                        })}
-                      </td>
-                    </thead>
+                      return (
+                        <div className="banned-champ" key={idx}>
+                          <img className="banned-champ-img" src={value}></img>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <table className="ingame-tb">
                     <tbody>
-                      <tr>
-                        <th className="ingame-tb-th0" scope="col"></th>
+                      <tr id="team-b-h">
+                        <th className="ingame-tb-th0" scope="col" colSpan={2}></th>
                         <th className="ingame-tb-th1" scope="col">
-                          이름
+                          블루팀
                         </th>
                         <th className="ingame-tb-th2" scope="col" colSpan={2}>
                           티어
@@ -154,9 +158,19 @@ const Ingame = () => {
 
                         return (
                           <tr className="ingame-tb-tr2" key={idx}>
-                            <td className="ingame-tb-champ">
+                            <td className="ingame-tb-champ-b">
                               <div>
-                                <img className="ingame-tb-champ-img" src={getChampSquareImg(value.championId)}></img>
+                                <img className="ingame-tb-champ-b-img" src={getChampSquareImg(value.championId)}></img>
+                              </div>
+                            </td>
+                            <td className="ingame-tb-spell">
+                              <div>
+                                <div className="spell-box">
+                                  <img className="spell-img" src={util.summonerSpellImg(value.spell1Id)}></img>
+                                </div>
+                                <div className="spell-box">
+                                  <img className="spell-img" src={util.summonerSpellImg(value.spell2Id)}></img>
+                                </div>
                               </div>
                             </td>
                             <td className="ingame-tb-name">
@@ -171,8 +185,9 @@ const Ingame = () => {
                                 </td>
                                 <td className="ingame-tb-lp">
                                   <div>
-                                    {value.rank.rank} {value.rank.leaguePoints} LP
+                                    {value.rank.tier} {value.rank.rank}
                                   </div>
+                                  <div>{value.rank.leaguePoints} LP</div>
                                 </td>
                                 <td className="ingame-tb-winrate">
                                   <div>
@@ -188,7 +203,7 @@ const Ingame = () => {
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
-                                  <div>Unranked</div>
+                                  <div>UNRANKED</div>
                                 </td>
                                 <td className="ingame-tb-winrate">
                                   <div>-</div>
@@ -201,13 +216,13 @@ const Ingame = () => {
                     </tbody>
                   </table>
                 </div>
-                <div id="second-team">
+                <div id="team-r">
                   <table className="ingame-tb">
                     <tbody>
-                      <tr>
-                        <th className="ingame-tb-th0" scope="col"></th>
+                      <tr id="team-r-h">
+                        <th className="ingame-tb-th0" scope="col" colSpan={2}></th>
                         <th className="ingame-tb-th1" scope="col">
-                          이름
+                          레드팀
                         </th>
                         <th className="ingame-tb-th2" scope="col" colSpan={2}>
                           티어
@@ -223,9 +238,19 @@ const Ingame = () => {
 
                         return (
                           <tr className="ingame-tb-tr2" key={idx}>
-                            <td className="ingame-tb-champ">
+                            <td className="ingame-tb-champ-r">
                               <div>
-                                <img className="ingame-tb-champ-img" src={getChampSquareImg(value.championId)}></img>
+                                <img className="ingame-tb-champ-r-img" src={getChampSquareImg(value.championId)}></img>
+                              </div>
+                            </td>
+                            <td className="ingame-tb-spell">
+                              <div>
+                                <div className="spell-box">
+                                  <img className="spell-img" src={util.summonerSpellImg(value.spell1Id)}></img>
+                                </div>
+                                <div className="spell-box">
+                                  <img className="spell-img" src={util.summonerSpellImg(value.spell2Id)}></img>
+                                </div>
                               </div>
                             </td>
                             <td className="ingame-tb-name">
@@ -240,8 +265,9 @@ const Ingame = () => {
                                 </td>
                                 <td className="ingame-tb-lp">
                                   <div>
-                                    {value.rank.rank} {value.rank.leaguePoints} LP
+                                    {value.rank.tier} {value.rank.rank}
                                   </div>
+                                  <div>{value.rank.leaguePoints} LP</div>
                                 </td>
                                 <td className="ingame-tb-winrate">
                                   <div>
@@ -257,7 +283,7 @@ const Ingame = () => {
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
-                                  <div>Unranked</div>
+                                  <div>UNRANKED</div>
                                 </td>
                                 <td className="ingame-tb-winrate">
                                   <div>-</div>
@@ -268,22 +294,20 @@ const Ingame = () => {
                         );
                       })}
                     </tbody>
-                    <tfoot>
-                      <td colSpan={5}>
-                        {bannedChampImg.map((value, idx) => {
-                          if (idx < 5) {
-                            return;
-                          }
-
-                          return (
-                            <th className="champ-square" key={idx}>
-                              <img className="champ-square-img" src={value}></img>
-                            </th>
-                          );
-                        })}
-                      </td>
-                    </tfoot>
                   </table>
+                  <div className="banned-champ-list">
+                    {bannedChampImg.map((value, idx) => {
+                      if (idx < 5) {
+                        return;
+                      }
+
+                      return (
+                        <div className="banned-champ" key={idx}>
+                          <img className="banned-champ-img" src={value}></img>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </Fragment>

@@ -4,9 +4,12 @@
   width: 100%;
   align-items: center;
   justify-content: center;
+  background-color: $sub-color2;
 }
 
 #summoner {
+  @include centering;
+
   display: flex;
   flex-direction: column;
   width: 670px;
@@ -16,7 +19,7 @@
     @include infoBox;
 
     display: flex;
-    width: 620px;
+    width: 540px;
     height: 250px;
   }
 
@@ -24,7 +27,7 @@
     @include infoBox;
 
     display: flex;
-    width: 620px;
+    width: 540px;
     height: 280px;
     margin-top: 30px;
 
@@ -33,11 +36,11 @@
       flex-grow: 1;
 
       &-img1 {
-        @include champMasteryImg(33%);
+        @include champMasteryImg(70px);
       }
 
       &-img2 {
-        @include champMasteryImg(40%);
+        @include champMasteryImg(90px);
       }
 
       &-info {
@@ -60,9 +63,13 @@
     border: $image-box-gold;
   }
 
-  #rank-emblem {
-    width: 70%;
+  .rank-emblem {
+    width: 80px;
     border: 40px gray;
+  }
+
+  .rank-emblem-unranked {
+    margin-top: 10px;
   }
 
   .outcome {
@@ -71,11 +78,12 @@
     flex-direction: row;
 
     &-win {
-      color: $win-color;
+      color: $blue;
       margin-right: 5px;
     }
+
     &-lose {
-      color: $lose-color;
+      color: $red;
       margin-left: 5px;
     }
   }
