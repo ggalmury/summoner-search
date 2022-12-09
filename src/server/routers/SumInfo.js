@@ -3,6 +3,7 @@ const util = require("../util/util.js");
 const db = require("../../mysql.js");
 const router = express.Router();
 const axios = require("axios");
+const { resolvePath } = require("react-router-dom");
 
 // 1. DB에 소환사 정보 요청
 // 2. 정보가 있다면 클라이언트에 응답
@@ -59,9 +60,9 @@ router.post("/summonerV4", async (req, res) => {
           try {
             util.success(res, [data]);
 
-            setSummonerNameToDB(summonerNameRegexp, data.id, summonerNameRegexp);
-
             setSummonerInfoToDB(data.name, data.accountId, data.profileIconId, data.revisionDate, data.id, data.puuid, data.summonerLevel, data.name);
+
+            setSummonerNameToDB(summonerNameRegexp, data.id, summonerNameRegexp);
           } catch (err) {
             console.log(err);
           }
@@ -103,11 +104,11 @@ router.post("/leagueV4", async (req, res) => {
     return db.query(`SELECT * FROM summoner_rank WHERE summoner_id=?`, [id]);
   };
 
-  const setRankInfoToDB = (name, queueType, id, leagueId, tier, rank, leaguePoints, wins, losses, hotStreak, veteran, freshBlood, inactive) => {
+  const setRankInfoToDB = (name, id, queueType, leagueId, tier, rank, leaguePoints, wins, losses, hotStreak, veteran, freshBlood, inactive) => {
     db.query(
       `INSERT INTO summoner_rank 
       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name, queueType, id, leagueId, tier, rank, leaguePoints, wins, losses, hotStreak, veteran, freshBlood, inactive]
+      [name, id, queueType, leagueId, tier, rank, leaguePoints, wins, losses, hotStreak, veteran, freshBlood, inactive]
     );
   };
 
@@ -128,8 +129,8 @@ router.post("/leagueV4", async (req, res) => {
             data.forEach((data) => {
               setRankInfoToDB(
                 data.summonerName,
-                data.queueType,
                 data.summonerId,
+                data.queueType,
                 data.leagueId,
                 data.tier,
                 data.rank,
@@ -160,7 +161,7 @@ router.post("/update", (req, res) => {
   const { encryptedSummonerId } = req.body;
   const url1 = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/${encryptedSummonerId}`;
   const url2 = `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}`;
-  const headers = { "X-Riot-Token": process.env.APIKEY };
+  // const headers = { "X-Riot-Token": process.env.APIKEY };
 
   let infoResult = {};
   let rankResult = {};
@@ -175,8 +176,8 @@ router.post("/update", (req, res) => {
       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE summoner_name=?, league_id=?, tier=?, \`rank\`=?, league_points=?, wins=?, losses=?, hot_streak=?, veteran=?, fresh_blood=?, inactive=?`,
       [
         name,
-        queueType,
         id,
+        queueType,
         leagueId,
         tier,
         rank,
@@ -254,32 +255,117 @@ router.post("/spectatorV4", async (req, res) => {
         return;
       case false:
         util.fail(res, {});
-        break;
+        return;
     }
   });
 });
 
 router.post("/matchV5", (req, res) => {
   const { puuid, start, count } = req.body;
-  let riotRes = []; // matchId로 게임의 detail info 조회, 최종적으로 클라에 응답
-  const url1 = process.env.MATCHV5;
-  const url2 = process.env.MATCHV5DETAIL;
-  // 최근 전적으로부터 start번 전적에서 count개의 전적을 조회
+  const url1 = `https://asia.api.riotgames.com/lol/match/v5/matches/by-puuid/`;
+  const url2 = `https://asia.api.riotgames.com/lol/match/v5/matches/`;
   const fullUrl1 = `${url1}${puuid}/ids?start=${start}&count=${count}`;
 
-  util.riotRes(fullUrl1, (success, data) => {
-    data.map((matchId) => {
-      const fullUrl2 = `${url2}${matchId}`;
+  let history = [];
 
-      util.riotRes(fullUrl2, (success, data) => {
-        setTimeout(() => {
-          riotRes.push(data.info);
-          if (riotRes.length === 10) {
-            util.success(res, riotRes);
-          }
-        }, 100);
-      });
-    });
+  util.riotRes(fullUrl1, (success, data) => {
+    switch (success) {
+      case true:
+        for (let matchId of data) {
+          const fullUrl2 = `${url2}${matchId}`;
+
+          let detail = {};
+
+          const promise2 = new Promise((resolve, reject) => {
+            util.riotRes(fullUrl2, (success, data) => {
+              switch (success) {
+                case true:
+                  const game = data.info;
+                  const participants = game.participants;
+
+                  let participantData = [];
+                  let participant = {};
+
+                  const gameData = {
+                    gameDuration: game.gameDuration,
+                    gameStartTimestamp: game.gameStartTimestamp,
+                    gameEndTimestamp: game.gameEndTimestamp,
+                    gameMode: game.gameMode,
+                    mapId: game.mapId,
+                  };
+
+                  for (let summ of participants) {
+                    participant = {
+                      summonerName: summ.summonerName,
+                      teamId: summ.teamId,
+                      win: summ.win,
+                      summonerLevel: summ.summonerLevel,
+                      kills: summ.kills,
+                      deaths: summ.deaths,
+                      assists: summ.assists,
+                      perksMain: summ.perks.styles[0].selections[0].perk,
+                      perksSub: summ.perks.styles[1].selections[0].perk,
+                      totalDamageDealtToChampions: summ.totalDamageDealtToChampions,
+                      totalDamageTaken: summ.totalDamageTaken,
+                      totalMinionsKilled: summ.totalMinionsKilled,
+
+                      lane: summ.lane,
+                      championId: summ.championId,
+                      champLevel: summ.champLevel,
+                      summoner1Id: summ.summoner1Id,
+                      summoner2Id: summ.summoner2Id,
+
+                      doubleKills: summ.doubleKills,
+                      tripleKills: summ.tripleKills,
+                      quadraKills: summ.quadraKills,
+                      pentaKills: summ.pentaKills,
+
+                      item0: summ.item0,
+                      item1: summ.item1,
+                      item2: summ.item2,
+                      item3: summ.item3,
+                      item4: summ.item4,
+                      item5: summ.item5,
+                      item6: summ.item6,
+
+                      baronKills: summ.baronKills,
+                      dragonKills: summ.dragonKills,
+                      turretKills: summ.turretKills,
+
+                      detectorWardsPlaced: summ.detectorWardsPlaced,
+                      wardsPlaced: summ.wardsPlaced,
+                      wardsKilled: summ.wardsKilled,
+                      goldEarned: summ.goldEarned,
+                    };
+
+                    participantData.push(participant);
+                  }
+
+                  detail.gameData = gameData;
+                  detail.participantData = participantData;
+
+                  resolve(detail);
+                  break;
+                default:
+                  util.fail(res, []);
+                  return;
+              }
+            });
+          });
+
+          promise2.then((arr) => {
+            history.push(arr);
+
+            if (history.length >= count) {
+              util.success(res, history);
+            }
+          });
+        }
+        break;
+      default:
+        util.fail(res, []);
+        return;
+    }
   });
 });
 

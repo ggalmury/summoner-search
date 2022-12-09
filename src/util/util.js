@@ -1,9 +1,13 @@
 module.exports = {
   ddragonVersion: () => {
-    return "12.22.1";
+    return "12.23.1";
   },
 
   champSquareImg: (name, version) => {
+    if (name === undefined) {
+      return undefined;
+    }
+
     return `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${name}.png`;
   },
 
@@ -15,8 +19,143 @@ module.exports = {
     return `${process.env.PUBLIC_URL}/images/rank_emblems2/${tier}.png`;
   },
 
+  tier: (tier, rank) => {
+    return tier + " " + rank;
+  },
+
+  asc: (arr) => {
+    arr.sort((a, b) => {
+      a = a.gameData.gameStartTimestamp;
+      b = b.gameData.gameStartTimestamp;
+      if (a < b) return 1;
+      if (a > b) return -1;
+
+      return 0;
+    });
+  },
+
+  mainPerkImg: (id) => {
+    let perkName = "";
+    let perkStyle = "";
+
+    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkStyle}/${perkName}/${perkName}.png`;
+
+    switch (id) {
+      case 8005:
+        perkName = "PressTheAttack";
+        perkStyle = "Precision";
+        break;
+      case 8008:
+        perkName = "LethalTempo";
+        perkStyle = "Precision";
+        break;
+      case 8010:
+        perkName = "Conqueror";
+        perkStyle = "Precision";
+        break;
+      case 8021:
+        perkName = "FleetFootwork";
+        perkStyle = "Precision";
+        break;
+      case 8112:
+        perkName = "Electrocute";
+        perkStyle = "Domination";
+        break;
+      case 8124:
+        perkName = "Predator";
+        perkStyle = "Domination";
+        break;
+      case 8128:
+        perkName = "DarkHarvest";
+        perkStyle = "Domination";
+        break;
+      case 9923:
+        perkName = " HailOfBlades";
+        perkStyle = "Domination";
+        break;
+      case 8214:
+        perkName = "SummonAery";
+        perkStyle = "Sorcery";
+        break;
+      case 8229:
+        perkName = "ArcaneComet";
+        perkStyle = "Sorcery";
+        break;
+      case 8230:
+        perkName = " PhaseRush";
+        perkStyle = "Sorcery";
+        break;
+      case 8351:
+        perkName = "GlacialAugment";
+        perkStyle = "Inspiration";
+        break;
+      case 8360:
+        perkName = "UnsealedSpellbook";
+        perkStyle = "Inspiration";
+        break;
+      case 8369:
+        perkName = " FirstStrike";
+        perkStyle = "Inspiration";
+        break;
+      case 8437:
+        perkName = "GraspOfTheUndying";
+        perkStyle = "Resolve";
+        break;
+      case 8439:
+        perkName = "Aftershock";
+        perkStyle = "Resolve";
+        break;
+      case 8465:
+        perkName = "Guardian";
+        perkStyle = "Resolve";
+        break;
+      default:
+        url = undefined;
+        break;
+    }
+
+    return url;
+  },
+
+  subPerkImg: (id) => {
+    let perkNum = 0;
+    let perkStyle = "";
+
+    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkNum}_${perkStyle}.png`;
+
+    switch (id) {
+      case 8000:
+        perkNum = 7201;
+        perkStyle = "Precision";
+        break;
+      case 8100:
+        perkNum = 7200;
+        perkStyle = "Domination";
+        break;
+      case 8200:
+        perkNum = 7202;
+        perkStyle = "Sorcery";
+        break;
+      case 8300:
+        perkNum = 7203;
+        perkStyle = "Whimsy";
+        break;
+      case 8400:
+        perkNum = 7204;
+        perkStyle = "Resolve";
+        break;
+      default:
+        url = undefined;
+        break;
+    }
+
+    return url;
+  },
+
   summonerSpellImg: (spellId) => {
     let spellName = "";
+
+    let url = `${process.env.PUBLIC_URL}/images/summoner_spells/summoner_${spellName}.png`;
 
     switch (spellId) {
       case 1:
@@ -52,9 +191,12 @@ module.exports = {
       case 32:
         spellName = "mark";
         break;
+      default:
+        url = undefined;
+        break;
     }
 
-    return `${process.env.PUBLIC_URL}/images/summoner_spells/summoner_${spellName}.png`;
+    return url;
   },
 
   winRate: (win, lose) => {
@@ -62,355 +204,545 @@ module.exports = {
   },
 
   gameType: (gameId) => {
+    let game = "";
+
     switch (gameId) {
       case 0:
-        return "사용자 설정 게임";
+        game = "사용자 설정 게임";
+        break;
       case 420:
-        return "개인/2인 랭크 게임";
+        game = "개인/2인 랭크 게임";
+        break;
+      case 420:
+        game = "일반 게임";
+        break;
       case 440:
-        return "자유 랭크 게임";
+        game = "자유 랭크 게임";
+        break;
       case 450:
-        return "무작위 총력전";
+        game = "무작위 총력전";
+        break;
+      default:
+        game = undefined;
+        break;
     }
+
+    return game;
   },
 
   mapType: (mapId) => {
+    let map = "";
+
     switch (mapId) {
       case 11:
-        return "소환사의 협곡";
+        map = "소환사의 협곡";
+        break;
       case 12:
-        return "칼바람 나락";
+        map = "칼바람 나락";
+        break;
+      default:
+        map = undefined;
+        break;
     }
+
+    return map;
   },
 
   champNumToName: (id) => {
+    let champion = "";
+
     switch (id) {
       case 1:
-        return "Annie";
+        champion = "Annie";
+        break;
       case 2:
-        return "Olaf";
+        champion = "Olaf";
+        break;
       case 3:
-        return "Galio";
+        champion = "Galio";
+        break;
       case 4:
-        return "TwistedFate";
+        champion = "TwistedFate";
+        break;
       case 5:
-        return "XinZhao";
+        champion = "XinZhao";
+        break;
       case 6:
-        return "Urgot";
+        champion = "Urgot";
+        break;
       case 7:
-        return "Leblanc";
+        champion = "Leblanc";
+        break;
       case 8:
-        return "Vladimir";
+        champion = "Vladimir";
+        break;
       case 9:
-        return "Fiddlesticks";
+        champion = "Fiddlesticks";
+        break;
       case 10:
-        return "Kayle";
+        champion = "Kayle";
+        break;
       case 11:
-        return "MasterYi";
+        champion = "MasterYi";
+        break;
       case 12:
-        return "Alistar";
+        champion = "Alistar";
+        break;
       case 13:
-        return "Ryze";
+        champion = "Ryze";
+        break;
       case 14:
-        return "Sion";
+        champion = "Sion";
+        break;
       case 15:
-        return "Sivir";
+        champion = "Sivir";
+        break;
       case 16:
-        return "Soraka";
+        champion = "Soraka";
+        break;
       case 17:
-        return "Teemo";
+        champion = "Teemo";
+        break;
       case 18:
-        return "Tristana";
+        champion = "Tristana";
+        break;
       case 19:
-        return "Warwick";
+        champion = "Warwick";
+        break;
       case 20:
-        return "Nunu";
+        champion = "Nunu";
+        break;
       case 21:
-        return "MissFortune";
+        champion = "MissFortune";
+        break;
       case 22:
-        return "Ashe";
+        champion = "Ashe";
+        break;
       case 23:
-        return "Tryndamere";
+        champion = "Tryndamere";
+        break;
       case 24:
-        return "Jax";
+        champion = "Jax";
+        break;
       case 25:
-        return "Morgana";
+        champion = "Morgana";
+        break;
       case 26:
-        return "Zilean";
+        champion = "Zilean";
+        break;
       case 27:
-        return "Singed";
+        champion = "Singed";
+        break;
       case 28:
-        return "Evelynn";
+        champion = "Evelynn";
+        break;
       case 29:
-        return "Twitch";
+        champion = "Twitch";
+        break;
       case 30:
-        return "Karthus";
+        champion = "Karthus";
+        break;
       case 31:
-        return "Chogath";
+        champion = "Chogath";
+        break;
       case 32:
-        return "Amumu";
+        champion = "Amumu";
+        break;
       case 33:
-        return "Rammus";
+        champion = "Rammus";
+        break;
       case 34:
-        return "Anivia";
+        champion = "Anivia";
+        break;
       case 35:
-        return "Shaco";
+        champion = "Shaco";
+        break;
       case 36:
-        return "DrMundo";
+        champion = "DrMundo";
+        break;
       case 37:
-        return "Sona";
+        champion = "Sona";
+        break;
       case 38:
-        return "Kassadin";
+        champion = "Kassadin";
+        break;
       case 39:
-        return "Irelia";
+        champion = "Irelia";
+        break;
       case 40:
-        return "Janna";
+        champion = "Janna";
+        break;
       case 41:
-        return "Gangplank";
+        champion = "Gangplank";
+        break;
       case 42:
-        return "Corki";
+        champion = "Corki";
+        break;
       case 43:
-        return "Karma";
+        champion = "Karma";
+        break;
       case 44:
-        return "Taric";
+        champion = "Taric";
+        break;
       case 45:
-        return "Veigar";
+        champion = "Veigar";
+        break;
       case 48:
-        return "Trundle";
+        champion = "Trundle";
+        break;
       case 50:
-        return "Swain";
+        champion = "Swain";
+        break;
       case 51:
-        return "Caitlyn";
+        champion = "Caitlyn";
+        break;
       case 53:
-        return "Blitzcrank";
+        champion = "Blitzcrank";
+        break;
       case 54:
-        return "Malphite";
+        champion = "Malphite";
+        break;
       case 55:
-        return "Katarina";
+        champion = "Katarina";
+        break;
       case 56:
-        return "Nocturne";
+        champion = "Nocturne";
+        break;
       case 57:
-        return "Maokai";
+        champion = "Maokai";
+        break;
       case 58:
-        return "Renekton";
+        champion = "Renekton";
+        break;
       case 59:
-        return "JarvanIV";
+        champion = "JarvanIV";
+        break;
       case 60:
-        return "Elise";
+        champion = "Elise";
+        break;
       case 61:
-        return "Orianna";
+        champion = "Orianna";
+        break;
       case 62:
-        return "MonkeyKing";
+        champion = "MonkeyKing";
+        break;
       case 63:
-        return "Brand";
+        champion = "Brand";
+        break;
       case 64:
-        return "LeeSin";
+        champion = "LeeSin";
+        break;
       case 67:
-        return "Vayne";
+        champion = "Vayne";
+        break;
       case 68:
-        return "Rumble";
+        champion = "Rumble";
+        break;
       case 69:
-        return "Cassiopeia";
+        champion = "Cassiopeia";
+        break;
       case 72:
-        return "Skarner";
+        champion = "Skarner";
+        break;
       case 74:
-        return "Heimerdinger";
+        champion = "Heimerdinger";
+        break;
       case 75:
-        return "Nasus";
+        champion = "Nasus";
+        break;
       case 76:
-        return "Nidalee";
+        champion = "Nidalee";
+        break;
       case 77:
-        return "Udyr";
+        champion = "Udyr";
+        break;
       case 78:
-        return "Poppy";
+        champion = "Poppy";
+        break;
       case 79:
-        return "Gragas";
+        champion = "Gragas";
+        break;
       case 80:
-        return "Pantheon";
+        champion = "Pantheon";
+        break;
       case 81:
-        return "Ezreal";
+        champion = "Ezreal";
+        break;
       case 82:
-        return "Mordekaiser";
+        champion = "Mordekaiser";
+        break;
       case 83:
-        return "Yorick";
+        champion = "Yorick";
+        break;
       case 84:
-        return "Akali";
+        champion = "Akali";
+        break;
       case 85:
-        return "Kennen";
+        champion = "Kennen";
+        break;
       case 86:
-        return "Garen";
+        champion = "Garen";
+        break;
       case 89:
-        return "Leona";
+        champion = "Leona";
+        break;
       case 90:
-        return "Malzahar";
+        champion = "Malzahar";
+        break;
       case 91:
-        return "Talon";
+        champion = "Talon";
+        break;
       case 92:
-        return "Riven";
+        champion = "Riven";
+        break;
       case 96:
-        return "KogMaw";
+        champion = "KogMaw";
+        break;
       case 98:
-        return "Shen";
+        champion = "Shen";
+        break;
       case 99:
-        return "Lux";
+        champion = "Lux";
+        break;
       case 101:
-        return "Xerath";
+        champion = "Xerath";
+        break;
       case 102:
-        return "Shyvana";
+        champion = "Shyvana";
+        break;
       case 103:
-        return "Ahri";
+        champion = "Ahri";
+        break;
       case 104:
-        return "Graves";
+        champion = "Graves";
+        break;
       case 105:
-        return "Fizz";
+        champion = "Fizz";
+        break;
       case 106:
-        return "Volibear";
+        champion = "Volibear";
+        break;
       case 107:
-        return "Rengar";
+        champion = "Rengar";
+        break;
       case 110:
-        return "Varus";
+        champion = "Varus";
+        break;
       case 111:
-        return "Nautilus";
+        champion = "Nautilus";
+        break;
       case 112:
-        return "Viktor";
+        champion = "Viktor";
+        break;
       case 113:
-        return "Sejuani";
+        champion = "Sejuani";
+        break;
       case 114:
-        return "Fiora";
+        champion = "Fiora";
+        break;
       case 115:
-        return "Ziggs";
+        champion = "Ziggs";
+        break;
       case 117:
-        return "Lulu";
+        champion = "Lulu";
+        break;
       case 119:
-        return "Draven";
+        champion = "Draven";
+        break;
       case 120:
-        return "Hecarim";
+        champion = "Hecarim";
+        break;
       case 121:
-        return "Khazix";
+        champion = "Khazix";
+        break;
       case 122:
-        return "Darius";
+        champion = "Darius";
+        break;
       case 126:
-        return "Jayce";
+        champion = "Jayce";
+        break;
       case 127:
-        return "Lissandra";
+        champion = "Lissandra";
+        break;
       case 131:
-        return "Diana";
+        champion = "Diana";
+        break;
       case 133:
-        return "Quinn";
+        champion = "Quinn";
+        break;
       case 134:
-        return "Syndra";
+        champion = "Syndra";
+        break;
       case 136:
-        return "AurelionSol";
+        champion = "AurelionSol";
+        break;
       case 141:
-        return "Kayn";
+        champion = "Kayn";
+        break;
       case 142:
-        return "Zoe";
+        champion = "Zoe";
+        break;
       case 143:
-        return "Zyra";
+        champion = "Zyra";
+        break;
       case 145:
-        return "Kaisa";
+        champion = "Kaisa";
+        break;
       case 147:
-        return "Seraphine";
+        champion = "Seraphine";
+        break;
       case 150:
-        return "Gnar";
+        champion = "Gnar";
+        break;
       case 154:
-        return "Zac";
+        champion = "Zac";
+        break;
       case 157:
-        return "Yasuo";
+        champion = "Yasuo";
+        break;
       case 161:
-        return "Velkoz";
+        champion = "Velkoz";
+        break;
       case 163:
-        return "Taliyah";
+        champion = "Taliyah";
+        break;
       case 164:
-        return "Camille";
+        champion = "Camille";
+        break;
       case 166:
-        return "Akshan";
+        champion = "Akshan";
+        break;
       case 200:
-        return "Belveth";
+        champion = "Belveth";
+        break;
       case 201:
-        return "Braum";
+        champion = "Braum";
+        break;
       case 202:
-        return "Jhin";
+        champion = "Jhin";
+        break;
       case 203:
-        return "Kindred";
+        champion = "Kindred";
+        break;
       case 221:
-        return "Zeri";
+        champion = "Zeri";
+        break;
       case 222:
-        return "Jinx";
+        champion = "Jinx";
+        break;
       case 223:
-        return "TahmKench";
+        champion = "TahmKench";
+        break;
       case 234:
-        return "Viego";
+        champion = "Viego";
+        break;
       case 235:
-        return "Senna";
+        champion = "Senna";
+        break;
       case 236:
-        return "Lucian";
+        champion = "Lucian";
+        break;
       case 238:
-        return "Zed";
+        champion = "Zed";
+        break;
       case 240:
-        return "Kled";
+        champion = "Kled";
+        break;
       case 245:
-        return "Ekko";
+        champion = "Ekko";
+        break;
       case 246:
-        return "Qiyana";
+        champion = "Qiyana";
+        break;
       case 254:
-        return "Vi";
+        champion = "Vi";
+        break;
       case 266:
-        return "Aatrox";
+        champion = "Aatrox";
+        break;
       case 267:
-        return "Nami";
+        champion = "Nami";
+        break;
       case 268:
-        return "Azir";
+        champion = "Azir";
+        break;
       case 350:
-        return "Yuumi";
+        champion = "Yuumi";
+        break;
       case 360:
-        return "Samira";
+        champion = "Samira";
+        break;
       case 412:
-        return "Thresh";
+        champion = "Thresh";
+        break;
       case 420:
-        return "Illaoi";
+        champion = "Illaoi";
+        break;
       case 421:
-        return "RekSai";
+        champion = "RekSai";
+        break;
       case 427:
-        return "Ivern";
+        champion = "Ivern";
+        break;
       case 429:
-        return "Kalista";
+        champion = "Kalista";
+        break;
       case 432:
-        return "Bard";
+        champion = "Bard";
+        break;
       case 497:
-        return "Rakan";
+        champion = "Rakan";
+        break;
       case 498:
-        return "Xayah";
+        champion = "Xayah";
+        break;
       case 516:
-        return "Ornn";
+        champion = "Ornn";
+        break;
       case 517:
-        return "Sylas";
+        champion = "Sylas";
+        break;
       case 518:
-        return "Neeko";
+        champion = "Neeko";
+        break;
       case 523:
-        return "Aphelios";
+        champion = "Aphelios";
+        break;
       case 526:
-        return "Rell";
+        champion = "Rell";
+        break;
       case 555:
-        return "Pyke";
+        champion = "Pyke";
+        break;
       case 711:
-        return "Vex";
+        champion = "Vex";
+        break;
       case 777:
-        return "Yone";
+        champion = "Yone";
+        break;
       case 875:
-        return "Sett";
+        champion = "Sett";
+        break;
       case 876:
-        return "Lillia";
+        champion = "Lillia";
+        break;
       case 887:
-        return "Gwen";
+        champion = "Gwen";
+        break;
       case 888:
-        return "Renata";
+        champion = "Renata";
+        break;
       case 895:
-        return "Nilah";
+        champion = "Nilah";
+        break;
       case 897:
-        return "KSante";
+        champion = "KSante";
+        break;
       default:
-        return "no result";
+        champion = undefined;
+        break;
     }
+
+    return champion;
   },
 };

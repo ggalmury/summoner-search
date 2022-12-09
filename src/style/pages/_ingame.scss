@@ -17,27 +17,27 @@
     #now-gaming {
       font-size: 0.9em;
       text-indent: 30px;
-      margin-right: auto;
+      margin-left: 260px;
     }
 
     #game-detail {
       display: flex;
-      align-items: center;
       margin-right: 40px;
 
       &-type {
         font-size: 0.8em;
+        text-indent: 14px;
 
         &::after {
           content: "|";
           float: right;
-          margin-right: -12px;
+          margin-right: 10px;
         }
       }
 
       &-map {
         font-size: 0.8em;
-        text-indent: 20px;
+        text-indent: 4px;
       }
     }
   }

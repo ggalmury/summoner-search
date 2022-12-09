@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "../molecules/Header.js";
+import Footer from "../molecules/Footer.js";
 import SummonerInfo from "../pages/SummonerInfo.js";
 import SummonerSearch from "../pages/SummonerSearch.js";
 import MatchHistory from "../pages/MatchHistory.js";
@@ -18,6 +19,7 @@ const MainRouter = () => {
         </Route>
         <Route path="*" element={<Page404 />}></Route>
       </Routes>
+      <Footer></Footer>
     </BrowserRouter>
   );
 };

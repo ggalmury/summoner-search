@@ -1,40 +1,40 @@
-#content-box {
-  display: flex;
-  flex-grow: 1;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  background-color: $sub-color2;
-}
-
-#summoner {
+#article {
   @include centering;
 
   display: flex;
   flex-direction: column;
-  width: 670px;
-  height: 550px;
+}
+
+#content-box {
+  display: flex;
+  flex-direction: column;
+  width: 1300px;
+  background-color: $sub-color2;
+}
+
+#summoner {
+  display: flex;
+  flex-grow: 1;
+  height: 350px;
 
   &-info {
     @include infoBox;
 
     display: flex;
-    width: 540px;
+    width: 100px;
+    flex-grow: 1;
     height: 250px;
   }
 
   &-champ {
+    @include centering;
     @include infoBox;
 
     display: flex;
-    width: 540px;
-    height: 280px;
-    margin-top: 30px;
+    flex-grow: 1;
+    height: 250px;
 
     .champ-mastery {
-      @include centering;
-      flex-grow: 1;
-
       &-img1 {
         @include champMasteryImg(70px);
       }
@@ -53,9 +53,10 @@
 .summoner-detail {
   @include centering;
 
-  width: 30%;
+  width: 40%;
   padding: 20px;
   margin-inline: 20px;
+  font-size: 1em;
 
   #profile-icon {
     width: 100%;

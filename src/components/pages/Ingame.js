@@ -2,9 +2,7 @@ import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
 import Loading from "./Loading.js";
 import { SummonerInfoContext } from "./SummonerInfo";
-import util, { summonerSpellImg } from "util/util.js";
-
-// TODO: 밴된 챔피언 테이블 수정(table => div)
+import util from "util/util.js";
 
 const Ingame = () => {
   const summonerInfo = useContext(SummonerInfoContext);
@@ -47,7 +45,7 @@ const Ingame = () => {
           const rankDataRaw = await axios.post("/api/leagueV4", { encryptedSummonerId: participant.summonerId });
           const rankData = rankDataRaw.data.data;
 
-          rankData.map((detail) => {
+          await rankData.map((detail) => {
             if (detail.queueType === "RANKED_SOLO_5x5") {
               const rank = {
                 summonerName: detail.summonerName,
@@ -100,7 +98,7 @@ const Ingame = () => {
 
       setTimeout(() => {
         setLoading(false);
-      }, 600);
+      }, 850);
     };
 
     setLoading(true);
@@ -116,11 +114,11 @@ const Ingame = () => {
           {ingameInfo.success === true ? (
             <Fragment>
               <div className="ingame-status">
-                <div id="now-gaming">게임중입니다</div>
                 <div id="game-detail">
                   <div id="game-detail-type">{util.gameType(ingameInfo.data.gameQueueConfigId)}</div>
                   <div id="game-detail-map">{util.mapType(ingameInfo.data.mapId)}</div>
                 </div>
+                <div id="now-gaming">게임중입니다</div>
               </div>
               <div id="ingame-info">
                 <div id="team-b">
@@ -184,9 +182,7 @@ const Ingame = () => {
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
-                                  <div>
-                                    {value.rank.tier} {value.rank.rank}
-                                  </div>
+                                  <div>{util.tier(value.rank.tier, value.rank.rank)}</div>
                                   <div>{value.rank.leaguePoints} LP</div>
                                 </td>
                                 <td className="ingame-tb-winrate">
@@ -264,9 +260,7 @@ const Ingame = () => {
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
-                                  <div>
-                                    {value.rank.tier} {value.rank.rank}
-                                  </div>
+                                  <div>{util.tier(value.rank.tier, value.rank.rank)}</div>
                                   <div>{value.rank.leaguePoints} LP</div>
                                 </td>
                                 <td className="ingame-tb-winrate">

@@ -8,6 +8,7 @@
 // layout
 @import "layout/header";
 @import "layout/nav";
+@import "layout/footer";
 
 // pages
 @import "pages/index";
@@ -15,3 +16,4 @@
 @import "pages/loading";
 @import "pages/summonerInfo";
 @import "pages/summonerSearch";
+@import "pages/matchHistory";
