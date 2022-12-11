@@ -1,3 +1,112 @@
 #match {
-  background-color: yellow;
+  &-statistic {
+    background-color: green;
+  }
+
+  &-history {
+    display: flex;
+    background-color: rgb(137, 137, 137);
+    justify-content: center;
+
+    .win {
+      @include matchBox($blue);
+
+      .history-summ-1-vod {
+        font-size: 1.2em;
+        color: $blue;
+      }
+    }
+
+    .lose {
+      @include matchBox($red);
+
+      .history-summ-1-vod {
+        font-size: 1.2em;
+        color: $red;
+      }
+    }
+
+    .draw {
+      @include matchBox($gray);
+
+      .history-summ-1-vod {
+        font-size: 1.2em;
+        color: $gray;
+      }
+    }
+
+    .history-summ {
+      &-1 {
+        display: flex;
+        flex-direction: column;
+        width: 120px;
+
+        &-game {
+          font-size: 0.85em;
+          line-height: 30px;
+        }
+
+        &-passed {
+          font-size: 0.9em;
+          line-height: 20px;
+        }
+
+        &-duration {
+          font-size: 0.9em;
+          line-height: 20px;
+        }
+      }
+
+      &-2 {
+        display: flex;
+        width: 250px;
+        height: 100%;
+        // background-color: yellow;
+
+        &-1 {
+          @include centering;
+
+          display: flex;
+          flex-direction: column;
+          width: 100px;
+          //   background-color: green;
+
+          &-img-1 {
+            width: 60px;
+            height: 60px;
+            border-radius: $border-rad1;
+          }
+
+          &-img-2 {
+            width: 27px;
+            height: 27px;
+            border-radius: $border-rad1;
+          }
+
+          .spell-box {
+            display: flex;
+            flex-direction: row;
+
+            &-1 {
+              padding: 3px;
+            }
+          }
+        }
+      }
+
+      &-3 {
+      }
+
+      &-4 {
+      }
+    }
+  }
+
+  &-add {
+    @include centering;
+
+    display: flex;
+    height: 70px;
+    background-color: white;
+  }
 }

@@ -2,7 +2,8 @@ import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
 import Loading from "./Loading.js";
 import { SummonerInfoContext } from "./SummonerInfo";
-import util from "util/util.js";
+import resourceUtil from "util/resourceUtil.js";
+import calcUtil from "util/calcUtil.js";
 
 const Ingame = () => {
   const summonerInfo = useContext(SummonerInfoContext);
@@ -12,14 +13,14 @@ const Ingame = () => {
   const [loading, setLoading] = useState(true);
 
   const getChampSquareImg = (id) => {
-    const ddversion = util.ddragonVersion();
-    const champName = util.champNumToName(id);
+    const ddversion = resourceUtil.ddragonVersion();
+    const champName = resourceUtil.champNumToName(id);
 
     if (id === undefined || id === -1) {
       return `${process.env.PUBLIC_URL}/images/random-champion.png`;
     }
 
-    return util.champSquareImg(champName, ddversion);
+    return resourceUtil.champSquareImg(champName, ddversion);
   };
 
   const bannedChampList = (list) => {
@@ -38,14 +39,14 @@ const Ingame = () => {
     setBannedChampImg(champArr);
   };
 
-  const summonerRank = (list) => {
-    const promise = new Promise((resolve, reject) => {
+  const summonerRank = async (list) => {
+    const newArr = await Promise.all(
       list.map(async (participant) => {
         try {
           const rankDataRaw = await axios.post("/api/leagueV4", { encryptedSummonerId: participant.summonerId });
           const rankData = rankDataRaw.data.data;
 
-          await rankData.map((detail) => {
+          for (let detail of rankData) {
             if (detail.queueType === "RANKED_SOLO_5x5") {
               const rank = {
                 summonerName: detail.summonerName,
@@ -58,23 +59,16 @@ const Ingame = () => {
 
               participant.rank = rank;
             }
-          });
+          }
+
+          return participant;
         } catch (err) {
           console.log(err);
         }
-
-        resolve(list);
-      });
-    });
-
-    promise
-      .then((arr) => {
-        console.log(arr);
-        setSummRankInfo(arr);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+    );
+
+    setSummRankInfo(newArr);
   };
 
   useEffect(() => {
@@ -96,9 +90,7 @@ const Ingame = () => {
         summonerRank(ingameResult.data.participants);
       }
 
-      setTimeout(() => {
-        setLoading(false);
-      }, 850);
+      setLoading(false);
     };
 
     setLoading(true);
@@ -115,8 +107,8 @@ const Ingame = () => {
             <Fragment>
               <div className="ingame-status">
                 <div id="game-detail">
-                  <div id="game-detail-type">{util.gameType(ingameInfo.data.gameQueueConfigId)}</div>
-                  <div id="game-detail-map">{util.mapType(ingameInfo.data.mapId)}</div>
+                  <div id="game-detail-type">{resourceUtil.gameType(ingameInfo.data.gameQueueConfigId)}</div>
+                  <div id="game-detail-map">{resourceUtil.mapType(ingameInfo.data.mapId)}</div>
                 </div>
                 <div id="now-gaming">게임중입니다</div>
               </div>
@@ -164,10 +156,10 @@ const Ingame = () => {
                             <td className="ingame-tb-spell">
                               <div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={util.summonerSpellImg(value.spell1Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell1Id)}></img>
                                 </div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={util.summonerSpellImg(value.spell2Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell2Id)}></img>
                                 </div>
                               </div>
                             </td>
@@ -178,16 +170,16 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={util.rankEmblem2(value.rank.tier)}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2(value.rank.tier)}></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
-                                  <div>{util.tier(value.rank.tier, value.rank.rank)}</div>
+                                  <div>{calcUtil.tier(value.rank.tier, value.rank.rank)}</div>
                                   <div>{value.rank.leaguePoints} LP</div>
                                 </td>
                                 <td className="ingame-tb-winrate">
                                   <div>
-                                    {value.rank.wins} W {value.rank.losses} L ({util.winRate(value.rank.wins, value.rank.losses)} % )
+                                    {value.rank.wins} W {value.rank.losses} L ({calcUtil.winRate(value.rank.wins, value.rank.losses)} % )
                                   </div>
                                 </td>
                               </Fragment>
@@ -195,7 +187,7 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={util.rankEmblem2("UNRANKED")}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2("UNRANKED")}></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
@@ -242,10 +234,10 @@ const Ingame = () => {
                             <td className="ingame-tb-spell">
                               <div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={util.summonerSpellImg(value.spell1Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell1Id)}></img>
                                 </div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={util.summonerSpellImg(value.spell2Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell2Id)}></img>
                                 </div>
                               </div>
                             </td>
@@ -256,16 +248,16 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={util.rankEmblem2(value.rank.tier)}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2(value.rank.tier)}></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
-                                  <div>{util.tier(value.rank.tier, value.rank.rank)}</div>
+                                  <div>{calcUtil.tier(value.rank.tier, value.rank.rank)}</div>
                                   <div>{value.rank.leaguePoints} LP</div>
                                 </td>
                                 <td className="ingame-tb-winrate">
                                   <div>
-                                    {value.rank.wins} W {value.rank.losses} L ({util.winRate(value.rank.wins, value.rank.losses)} % )
+                                    {value.rank.wins} W {value.rank.losses} L ({calcUtil.winRate(value.rank.wins, value.rank.losses)} % )
                                   </div>
                                 </td>
                               </Fragment>
@@ -273,7 +265,7 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={util.rankEmblem2("UNRANKED")}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2("UNRANKED")}></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">

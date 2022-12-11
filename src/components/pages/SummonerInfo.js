@@ -2,7 +2,8 @@ import { Fragment, React, useEffect, useState, createContext } from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading.js";
-import util from "util/util.js";
+import resourceUtil from "util/resourceUtil.js";
+import calcUtil from "util/calcUtil.js";
 
 export const SummonerInfoContext = createContext({});
 
@@ -15,6 +16,7 @@ const ResultPage = () => {
   const [flexLeagueInfo, setFlexLeagueInfo] = useState({});
   const [historyInfo, setHistoryInfo] = useState([]);
   const [champMasteryInfo, setChampMasteryInfo] = useState([]);
+  const [rankCount, setRankCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const updateHistory = async () => {
@@ -42,6 +44,76 @@ const ResultPage = () => {
     alert("갱신되었습니다");
   };
 
+  const showMatchHistory = () => {
+    const data = historyInfo.map((game, idx) => {
+      let myData = {};
+      let vod = {};
+      const gameData = game.gameData;
+
+      const gameType = resourceUtil.gameType(gameData.queueId);
+      const gameDuration = calcUtil.timeCalc(gameData.gameDuration);
+
+      for (let participantRaw of game.participantData) {
+        const participant = participantRaw.value;
+
+        if (participant.summonerName === summonerInfo.name) {
+          myData = participant;
+
+          if (gameData.gameDuration <= 300) {
+            vod.eng = "draw";
+            vod.kor = "다시하기";
+          } else if (myData.win === true) {
+            vod.eng = "win";
+            vod.kor = "승리";
+          } else {
+            vod.eng = "lose";
+            vod.kor = "패배";
+          }
+        }
+      }
+
+      return (
+        <div className={vod.eng} key={idx}>
+          <div className="history-summ-1">
+            <div className="history-summ-1-vod">{vod.kor}</div>
+            <div className="history-summ-1-game">{gameType}</div>
+            <div className="history-summ-1-passed">{calcUtil.passedTimeFromNow(gameData.gameEndTimestamp)}</div>
+            <div className="history-summ-1-duration">
+              {gameDuration.hour !== 0 ? (
+                <div>
+                  {gameDuration.hour}시간 {gameDuration.min}분 {gameDuration.sec}초
+                </div>
+              ) : (
+                <div>
+                  {gameDuration.min}분 {gameDuration.sec}초
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="history-summ-2">
+            <div className="history-summ-2-1">
+              <div>
+                <img className="history-summ-2-1-img-1" src={resourceUtil.champSquareImg(resourceUtil.champNumToName(myData.championId), resourceUtil.ddragonVersion())}></img>
+              </div>
+              <div className="spell-box">
+                <div className="spell-box-1">
+                  <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner1Id)}></img>
+                </div>
+                <div className="spell-box-1">
+                  <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner2Id)}></img>
+                </div>
+              </div>
+            </div>
+            {/* TODO: 인게임 구현 */}
+          </div>
+          <div className="history-summ-3"></div>
+          <div className="history-summ-4"></div>
+        </div>
+      );
+    });
+    return <div>{data}</div>;
+  };
+
   const goToMain = () => {
     navigate(`/summoner/${summonerName}`);
   };
@@ -55,25 +127,12 @@ const ResultPage = () => {
     navigate(`/summoner/${summonerName}/ingame`);
   };
 
-  const getImage = (category, code) => {
-    const ddragonVersion = util.ddragonVersion();
-    return `http://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/${category}/${code}.png`;
-  };
-
   const getChampName = (num) => {
     if (champMasteryInfo.length <= num) {
       return null;
     }
 
-    return util.champNumToName(champMasteryInfo[num].championId);
-  };
-
-  const getChampImage = (name) => {
-    if (name === null) {
-      return `${process.env.PUBLIC_URL}/images/question_mark.jpeg`;
-    }
-
-    return `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${name}_0.jpg`;
+    return resourceUtil.champNumToName(champMasteryInfo[num].championId);
   };
 
   useEffect(() => {
@@ -104,7 +163,7 @@ const ResultPage = () => {
         .all([
           axios.post("/api/masteryV4", { encryptedSummonerId: infoResult.data[0].id }),
           axios.post("/api/leagueV4", { encryptedSummonerId: infoResult.data[0].id }),
-          axios.post("/api/matchV5", { puuid: infoResult.data[0].puuid, start: 0, count: 10 }),
+          axios.post("/api/matchV5", { puuid: infoResult.data[0].puuid, start: 0, end: 100, count: rankCount }),
         ])
         .then(
           axios.spread((champResultRaw, rankResultRaw, historyInfoRaw) => {
@@ -112,7 +171,7 @@ const ResultPage = () => {
             const champResult = champResultRaw.data;
             const historyInfo = historyInfoRaw.data;
 
-            util.asc(historyInfo.data);
+            calcUtil.asc(historyInfo.data);
             console.log(historyInfo.data);
 
             setChampMasteryInfo(champResult.data);
@@ -169,48 +228,48 @@ const ResultPage = () => {
                 <div id="summoner">
                   <div id="summoner-info">
                     <div className="summoner-detail">
-                      <img id="profile-icon" src={getImage("profileicon", summonerInfo.profileIconId)} alt="profile"></img>
+                      <img id="profile-icon" src={resourceUtil.profileIconImg(summonerInfo.profileIconId, resourceUtil.ddragonVersion())} alt="profile"></img>
                       <div>{summonerInfo.name}</div>
                       <div>Level {summonerInfo.summonerLevel}</div>
                     </div>
                     <div className="summoner-detail">
                       <div>솔로랭크</div>
-                      <img className="rank-emblem" src={util.rankEmblem1(soloLeagueInfo.tier)} alt="rank emblem"></img>
+                      <img className="rank-emblem" src={resourceUtil.rankEmblem1(soloLeagueInfo.tier)} alt="rank emblem"></img>
                       {soloLeagueInfo.tier === "UNRANKED" ? (
-                        <div className="rank-emblem-unranked">{soloLeagueInfo.tier}</div>
+                        <div>{soloLeagueInfo.tier}</div>
                       ) : (
                         <Fragment>
-                          <div>{util.tier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</div>
+                          <div>{calcUtil.tier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</div>
                           <div>{soloLeagueInfo.leaguePoints}LP</div>
                           <div className="outcome">
                             <div className="outcome-win">{soloLeagueInfo.wins}W </div>
                             <div className="outcome-lose">{soloLeagueInfo.losses}L</div>
                           </div>
-                          <div>승률 {util.winRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
+                          <div>승률 {calcUtil.winRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
                         </Fragment>
                       )}
                     </div>
                     <div className="summoner-detail">
                       <div>자유랭크</div>
-                      <img className="rank-emblem" src={util.rankEmblem1(flexLeagueInfo.tier)} alt="rank emblem"></img>
+                      <img className="rank-emblem" src={resourceUtil.rankEmblem1(flexLeagueInfo.tier)} alt="rank emblem"></img>
                       {flexLeagueInfo.tier === "UNRANKED" ? (
-                        <div className="rank-emblem-unranked">{flexLeagueInfo.tier}</div>
+                        <div>{flexLeagueInfo.tier}</div>
                       ) : (
                         <Fragment>
-                          <div>{util.tier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</div>
+                          <div>{calcUtil.tier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</div>
                           <div>{flexLeagueInfo.leaguePoints}LP</div>
                           <div className="outcome">
                             <div className="outcome-win">{flexLeagueInfo.wins}W</div>
                             <div className="outcome-lose">{flexLeagueInfo.losses}L</div>
                           </div>
-                          <div>승률 {util.winRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
+                          <div>승률 {calcUtil.winRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
                         </Fragment>
                       )}
                     </div>
                   </div>
                   <div id="summoner-champ">
                     <div className="champ-mastery">
-                      <img className="champ-mastery-img1" src={getChampImage(getChampName(1))} alt="champion"></img>
+                      <img className="champ-mastery-img1" src={resourceUtil.champImg(getChampName(1))} alt="champion"></img>
                       <div className="champ-mastery-info">
                         {champMasteryInfo[1] !== undefined ? (
                           <Fragment>
@@ -224,7 +283,7 @@ const ResultPage = () => {
                       </div>
                     </div>
                     <div className="champ-mastery">
-                      <img className="champ-mastery-img2" src={getChampImage(getChampName(0))} alt="champion"></img>
+                      <img className="champ-mastery-img2" src={resourceUtil.champImg(getChampName(0))} alt="champion"></img>
                       <div className="champ-mastery-info">
                         {champMasteryInfo[0] !== undefined ? (
                           <Fragment>
@@ -238,7 +297,7 @@ const ResultPage = () => {
                       </div>
                     </div>
                     <div className="champ-mastery">
-                      <img className="champ-mastery-img1" src={getChampImage(getChampName(2))} alt="champion"></img>
+                      <img className="champ-mastery-img1" src={resourceUtil.champImg(getChampName(2))} alt="champion"></img>
                       <div className="champ-mastery-info">
                         {champMasteryInfo[2] !== undefined ? (
                           <Fragment>
@@ -254,9 +313,11 @@ const ResultPage = () => {
                   </div>
                 </div>
                 <div id="match">
-                  {historyInfo.map((game, idx) => {
-                    return <div key={idx}>{game.gameData.gameDuration}</div>;
-                  })}
+                  <div id="match-statistic">게임통계</div>
+                  <div id="match-history">{showMatchHistory()}</div>
+                  <div id="match-add">
+                    <button id="btn-match-add">+</button>
+                  </div>
                 </div>
               </Fragment>
             )}

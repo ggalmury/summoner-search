@@ -14,15 +14,14 @@
 
 #summoner {
   display: flex;
-  flex-grow: 1;
-  height: 350px;
+  justify-content: center;
 
   &-info {
     @include infoBox;
+    justify-content: center;
 
     display: flex;
-    width: 100px;
-    flex-grow: 1;
+    width: 600px;
     height: 250px;
   }
 
@@ -31,10 +30,11 @@
     @include infoBox;
 
     display: flex;
-    flex-grow: 1;
     height: 250px;
 
     .champ-mastery {
+      width: 200px;
+
       &-img1 {
         @include champMasteryImg(70px);
       }
@@ -53,7 +53,7 @@
 .summoner-detail {
   @include centering;
 
-  width: 40%;
+  width: 100px;
   padding: 20px;
   margin-inline: 20px;
   font-size: 1em;
@@ -65,12 +65,8 @@
   }
 
   .rank-emblem {
-    width: 80px;
-    border: 40px gray;
-  }
-
-  .rank-emblem-unranked {
-    margin-top: 10px;
+    width: 90px;
+    height: 100px;
   }
 
   .outcome {

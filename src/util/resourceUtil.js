@@ -3,6 +3,18 @@ module.exports = {
     return "12.23.1";
   },
 
+  profileIconImg: (code, version) => {
+    return `http://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${code}.png`;
+  },
+
+  champImg: (name) => {
+    if (name === null) {
+      return `${process.env.PUBLIC_URL}/images/question_mark.jpeg`;
+    }
+
+    return `http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${name}_0.jpg`;
+  },
+
   champSquareImg: (name, version) => {
     if (name === undefined) {
       return undefined;
@@ -19,26 +31,9 @@ module.exports = {
     return `${process.env.PUBLIC_URL}/images/rank_emblems2/${tier}.png`;
   },
 
-  tier: (tier, rank) => {
-    return tier + " " + rank;
-  },
-
-  asc: (arr) => {
-    arr.sort((a, b) => {
-      a = a.gameData.gameStartTimestamp;
-      b = b.gameData.gameStartTimestamp;
-      if (a < b) return 1;
-      if (a > b) return -1;
-
-      return 0;
-    });
-  },
-
   mainPerkImg: (id) => {
     let perkName = "";
     let perkStyle = "";
-
-    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkStyle}/${perkName}/${perkName}.png`;
 
     switch (id) {
       case 8005:
@@ -110,9 +105,10 @@ module.exports = {
         perkStyle = "Resolve";
         break;
       default:
-        url = undefined;
-        break;
+        return undefined;
     }
+
+    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkStyle}/${perkName}/${perkName}.png`;
 
     return url;
   },
@@ -120,8 +116,6 @@ module.exports = {
   subPerkImg: (id) => {
     let perkNum = 0;
     let perkStyle = "";
-
-    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkNum}_${perkStyle}.png`;
 
     switch (id) {
       case 8000:
@@ -145,17 +139,16 @@ module.exports = {
         perkStyle = "Resolve";
         break;
       default:
-        url = undefined;
-        break;
+        return undefined;
     }
+
+    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkNum}_${perkStyle}.png`;
 
     return url;
   },
 
   summonerSpellImg: (spellId) => {
     let spellName = "";
-
-    let url = `${process.env.PUBLIC_URL}/images/summoner_spells/summoner_${spellName}.png`;
 
     switch (spellId) {
       case 1:
@@ -192,15 +185,12 @@ module.exports = {
         spellName = "mark";
         break;
       default:
-        url = undefined;
-        break;
+        return undefined;
     }
 
-    return url;
-  },
+    let url = `${process.env.PUBLIC_URL}/images/summoner_spells/summoner_${spellName}.png`;
 
-  winRate: (win, lose) => {
-    return Math.round((win / (win + lose)) * 100);
+    return url;
   },
 
   gameType: (gameId) => {
@@ -213,7 +203,7 @@ module.exports = {
       case 420:
         game = "개인/2인 랭크 게임";
         break;
-      case 420:
+      case 430:
         game = "일반 게임";
         break;
       case 440:
