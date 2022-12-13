@@ -1,5 +1,13 @@
 #footer {
-  height: 200px;
+  height: 170px;
   background-color: rgba(0, 0, 0, 0.39);
   margin-top: auto;
 }
+
+// @include mobile {
+//   #footer {
+//     height: 200px;
+//     background-color: rgba(0, 0, 0, 0.39);
+//     margin-top: auto;
+//   }
+// }

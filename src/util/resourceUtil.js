@@ -32,83 +32,101 @@ module.exports = {
   },
 
   mainPerkImg: (id) => {
-    let perkName = "";
+    let perkName1 = "";
+    let perkName2 = "";
     let perkStyle = "";
 
     switch (id) {
       case 8005:
-        perkName = "PressTheAttack";
+        perkName1 = "PressTheAttack";
+        perkName2 = "PressTheAttack";
         perkStyle = "Precision";
         break;
       case 8008:
-        perkName = "LethalTempo";
+        perkName1 = "LethalTempo";
+        perkName2 = "LethalTempoTemp";
         perkStyle = "Precision";
         break;
       case 8010:
-        perkName = "Conqueror";
+        perkName1 = "Conqueror";
+        perkName2 = "Conqueror";
         perkStyle = "Precision";
         break;
       case 8021:
-        perkName = "FleetFootwork";
+        perkName1 = "FleetFootwork";
+        perkName2 = "FleetFootwork";
         perkStyle = "Precision";
         break;
       case 8112:
-        perkName = "Electrocute";
+        perkName1 = "Electrocute";
+        perkName2 = "Electrocute";
         perkStyle = "Domination";
         break;
       case 8124:
-        perkName = "Predator";
+        perkName1 = "Predator";
+        perkName2 = "Predator";
         perkStyle = "Domination";
         break;
       case 8128:
-        perkName = "DarkHarvest";
+        perkName1 = "DarkHarvest";
+        perkName2 = "DarkHarvest";
         perkStyle = "Domination";
         break;
       case 9923:
-        perkName = " HailOfBlades";
+        perkName1 = "HailOfBlades";
+        perkName2 = "HailOfBlades";
         perkStyle = "Domination";
         break;
       case 8214:
-        perkName = "SummonAery";
+        perkName1 = "SummonAery";
+        perkName2 = "SummonAery";
         perkStyle = "Sorcery";
         break;
       case 8229:
-        perkName = "ArcaneComet";
+        perkName1 = "ArcaneComet";
+        perkName2 = "ArcaneComet";
         perkStyle = "Sorcery";
         break;
       case 8230:
-        perkName = " PhaseRush";
+        perkName1 = "PhaseRush";
+        perkName2 = "PhaseRush";
         perkStyle = "Sorcery";
         break;
       case 8351:
-        perkName = "GlacialAugment";
+        perkName1 = "GlacialAugment";
+        perkName2 = "GlacialAugment";
         perkStyle = "Inspiration";
         break;
       case 8360:
-        perkName = "UnsealedSpellbook";
+        perkName1 = "UnsealedSpellbook";
+        perkName2 = "UnsealedSpellbook";
         perkStyle = "Inspiration";
         break;
       case 8369:
-        perkName = " FirstStrike";
+        perkName1 = "FirstStrike";
+        perkName2 = "FirstStrike";
         perkStyle = "Inspiration";
         break;
       case 8437:
-        perkName = "GraspOfTheUndying";
+        perkName1 = "GraspOfTheUndying";
+        perkName2 = "GraspOfTheUndying";
         perkStyle = "Resolve";
         break;
       case 8439:
-        perkName = "Aftershock";
+        perkName1 = "VeteranAftershock";
+        perkName2 = "VeteranAftershock";
         perkStyle = "Resolve";
         break;
       case 8465:
-        perkName = "Guardian";
+        perkName1 = "Guardian";
+        perkName2 = "Guardian";
         perkStyle = "Resolve";
         break;
       default:
         return undefined;
     }
 
-    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkStyle}/${perkName}/${perkName}.png`;
+    let url = `https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/${perkStyle}/${perkName1}/${perkName2}.png`;
 
     return url;
   },

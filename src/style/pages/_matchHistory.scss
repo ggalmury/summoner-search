@@ -1,15 +1,14 @@
 #match {
   &-statistic {
-    background-color: green;
+    background-color: white;
   }
 
   &-history {
     display: flex;
-    background-color: rgb(137, 137, 137);
     justify-content: center;
 
     .win {
-      @include matchBox($blue);
+      @include matchBox($blue, $width: 1000px, $height: 120px);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -18,7 +17,7 @@
     }
 
     .lose {
-      @include matchBox($red);
+      @include matchBox($red, $width: 1000px, $height: 120px);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -27,7 +26,7 @@
     }
 
     .draw {
-      @include matchBox($gray);
+      @include matchBox($gray, $width: 1000px, $height: 120px);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -39,7 +38,7 @@
       &-1 {
         display: flex;
         flex-direction: column;
-        width: 120px;
+        width: 150px;
 
         &-game {
           font-size: 0.85em;
@@ -59,29 +58,16 @@
 
       &-2 {
         display: flex;
-        width: 250px;
+        width: 120px;
         height: 100%;
-        // background-color: yellow;
 
         &-1 {
           @include centering;
 
           display: flex;
           flex-direction: column;
-          width: 100px;
+          width: 80px;
           //   background-color: green;
-
-          &-img-1 {
-            width: 60px;
-            height: 60px;
-            border-radius: $border-rad1;
-          }
-
-          &-img-2 {
-            width: 27px;
-            height: 27px;
-            border-radius: $border-rad1;
-          }
 
           .spell-box {
             display: flex;
@@ -91,10 +77,65 @@
               padding: 3px;
             }
           }
+
+          &-img-1 {
+            @include square(60px);
+            border-radius: $border-rad1;
+          }
+
+          &-img-2 {
+            @include square(27px);
+            border-radius: $border-rad1;
+          }
+        }
+
+        &-2 {
+          display: flex;
+          flex-direction: column;
+          width: 30px;
+          margin-top: 10px;
+          align-items: center;
+
+          .rune-box-1 {
+            @include square(30px);
+
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: black;
+            margin-bottom: 2px;
+          }
+
+          .rune-box-2 {
+            @include square(25px);
+
+            border-radius: 20px;
+            overflow: hidden;
+            background-color: black;
+            margin-top: 2px;
+          }
+
+          &-img-1 {
+            @include square(27px);
+
+            margin-top: 1px;
+          }
+
+          &-img-2 {
+            @include square(15px);
+
+            margin-top: 5px;
+          }
         }
       }
 
       &-3 {
+        display: flex;
+        flex-direction: column;
+        width: 120px;
+
+        .d {
+          color: $red;
+        }
       }
 
       &-4 {
@@ -110,3 +151,118 @@
     background-color: white;
   }
 }
+
+// @include mobile {
+//   #match {
+//     &-statistic {
+//       background-color: green;
+//     }
+
+//     &-history {
+//       display: flex;
+//       background-color: rgb(137, 137, 137);
+//       justify-content: center;
+
+//       .win {
+//         @include matchBox($blue, $width: 365px, $height: 80px);
+
+//         .history-summ-1-vod {
+//           font-size: 1.2em;
+//           color: $blue;
+//         }
+//       }
+
+//       .lose {
+//         @include matchBox($red, $width: 365px, $height: 80px);
+
+//         .history-summ-1-vod {
+//           font-size: 1.2em;
+//           color: $red;
+//         }
+//       }
+
+//       .draw {
+//         @include matchBox($gray, $width: 365px, $height: 80px);
+
+//         .history-summ-1-vod {
+//           font-size: 1.2em;
+//           color: $gray;
+//         }
+//       }
+
+//       .history-summ {
+//         &-1 {
+//           display: flex;
+//           flex-direction: column;
+//           width: 120px;
+
+//           &-game {
+//             font-size: 0.85em;
+//             line-height: 30px;
+//           }
+
+//           &-passed {
+//             font-size: 0.9em;
+//             line-height: 20px;
+//           }
+
+//           &-duration {
+//             font-size: 0.9em;
+//             line-height: 20px;
+//           }
+//         }
+
+//         &-2 {
+//           display: flex;
+//           width: 250px;
+//           height: 100%;
+//           // background-color: yellow;
+
+//           &-1 {
+//             @include centering;
+
+//             display: flex;
+//             flex-direction: column;
+//             width: 100px;
+//             //   background-color: green;
+
+//             &-img-1 {
+//               width: 60px;
+//               height: 60px;
+//               border-radius: $border-rad1;
+//             }
+
+//             &-img-2 {
+//               width: 27px;
+//               height: 27px;
+//               border-radius: $border-rad1;
+//             }
+
+//             .spell-box {
+//               display: flex;
+//               flex-direction: row;
+
+//               &-1 {
+//                 padding: 3px;
+//               }
+//             }
+//           }
+//         }
+
+//         &-3 {
+//         }
+
+//         &-4 {
+//         }
+//       }
+//     }
+
+//     &-add {
+//       @include centering;
+
+//       display: flex;
+//       height: 70px;
+//       background-color: white;
+//     }
+//   }
+// }

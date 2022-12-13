@@ -3,85 +3,283 @@
 
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
+  background-color: $sub-color2;
 }
 
 #content-box {
-  display: flex;
-  flex-direction: column;
-  width: 1300px;
-  background-color: $sub-color2;
+  width: 1210px;
 }
 
 #summoner {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  background-color: transparent;
 
-  &-info {
+  &-info1 {
     @include infoBox;
-    justify-content: center;
 
     display: flex;
-    width: 600px;
-    height: 250px;
+    flex-direction: column;
+    height: 220px;
+    border: none;
+    background-color: $main-color;
+    margin-top: 15px;
   }
 
-  &-champ {
-    @include centering;
+  &-info2 {
     @include infoBox;
 
     display: flex;
-    height: 250px;
+    width: 100%;
+    height: 300px;
+    border: none;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    justify-content: center;
+    background-color: transparent;
 
-    .champ-mastery {
-      width: 200px;
+    &-rank {
+      @include infoBox;
 
-      &-img1 {
-        @include champMasteryImg(70px);
-      }
+      display: flex;
+      flex-direction: column;
+      margin-right: 15px;
+    }
 
-      &-img2 {
-        @include champMasteryImg(90px);
-      }
+    &-champ {
+      @include centering;
+      @include infoBox;
 
-      &-info {
-        width: 100%;
+      display: flex;
+      flex-grow: 1;
+
+      .champ-mastery {
+        width: 200px;
+        margin-top: 15px;
+
+        &-img1 {
+          @include champMasteryImg(70px);
+        }
+
+        &-img2 {
+          @include champMasteryImg(90px);
+        }
+
+        &-info {
+          width: 100%;
+        }
       }
     }
   }
 }
 
 .summoner-detail {
-  @include centering;
-
-  width: 100px;
-  padding: 20px;
-  margin-inline: 20px;
+  display: flex;
+  width: 700px;
+  height: 100px;
   font-size: 1em;
+  align-items: center;
+  padding: 35px;
 
-  #profile-icon {
-    width: 100%;
-    border-radius: 100px;
-    border: $image-box-gold;
+  .profile-icon-box {
+    @include square(110px);
+
+    margin-left: 25px;
+    border-radius: 20px;
+    overflow: hidden;
+
+    #profile-icon {
+      @include square(110px);
+    }
   }
 
-  .rank-emblem {
-    width: 90px;
-    height: 100px;
-  }
-
-  .outcome {
-    @include centering;
+  .profile-info-box {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    height: 80px;
+    margin-left: 35px;
+    text-align: left;
 
-    &-win {
-      color: $blue;
-      margin-right: 5px;
+    &-1 {
+      font-size: 1.6em;
+      line-height: 10px;
     }
 
-    &-lose {
-      color: $red;
-      margin-left: 5px;
+    &-2 {
+      font-size: 1em;
+      line-height: 50px;
+    }
+
+    &-3 {
+      font-size: 1.3em;
+      line-height: 20px;
     }
   }
 }
+
+.summoner-rank-detail {
+  display: flex;
+  flex-grow: 1;
+  width: 450px;
+  align-items: center;
+
+  .rank-icon-box {
+    margin-left: 43px;
+
+    .rank-emblem {
+      @include square(80px);
+    }
+  }
+
+  .rank-info-box {
+    @include centering;
+
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-left: 20px;
+
+    &-unranked {
+      font-size: 1.3em;
+    }
+
+    &-1 {
+      font-size: 1em;
+    }
+
+    &-2 {
+      font-size: 1.3em;
+    }
+
+    &-3 {
+      font-size: 1em;
+      line-height: 40px;
+    }
+
+    &-4 {
+      @include centering;
+      display: flex;
+      flex-direction: row;
+      font-size: 1em;
+
+      &-1 {
+        color: $blue;
+        margin-right: 5px;
+        font-size: 0.8em;
+      }
+
+      &-2 {
+        color: $red;
+        margin-left: 5px;
+        font-size: 0.8em;
+      }
+    }
+
+    &-5 {
+      font-size: 1em;
+      line-height: 30px;
+      font-size: 0.8em;
+    }
+  }
+
+  &:last-child {
+    border-top: 2px solid black;
+  }
+}
+
+// @include mobile {
+//   #article {
+//     @include centering;
+
+//     display: flex;
+//     flex-direction: column;
+//   }
+
+//   #content-box {
+//     display: flex;
+//     flex-direction: column;
+//     width: 470px;
+//     background-color: $sub-color2;
+//   }
+
+//   #summoner {
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+
+//     &-info {
+//       @include infoBox;
+
+//       display: flex;
+//       width: 464px;
+//       height: 200px;
+//     }
+
+//     &-champ {
+//       @include infoBox;
+
+//       display: flex;
+//       width: 464px;
+
+//       .champ-mastery {
+//         @include centering;
+
+//         display: flex;
+//         flex-direction: column;
+//         width: 100px;
+//         flex-grow: 1;
+
+//         &-img1 {
+//           @include champMasteryImg(70px);
+//         }
+
+//         &-img2 {
+//           @include champMasteryImg(80px);
+//         }
+
+//         &-info {
+//           display: flex;
+//           flex-direction: column;
+//           font-size: 0.4em;
+//         }
+//       }
+//     }
+//   }
+
+//   .summoner-detail {
+//     @include centering;
+
+//     display: flex;
+//     flex-direction: column;
+//     width: 100px;
+//     font-size: 0.7em;
+
+//     #profile-icon {
+//       width: 70px;
+//       border: $image-box-gold;
+//     }
+
+//     .rank-emblem {
+//       width: 90px;
+//       height: 100px;
+//     }
+
+//     .outcome {
+//       @include centering;
+//       display: flex;
+//       flex-direction: row;
+
+//       &-win {
+//         color: $blue;
+//         margin-right: 5px;
+//       }
+
+//       &-lose {
+//         color: $red;
+//         margin-left: 5px;
+//       }
+//     }
+//   }
+// }

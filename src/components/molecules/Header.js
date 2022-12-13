@@ -27,12 +27,18 @@ const Header = () => {
   return (
     <div id="header">
       <div id="web-title" onClick={goToMain}>
-        ZzangGa.GG
+        WARD.GG
       </div>
-      <input id="summoner-id-search" placeholder="info" value={summonerName} onChange={searchUserName}></input>
-      <button className="btn-search" onClick={userData}>
-        검색
-      </button>
+      <div id="search-box">
+        <div>
+          <input id="summoner-id-search" placeholder="소환사명 입력" value={summonerName} onChange={searchUserName}></input>
+        </div>
+        <div>
+          <button className="btn-search" onClick={userData}>
+            검색
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

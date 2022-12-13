@@ -1,4 +1,12 @@
 #nav {
-  height: 50px;
-  background-color: rgba(152, 152, 152, 0.358);
+  display: flex;
+  height: 100%;
+  background-color: white;
 }
+
+// @include mobile {
+//   #nav {
+//     height: 50px;
+//     background-color: rgba(152, 152, 152, 0.358);
+//   }
+// }

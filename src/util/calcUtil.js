@@ -14,6 +14,16 @@ module.exports = {
     });
   },
 
+  kdaRate: (k, d, a) => {
+    let kda = (k + a) / d;
+
+    if (d === 0) {
+      kda = 0;
+    }
+
+    return kda.toFixed(2);
+  },
+
   winRate: (win, lose) => {
     return Math.round((win / (win + lose)) * 100);
   },
