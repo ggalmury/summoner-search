@@ -220,9 +220,7 @@ const Ingame = () => {
                         </th>
                       </tr>
                       {summRankInfo.map((value, idx) => {
-                        if (idx < 5) {
-                          return;
-                        }
+                        if (idx < 5) return;
 
                         return (
                           <tr className="ingame-tb-tr2" key={idx}>
@@ -283,9 +281,7 @@ const Ingame = () => {
                   </table>
                   <div className="banned-champ-list">
                     {bannedChampImg.map((value, idx) => {
-                      if (idx < 5) {
-                        return;
-                      }
+                      if (idx < 5) return;
 
                       return (
                         <div className="banned-champ" key={idx}>

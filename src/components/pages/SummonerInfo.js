@@ -4,6 +4,7 @@ import axios from "axios";
 import Loading from "./Loading.js";
 import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
+import MatchHistoy from "./MatchHistoy.js";
 
 export const SummonerInfoContext = createContext({});
 
@@ -44,87 +45,90 @@ const ResultPage = () => {
     alert("갱신되었습니다");
   };
 
-  const showMatchHistory = () => {
-    console.log(historyInfo);
-    const data = historyInfo.map((game, idx) => {
-      let myData = {};
-      let vod = {};
+  const convertHistoryInfo = (history) => {
+    let convertResult = [];
+
+    history.forEach((game, idx) => {
       const gameData = game.gameData;
 
-      const gameType = resourceUtil.gameType(gameData.queueId);
-      const gameDuration = calcUtil.timeCalc(gameData.gameDuration);
+      let blueTeam = {};
+      let redTeam = {};
+
+      let blueTeamParticipant = [];
+      let redTeamParticipant = [];
+
+      let blueTeamStatistic = {
+        totalKill: 0,
+        totalDeath: 0,
+        totalAssist: 0,
+
+        totalBaronKills: 0,
+        totalDargonKills: 0,
+        totalTurretKills: 0,
+
+        totalDamageDealt: 0,
+        totalDamageTaken: 0,
+
+        totalGold: 0,
+        totalMinionKill: 0,
+      };
+
+      let redTeamStatistic = {
+        totalKill: 0,
+        totalDeath: 0,
+        totalAssist: 0,
+
+        totalBaronKills: 0,
+        totalDargonKills: 0,
+        totalTurretKills: 0,
+
+        totalDamageDealt: 0,
+        totalDamageTaken: 0,
+
+        totalGold: 0,
+        totalMinionKill: 0,
+      };
 
       for (let participant of game.participantData) {
-        if (participant.summonerName === summonerInfo.name) {
-          myData = participant;
+        if (participant.teamId === 100) {
+          blueTeamParticipant.push(participant);
 
-          if (gameData.gameDuration <= 300) {
-            vod.eng = "draw";
-            vod.kor = "다시하기";
-          } else if (myData.win === true) {
-            vod.eng = "win";
-            vod.kor = "승리";
-          } else {
-            vod.eng = "lose";
-            vod.kor = "패배";
-          }
+          blueTeamStatistic.totalKill += participant.kills;
+          blueTeamStatistic.totalDeath += participant.deaths;
+          blueTeamStatistic.totalAssist += participant.assists;
+          blueTeamStatistic.totalBaronKills += participant.baronKills;
+          blueTeamStatistic.totalDargonKills += participant.dragonKills;
+          blueTeamStatistic.totalTurretKills += participant.turretKills;
+          blueTeamStatistic.totalDamageDealt += participant.totalDamageDealtToChampions;
+          blueTeamStatistic.totalDamageTaken += participant.totalDamageTaken;
+          blueTeamStatistic.totalGold += participant.goldEarned;
+          blueTeamStatistic.totalMinionKill += participant.totalMinionsKilled;
+        } else {
+          redTeamParticipant.push(participant);
+
+          redTeamStatistic.totalKill += participant.kills;
+          redTeamStatistic.totalDeath += participant.deaths;
+          redTeamStatistic.totalAssist += participant.assists;
+          redTeamStatistic.totalBaronKills += participant.baronKills;
+          redTeamStatistic.totalDargonKills += participant.dragonKills;
+          redTeamStatistic.totalTurretKills += participant.turretKills;
+          redTeamStatistic.totalDamageDealt += participant.totalDamageDealtToChampions;
+          redTeamStatistic.totalDamageTaken += participant.totalDamageTaken;
+          redTeamStatistic.totalGold += participant.goldEarned;
+          redTeamStatistic.totalMinionKill += participant.totalMinionsKilled;
         }
       }
 
-      return (
-        <div className={vod.eng} key={idx}>
-          <div className="history-summ-1">
-            <div className="history-summ-1-vod">{vod.kor}</div>
-            <div className="history-summ-1-game">{gameType}</div>
-            <div className="history-summ-1-passed">{calcUtil.passedTimeFromNow(gameData.gameEndTimestamp)}</div>
-            <div className="history-summ-1-duration">
-              {gameDuration.hour !== 0 ? (
-                <div>
-                  {gameDuration.hour}시간 {gameDuration.min}분 {gameDuration.sec}초
-                </div>
-              ) : (
-                <div>
-                  {gameDuration.min}분 {gameDuration.sec}초
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="history-summ-2">
-            <div className="history-summ-2-1">
-              <div>
-                <img className="history-summ-2-1-img-1" src={resourceUtil.champSquareImg(resourceUtil.champNumToName(myData.championId), resourceUtil.ddragonVersion())}></img>
-              </div>
-              <div className="spell-box">
-                <div className="spell-box-1">
-                  <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner1Id)}></img>
-                </div>
-                <div className="spell-box-1">
-                  <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner2Id)}></img>
-                </div>
-              </div>
-            </div>
-            <div className="history-summ-2-2">
-              <div className="rune-box-1">
-                <img className="history-summ-2-2-img-1" src={resourceUtil.mainPerkImg(myData.perksMain)}></img>
-              </div>
-              <div className="rune-box-2">
-                <img className="history-summ-2-2-img-2" src={resourceUtil.subPerkImg(myData.perksSub)}></img>
-              </div>
-            </div>
-          </div>
-          {/* k/d/a */}
-          <div className="history-summ-3">
-            <div>
-              <span>{myData.kills}</span> / <span className="d">{myData.deaths}</span> / <span>{myData.assists}</span>
-            </div>
-            <div>{calcUtil.kdaRate(myData.kills, myData.deaths, myData.assists)} 평점</div>
-          </div>
-          {/* 아이템 */}
-          <div className="history-summ-4"></div>
-        </div>
-      );
+      blueTeam.participant = blueTeamParticipant;
+      blueTeam.statistic = blueTeamStatistic;
+
+      redTeam.participant = redTeamParticipant;
+      redTeam.statistic = redTeamStatistic;
+
+      convertResult.push({ gameData, blueTeam, redTeam });
     });
-    return <div>{data}</div>;
+
+    setHistoryInfo(convertResult);
   };
 
   const goToMain = () => {
@@ -180,7 +184,7 @@ const ResultPage = () => {
           calcUtil.asc(historyInfo.data);
 
           setChampMasteryInfo(champResult.data);
-          setHistoryInfo(historyInfo.data);
+          convertHistoryInfo(historyInfo.data);
 
           rankResult.data.forEach((rank) => {
             switch (rank.queueType) {
@@ -334,10 +338,11 @@ const ResultPage = () => {
                     </div>
                   </div>
                 </div>
-
                 <div id="match">
                   <div id="match-statistic">게임통계</div>
-                  <div id="match-history">{showMatchHistory()}</div>
+                  <div id="match-history">
+                    <MatchHistoy history={historyInfo} summoner={summonerInfo}></MatchHistoy>
+                  </div>
                   <div id="match-add">
                     <button id="btn-match-add">+</button>
                   </div>

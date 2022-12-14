@@ -204,41 +204,37 @@ router.post("/update", (req, res) => {
     );
   };
 
-  axios
-    .all([axios.get(url1, { headers }), axios.get(url2, { headers })])
-    .then(
-      axios.spread(async (infoResultRaw, rankResultRaw) => {
-        infoResult = [infoResultRaw.data];
-        rankResult = rankResultRaw.data;
-        console.log(rankResult);
+  Promise.allSettled([axios.get(url1, { headers }), axios.get(url2, { headers })])
+    .then((result) => {
+      infoResult = [result[0].value.data];
+      rankResult = result[1].value.data;
 
-        try {
-          util.success(res, [infoResult, rankResult]);
+      try {
+        util.success(res, [infoResult, rankResult]);
 
-          updateSummonerInfoToDB(infoResult[0].profileIconId, infoResult[0].revisionDate, infoResult[0].summonerLevel);
+        updateSummonerInfoToDB(infoResult[0].profileIconId, infoResult[0].revisionDate, infoResult[0].summonerLevel);
 
-          rankResult.forEach((data) => {
-            updateSummonerRankToDB(
-              data.summonerName,
-              data.queueType,
-              data.summonerId,
-              data.leagueId,
-              data.tier,
-              data.rank,
-              data.leaguePoints,
-              data.wins,
-              data.losses,
-              data.hotStreak,
-              data.veteran,
-              data.freshBlood,
-              data.inactive
-            );
-          });
-        } catch (err) {
-          console.log(err);
-        }
-      })
-    )
+        rankResult.forEach((data) => {
+          updateSummonerRankToDB(
+            data.summonerName,
+            data.queueType,
+            data.summonerId,
+            data.leagueId,
+            data.tier,
+            data.rank,
+            data.leaguePoints,
+            data.wins,
+            data.losses,
+            data.hotStreak,
+            data.veteran,
+            data.freshBlood,
+            data.inactive
+          );
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    })
     .catch((err) => {
       console.log(err);
     });

@@ -10,7 +10,7 @@ const Header = () => {
     navigate("/");
   };
 
-  const userData = (event) => {
+  const userData = () => {
     if (summonerName === "") {
       alert("소환사명을 입력하세요.");
       return;
