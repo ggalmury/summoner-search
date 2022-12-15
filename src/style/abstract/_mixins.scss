@@ -39,11 +39,12 @@
   margin-top: 10%;
 }
 
-@mixin matchBox($color, $width, $height) {
+@mixin matchBox($color) {
+  @include centering();
+
   display: flex;
-  width: $width;
-  height: $height;
-  align-items: center;
+  width: 1000px;
+  height: 120px;
   background-color: white;
   border-left: 10px solid $color;
   margin-top: 7px;

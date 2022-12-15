@@ -2,7 +2,6 @@
   display: flex;
   height: 100px;
   padding: 30px;
-  align-items: center;
 
   #web-title {
     padding: 30px;
@@ -12,6 +11,8 @@
   }
 
   #search-box {
+    @include centering;
+
     display: flex;
 
     #summoner-id-search {

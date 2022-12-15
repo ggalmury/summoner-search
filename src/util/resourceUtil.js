@@ -23,6 +23,14 @@ module.exports = {
     return `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${name}.png`;
   },
 
+  itemIng: (itemId) => {
+    if (itemId === 0) {
+      return `https://raw.communitydragon.org/12.22/game/data/spells/icons2d/linetip_blank.png`;
+    }
+
+    return `https://ddragon.bangingheads.net/cdn/latest/img/item/${itemId}.png`;
+  },
+
   rankEmblem1: (tier) => {
     return `${process.env.PUBLIC_URL}/images/rank_emblems1/Emblem_${tier}.png`;
   },

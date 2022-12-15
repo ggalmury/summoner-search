@@ -24,6 +24,17 @@
   }
 }
 
+.btn-history-detail {
+  @include square(25px);
+
+  border: none;
+  background-color: transparent;
+  background-image: url("https://raw.communitydragon.org/12.22/plugins/rcp-fe-lol-clash/global/default/assets/images/buttons/button-downarrow-down.png");
+  background-position: center;
+  background-size: cover;
+  cursor: pointer;
+}
+
 #btn-match-add {
   border-radius: 100%;
   width: 30px;

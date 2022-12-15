@@ -6,18 +6,19 @@ import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
 import MatchHistoy from "./MatchHistoy.js";
 
+// TODO: 코드 최적화
+
 export const SummonerInfoContext = createContext({});
 
 const ResultPage = () => {
   const navigate = useNavigate();
-  const params = useParams();
-  const summonerName = params.summonerName;
+  const summonerName = useParams().summonerName;
   const [summonerInfo, setSummonerInfo] = useState({});
-  const [soloLeagueInfo, setSoloLeagueInfo] = useState({});
-  const [flexLeagueInfo, setFlexLeagueInfo] = useState({});
+  const [soloLeagueInfo, setSoloLeagueInfo] = useState({ tier: "UNRANKED" });
+  const [flexLeagueInfo, setFlexLeagueInfo] = useState({ tier: "UNRANKED" });
   const [historyInfo, setHistoryInfo] = useState([]);
-  const [champMasteryInfo, setChampMasteryInfo] = useState([]);
   const [rankCount, setRankCount] = useState(0);
+  const [champMasteryInfo, setChampMasteryInfo] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const updateHistory = async () => {
@@ -48,7 +49,7 @@ const ResultPage = () => {
   const convertHistoryInfo = (history) => {
     let convertResult = [];
 
-    history.forEach((game, idx) => {
+    history.forEach((game) => {
       const gameData = game.gameData;
 
       let blueTeam = {};
@@ -128,7 +129,7 @@ const ResultPage = () => {
       convertResult.push({ gameData, blueTeam, redTeam });
     });
 
-    setHistoryInfo(convertResult);
+    return convertResult;
   };
 
   const goToMain = () => {
@@ -147,12 +148,19 @@ const ResultPage = () => {
     return resourceUtil.champNumToName(champMasteryInfo[num].championId);
   };
 
+  const addHistory = (arr) => {
+    const data = arr.map((his, idx) => {
+      return <MatchHistoy key={idx} history={his} summoner={summonerInfo}></MatchHistoy>;
+    });
+
+    return data;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       let infoResult;
 
-      setSoloLeagueInfo({ tier: "UNRANKED" });
-      setFlexLeagueInfo({ tier: "UNRANKED" });
+      setRankCount(0);
 
       try {
         const infoResultRaw = await axios.post("/api/summonerV4", { summonerName });
@@ -174,7 +182,7 @@ const ResultPage = () => {
       Promise.allSettled([
         axios.post("/api/masteryV4", { encryptedSummonerId: infoResult.data[0].id }),
         axios.post("/api/leagueV4", { encryptedSummonerId: infoResult.data[0].id }),
-        axios.post("/api/matchV5", { puuid: infoResult.data[0].puuid, start: 0, end: 100, count: rankCount }),
+        axios.post("/api/matchV5", { puuid: infoResult.data[0].puuid, start: 0, end: 100, count: 0 }),
       ])
         .then((res) => {
           const champResult = res[0].value.data;
@@ -184,7 +192,7 @@ const ResultPage = () => {
           calcUtil.asc(historyInfo.data);
 
           setChampMasteryInfo(champResult.data);
-          convertHistoryInfo(historyInfo.data);
+          setHistoryInfo(convertHistoryInfo(historyInfo.data));
 
           rankResult.data.forEach((rank) => {
             switch (rank.queueType) {
@@ -340,11 +348,26 @@ const ResultPage = () => {
                 </div>
                 <div id="match">
                   <div id="match-statistic">게임통계</div>
-                  <div id="match-history">
-                    <MatchHistoy history={historyInfo} summoner={summonerInfo}></MatchHistoy>
-                  </div>
+                  <div id="match-history">{addHistory(historyInfo)}</div>
                   <div id="match-add">
-                    <button id="btn-match-add">+</button>
+                    <button
+                      id="btn-match-add"
+                      onClick={() => {
+                        axios
+                          .post("/api/matchV5", { puuid: summonerInfo.puuid, start: 0, end: 100, count: rankCount + 10 })
+                          .then((res) => {
+                            const data = res.data.data;
+                            calcUtil.asc(data);
+                            setHistoryInfo(historyInfo.concat(convertHistoryInfo(data)));
+                            setRankCount(rankCount + 10);
+                          })
+                          .catch((err) => {
+                            console.log(err);
+                          });
+                      }}
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </Fragment>

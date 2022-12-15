@@ -1,28 +1,75 @@
-import { React, useState } from "react";
+import { Fragment, React, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
 
 const MatchHistoy = (props) => {
-  const [historyInfo, setHistoryInfo] = useState(props.history);
-  const [summonerInfo, setSummonerInfo] = useState(props.summoner);
-  const [personalHistory, setPersonalHistory] = useState([]);
+  const navigate = useNavigate();
+  const [isDetail, setIsDetail] = useState(false);
 
-  const getGameTotalStatistics = (idx) => {
-    // console.log(test);
+  const game = props.history;
+  const summonerInfo = props.summoner;
+
+  const gameData = game.gameData;
+  const blueTeam = game.blueTeam;
+  const redTeam = game.redTeam;
+
+  const gameType = resourceUtil.gameType(gameData.queueId);
+  const gameDuration = calcUtil.timeCalc(gameData.gameDuration);
+
+  let myData = {};
+  let vod = {};
+  let teamTotalKill;
+
+  //   console.log(game);
+
+  const getParticipantList = (team) => {
+    const data = team.participant.map((summ, idx) => {
+      return (
+        <li key={idx}>
+          <div>
+            <img className="history-summ-6-1-img" src={resourceUtil.champSquareImg(resourceUtil.champNumToName(summ.championId), resourceUtil.ddragonVersion())}></img>
+          </div>
+          <div
+            className="history-summ-6-1-name"
+            onClick={() => {
+              navigate(`/summoner/${summ.summonerName}`);
+            }}
+          >
+            {summ.summonerName}
+          </div>
+        </li>
+      );
+    });
+
+    return <ul>{data}</ul>;
   };
 
-  const data = historyInfo.map((game, idx) => {
-    const gameData = game.gameData;
-    const blueTeam = game.blueTeam;
-    const redTeam = game.redTeam;
+  const getItemList = () => {
+    const data = myData.items.map((item, idx) => {
+      return (
+        <div key={idx}>
+          <img className="history-summ-5-img" src={resourceUtil.itemIng(item)}></img>
+        </div>
+      );
+    });
 
-    const gameType = resourceUtil.gameType(gameData.queueId);
-    const gameDuration = calcUtil.timeCalc(gameData.gameDuration);
+    return data;
+  };
 
-    let myData = {};
-    let vod = {};
-    let teamTotalKill;
+  const getGameTotalStatistics = (idx) => {
+    if (isDetail === true) {
+      setIsDetail(false);
+    } else {
+      setIsDetail(true);
+    }
+  };
 
+  const gameDetail = () => {
+    return <div>ayay</div>;
+  };
+
+  const renderHistory = () => {
     for (let participant of blueTeam.participant) {
       if (participant.summonerName === summonerInfo.name) {
         myData = participant;
@@ -49,76 +96,75 @@ const MatchHistoy = (props) => {
     }
 
     return (
-      <div className={vod.eng} key={idx}>
-        <div className="history-summ-1">
-          <div className="history-summ-1-vod">{vod.kor}</div>
-          <div className="history-summ-1-game">{gameType}</div>
-          <div className="history-summ-1-passed">{calcUtil.passedTimeFromNow(gameData.gameEndTimestamp)}</div>
-          <div className="history-summ-1-duration">
-            {gameDuration.hour !== 0 ? (
+      <Fragment>
+        <div className={vod.eng}>
+          <div className="history-summ-1">
+            <div className="history-summ-1-vod">{vod.kor}</div>
+            <div className="history-summ-1-game">{gameType}</div>
+            <div className="history-summ-1-passed">{calcUtil.passedTimeFromNow(gameData.gameEndTimestamp)}</div>
+            <div className="history-summ-1-duration">
+              {gameDuration.hour !== 0 ? (
+                <div>
+                  {gameDuration.hour}시간 {gameDuration.min}분 {gameDuration.sec}초
+                </div>
+              ) : (
+                <div>
+                  {gameDuration.min}분 {gameDuration.sec}초
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="history-summ-2">
+            <div className="history-summ-2-1">
               <div>
-                {gameDuration.hour}시간 {gameDuration.min}분 {gameDuration.sec}초
+                <img className="history-summ-2-1-img-1" src={resourceUtil.champSquareImg(resourceUtil.champNumToName(myData.championId), resourceUtil.ddragonVersion())}></img>
               </div>
-            ) : (
-              <div>
-                {gameDuration.min}분 {gameDuration.sec}초
+              <div className="spell-box">
+                <div className="spell-box-1">
+                  <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner1Id)}></img>
+                </div>
+                <div className="spell-box-1">
+                  <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner2Id)}></img>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-        <div className="history-summ-2">
-          <div className="history-summ-2-1">
-            <div>
-              <img className="history-summ-2-1-img-1" src={resourceUtil.champSquareImg(resourceUtil.champNumToName(myData.championId), resourceUtil.ddragonVersion())}></img>
             </div>
-            <div className="spell-box">
-              <div className="spell-box-1">
-                <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner1Id)}></img>
+            <div className="history-summ-2-2">
+              <div className="rune-box-1">
+                <img className="history-summ-2-2-img-1" src={resourceUtil.mainPerkImg(myData.perksMain)}></img>
               </div>
-              <div className="spell-box-1">
-                <img className="history-summ-2-1-img-2" src={resourceUtil.summonerSpellImg(myData.summoner2Id)}></img>
+              <div className="rune-box-2">
+                <img className="history-summ-2-2-img-2" src={resourceUtil.subPerkImg(myData.perksSub)}></img>
               </div>
             </div>
           </div>
-          <div className="history-summ-2-2">
-            <div className="rune-box-1">
-              <img className="history-summ-2-2-img-1" src={resourceUtil.mainPerkImg(myData.perksMain)}></img>
+          {/* k/d/a */}
+          <div className="history-summ-3">
+            <div className="history-summ-3-1">
+              <span>{myData.kills}</span> / <span className="d">{myData.deaths}</span> / <span>{myData.assists}</span>
             </div>
-            <div className="rune-box-2">
-              <img className="history-summ-2-2-img-2" src={resourceUtil.subPerkImg(myData.perksSub)}></img>
+            <div className="history-summ-3-2">{calcUtil.kdaRate(myData.kills, myData.deaths, myData.assists)} 평점</div>
+          </div>
+          <div className="history-summ-4">
+            <div className="history-summ-4-1">킬관여 {Math.floor(((myData.kills + myData.assists) / teamTotalKill) * 100) || 0}%</div>
+            <div className="history-summ-4-2">
+              cs {myData.totalMinionsKilled} ({(myData.totalMinionsKilled / gameDuration.min).toFixed(1)} / m)
             </div>
           </div>
-        </div>
-        {/* k/d/a */}
-        <div className="history-summ-3">
-          <div className="history-summ-3-1">
-            <span>{myData.kills}</span> / <span className="d">{myData.deaths}</span> / <span>{myData.assists}</span>
+          <div className="history-summ-5">{getItemList()}</div>
+          <div className="history-summ-6">
+            <div className="history-summ-6-1">{getParticipantList(blueTeam)}</div>
+            <div className="history-summ-6-1">{getParticipantList(redTeam)}</div>
           </div>
-          <div className="history-summ-3-2">{calcUtil.kdaRate(myData.kills, myData.deaths, myData.assists)} 평점</div>
-        </div>
-        <div className="history-summ-4">
-          <div className="history-summ-4-1">킬관여 {Math.floor(((myData.kills + myData.assists) / teamTotalKill) * 100) || 0}%</div>
-          <div className="history-summ-4-2">
-            cs {myData.totalMinionsKilled} ({(myData.totalMinionsKilled / gameDuration.min).toFixed(1)} / m)
+          <div>
+            <button className="btn-history-detail" onClick={getGameTotalStatistics}></button>
           </div>
         </div>
-        {/* 아이템 */}
-        <div className="history-summ-5"></div>
-        {/* <div>
-          <button onClick={getGameTotalStatistics}></button>
-        </div> */}
-      </div>
+        <div>{isDetail === true ? gameDetail() : <Fragment></Fragment>}</div>
+      </Fragment>
     );
-  });
+  };
 
-  //   <div>
-  //     {historyInfo[idx].participantData.map((data, idx) => {
-  //       if (idx >= 5) return;
-
-  //       return <div key={idx}>{data.championId}</div>;
-  //     })}
-  //   </div>;
-  return <div>{data}</div>;
+  return renderHistory();
 };
 
 export default MatchHistoy;

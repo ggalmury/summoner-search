@@ -314,13 +314,7 @@ router.post("/matchV5", (req, res) => {
                 quadraKills: summ.quadraKills,
                 pentaKills: summ.pentaKills,
 
-                item0: summ.item0,
-                item1: summ.item1,
-                item2: summ.item2,
-                item3: summ.item3,
-                item4: summ.item4,
-                item5: summ.item5,
-                item6: summ.item6,
+                items: [summ.item0, summ.item1, summ.item2, summ.item3, summ.item4, summ.item5, summ.item6],
 
                 baronKills: summ.baronKills,
                 dragonKills: summ.dragonKills,
@@ -339,7 +333,6 @@ router.post("/matchV5", (req, res) => {
             detail.participantData = participantData;
 
             history.push(detail);
-            // fix end
             if (history.length >= 10) {
               util.success(res, history);
               return;

@@ -4,11 +4,13 @@
   }
 
   &-history {
+    @include centering;
+
     display: flex;
-    justify-content: center;
+    flex-direction: column;
 
     .win {
-      @include matchBox($blue, $width: 1000px, $height: 120px);
+      @include matchBox($blue);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -17,7 +19,7 @@
     }
 
     .lose {
-      @include matchBox($red, $width: 1000px, $height: 120px);
+      @include matchBox($red);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -26,7 +28,7 @@
     }
 
     .draw {
-      @include matchBox($gray, $width: 1000px, $height: 120px);
+      @include matchBox($gray);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -38,7 +40,7 @@
       &-1 {
         display: flex;
         flex-direction: column;
-        width: 150px;
+        width: 120px;
 
         &-game {
           font-size: 0.85em;
@@ -58,7 +60,7 @@
 
       &-2 {
         display: flex;
-        width: 120px;
+        width: 124px;
         height: 100%;
 
         &-1 {
@@ -67,7 +69,6 @@
           display: flex;
           flex-direction: column;
           width: 80px;
-          //   background-color: green;
 
           .spell-box {
             display: flex;
@@ -163,6 +164,50 @@
         &-2 {
           font-size: 0.8em;
           margin-top: 5px;
+        }
+      }
+
+      &-5 {
+        display: flex;
+        width: 260px;
+
+        justify-content: center;
+
+        &-img {
+          @include square(30px);
+
+          padding: 1px;
+          border-radius: $border-rad1;
+        }
+      }
+
+      &-6 {
+        display: flex;
+        width: 185px;
+        justify-content: center;
+
+        ul {
+          width: 80px;
+        }
+
+        li {
+          display: flex;
+        }
+
+        &-1 {
+          &-img {
+            @include square(15px);
+
+            border-radius: $border-rad1;
+          }
+
+          &-name {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 0.6em;
+            cursor: pointer;
+          }
         }
       }
     }
