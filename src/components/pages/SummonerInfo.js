@@ -1,10 +1,10 @@
 import { Fragment, React, useEffect, useState, createContext } from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
-import Loading from "./Loading.js";
+import Loading from "./loading.js";
 import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
-import MatchHistoy from "./MatchHistoy.js";
+import MatchHistoy from "./matchHistoy.js";
 
 // TODO: 코드 최적화
 

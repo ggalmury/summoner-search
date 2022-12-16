@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "../molecules/Header.js";
-import Footer from "../molecules/Footer.js";
-import SummonerInfo from "../pages/SummonerInfo.js";
-import SummonerSearch from "../pages/SummonerSearch.js";
-import Ingame from "../pages/Ingame.js";
-import Page404 from "../pages/Page404.js";
+import Header from "../molecules/header.js";
+import Footer from "../molecules/footer.js";
+import SummonerInfo from "../pages/summonerInfo.js";
+import SummonerSearch from "../pages/summonerSearch.js";
+import Ingame from "../pages/ingame.js";
+import Page404 from "../pages/page404.js";
 
 const MainRouter = () => {
   return (

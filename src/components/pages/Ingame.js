@@ -1,7 +1,7 @@
 import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
-import Loading from "./Loading.js";
-import { SummonerInfoContext } from "./SummonerInfo";
+import Loading from "./loading.js";
+import { SummonerInfoContext } from "./summonerInfo";
 import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
 

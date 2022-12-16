@@ -3,7 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
-const sumInfo = require("./routers/SumInfo.js");
+const sumInfo = require("./routers/sumInfo.js");
 
 const app = express();
 const port = 4000;

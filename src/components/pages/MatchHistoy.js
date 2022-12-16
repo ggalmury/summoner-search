@@ -2,12 +2,14 @@ import { Fragment, React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
+import MatchDetail from "./matchDetail.js";
 
 const MatchHistoy = (props) => {
   const navigate = useNavigate();
   const [isDetail, setIsDetail] = useState(false);
 
   const game = props.history;
+  console.log(game);
   const summonerInfo = props.summoner;
 
   const gameData = game.gameData;
@@ -57,16 +59,12 @@ const MatchHistoy = (props) => {
     return data;
   };
 
-  const getGameTotalStatistics = (idx) => {
+  const getGameTotalStatistics = () => {
     if (isDetail === true) {
       setIsDetail(false);
     } else {
       setIsDetail(true);
     }
-  };
-
-  const gameDetail = () => {
-    return <div>ayay</div>;
   };
 
   const renderHistory = () => {
@@ -137,7 +135,6 @@ const MatchHistoy = (props) => {
               </div>
             </div>
           </div>
-          {/* k/d/a */}
           <div className="history-summ-3">
             <div className="history-summ-3-1">
               <span>{myData.kills}</span> / <span className="d">{myData.deaths}</span> / <span>{myData.assists}</span>
@@ -159,7 +156,7 @@ const MatchHistoy = (props) => {
             <button className="btn-history-detail" onClick={getGameTotalStatistics}></button>
           </div>
         </div>
-        <div>{isDetail === true ? gameDetail() : <Fragment></Fragment>}</div>
+        <div>{isDetail === true ? <MatchDetail history={game}></MatchDetail> : <Fragment></Fragment>}</div>
       </Fragment>
     );
   };
