@@ -1,6 +1,27 @@
 #match {
   &-statistic {
+    height: 350px;
     background-color: white;
+  }
+
+  &-statistic {
+    display: flex;
+
+    .chart-box-1 {
+      @include centering;
+
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+
+      &-1 {
+        line-height: 50px;
+      }
+
+      &-2 {
+        display: flex;
+      }
+    }
   }
 
   &-history {

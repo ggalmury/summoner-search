@@ -10,13 +10,13 @@
   width: 1210px;
 }
 
-#summoner {
+#profile {
   display: flex;
   flex-direction: column;
   justify-content: center;
   background-color: transparent;
 
-  &-info1 {
+  &-1 {
     @include infoBox;
 
     display: flex;
@@ -25,9 +25,46 @@
     border: none;
     background-color: $main-color;
     margin-top: 15px;
+
+    &-1 {
+      display: flex;
+      width: 700px;
+      height: 100px;
+      font-size: 1em;
+      align-items: center;
+      padding: 35px;
+
+      &-img {
+        @include square(110px);
+        margin-left: 50px;
+      }
+
+      .profile-detail {
+        display: flex;
+        flex-direction: column;
+        height: 80px;
+        margin-left: 35px;
+        text-align: left;
+
+        &-1 {
+          font-size: 1.6em;
+          line-height: 10px;
+        }
+
+        &-2 {
+          font-size: 1em;
+          line-height: 50px;
+        }
+
+        &-3 {
+          font-size: 1.3em;
+          line-height: 20px;
+        }
+      }
+    }
   }
 
-  &-info2 {
+  &-2 {
     @include infoBox;
 
     display: flex;
@@ -39,7 +76,7 @@
     justify-content: center;
     background-color: transparent;
 
-    &-rank {
+    &-1 {
       @include infoBox;
 
       display: flex;
@@ -47,92 +84,31 @@
       margin-right: 15px;
     }
 
-    &-champ {
+    &-2 {
       @include centering;
       @include infoBox;
 
       display: flex;
       flex-grow: 1;
-
-      .champ-mastery {
-        width: 200px;
-        margin-top: 15px;
-
-        &-img1 {
-          @include champMasteryImg(70px);
-        }
-
-        &-img2 {
-          @include champMasteryImg(90px);
-        }
-
-        &-info {
-          width: 100%;
-        }
-      }
     }
   }
 }
 
-.summoner-detail {
-  display: flex;
-  width: 700px;
-  height: 100px;
-  font-size: 1em;
-  align-items: center;
-  padding: 35px;
-
-  .profile-icon-box {
-    @include square(110px);
-
-    margin-left: 25px;
-    border-radius: 20px;
-    overflow: hidden;
-
-    #profile-icon {
-      @include square(110px);
-    }
-  }
-
-  .profile-info-box {
-    display: flex;
-    flex-direction: column;
-    height: 80px;
-    margin-left: 35px;
-    text-align: left;
-
-    &-1 {
-      font-size: 1.6em;
-      line-height: 10px;
-    }
-
-    &-2 {
-      font-size: 1em;
-      line-height: 50px;
-    }
-
-    &-3 {
-      font-size: 1.3em;
-      line-height: 20px;
-    }
-  }
-}
-
-.summoner-rank-detail {
+.profile-rank-detail {
   display: flex;
   flex-grow: 1;
   width: 450px;
   align-items: center;
 
-  .rank-icon-box {
+  &-1 {
     margin-left: 43px;
 
-    .rank-emblem {
+    &-img1 {
       @include square(80px);
     }
   }
 
-  .rank-info-box {
+  &-2 {
     @include centering;
 
     display: flex;
@@ -185,6 +161,23 @@
 
   &:last-child {
     border-top: 2px solid black;
+  }
+}
+
+.profile-champ-detail {
+  width: 200px;
+  margin-top: 15px;
+
+  &-img1 {
+    @include champMasteryImg(70px);
+  }
+
+  &-img2 {
+    @include champMasteryImg(90px);
+  }
+
+  &-info {
+    width: 100%;
   }
 }
 

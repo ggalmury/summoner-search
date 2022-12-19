@@ -1,7 +1,7 @@
 import { React } from "react";
 import { useNavigate } from "react-router-dom";
-import resourceUtil from "util/resourceUtil.js";
-import calcUtil from "util/calcUtil.js";
+import resourceUtil from "client/util/resourceUtil.js";
+import calcUtil from "client/util/calcUtil.js";
 
 const MatchDetail = (props) => {
   const navigate = useNavigate();
@@ -10,6 +10,13 @@ const MatchDetail = (props) => {
 
   const renderDetail = (team) => {
     const participants = team.participant;
+    const vod = () => {
+      if (team.participant[0].win === true) {
+        return "승리";
+      } else {
+        return "패배";
+      }
+    };
 
     const data = participants.map((participant, idx) => {
       const champName = resourceUtil.champNumToName(participant.championId);
@@ -77,7 +84,7 @@ const MatchDetail = (props) => {
           <td>
             <div>
               <div>
-                {kills} / {deaths} / {assists} ({killPart}%)
+                {kills} / {deaths} / {assists} ({killPart || 0}%)
               </div>
               <div>{kda}</div>
             </div>
@@ -108,7 +115,7 @@ const MatchDetail = (props) => {
     return (
       <tbody>
         <tr className="match-tr-1">
-          <td colSpan={4}>정보</td>
+          <td colSpan={4}>{vod()}</td>
           <td>KDA</td>
           <td>피해량</td>
           <td>와드</td>

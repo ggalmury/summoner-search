@@ -55,21 +55,18 @@ router.post("/summonerV4", async (req, res) => {
 
   if (summonerInfo.length <= 0) {
     util.riotRes(url, async (success, data) => {
-      switch (success) {
-        case true:
-          try {
-            util.success(res, [data]);
+      if (success) {
+        try {
+          util.success(res, [data]);
 
-            setSummonerInfoToDB(data.name, data.accountId, data.profileIconId, data.revisionDate, data.id, data.puuid, data.summonerLevel, data.name);
+          setSummonerInfoToDB(data.name, data.accountId, data.profileIconId, data.revisionDate, data.id, data.puuid, data.summonerLevel, data.name);
 
-            setSummonerNameToDB(summonerNameRegexp, data.id, summonerNameRegexp);
-          } catch (err) {
-            console.log(err);
-          }
-          break;
-        case false:
-          util.fail(res, []);
-          return;
+          setSummonerNameToDB(summonerNameRegexp, data.id, summonerNameRegexp);
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        util.fail(res, []);
       }
     });
   } else {
@@ -82,14 +79,10 @@ router.post("/masteryV4", (req, res) => {
   const url = `https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${encryptedSummonerId}/top?count=3`;
 
   util.riotRes(url, (success, data) => {
-    switch (success) {
-      case true:
-        util.success(res, data);
-
-        break;
-      case false:
-        util.fail(res, []);
-        break;
+    if (success) {
+      util.success(res, data);
+    } else {
+      util.fail(res, []);
     }
   });
 });
@@ -98,8 +91,8 @@ router.post("/leagueV4", async (req, res) => {
   const { encryptedSummonerId } = req.body;
   const url = `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${encryptedSummonerId}`;
 
-  let rankInfo = {};
-  let rankInfoCamel = {};
+  let rankInfo = [];
+  let rankInfoCamel = [];
 
   const getRankInfoFromDB = (id) => {
     return db.query(`SELECT * FROM summoner_rank WHERE summoner_id=?`, [id]);
@@ -122,35 +115,32 @@ router.post("/leagueV4", async (req, res) => {
 
   if (rankInfo.length <= 0) {
     util.riotRes(url, (success, data) => {
-      switch (success) {
-        case true:
-          try {
-            util.success(res, data);
+      if (success) {
+        try {
+          util.success(res, data);
 
-            data.forEach((data) => {
-              setRankInfoToDB(
-                data.summonerName,
-                data.summonerId,
-                data.queueType,
-                data.leagueId,
-                data.tier,
-                data.rank,
-                data.leaguePoints,
-                data.wins,
-                data.losses,
-                data.hotStreak,
-                data.veteran,
-                data.freshBlood,
-                data.inactive
-              );
-            });
-          } catch (err) {
-            console.log(err);
-          }
-          break;
-        case false:
-          util.fail(res, []);
-          break;
+          data.forEach((data) => {
+            setRankInfoToDB(
+              data.summonerName,
+              data.summonerId,
+              data.queueType,
+              data.leagueId,
+              data.tier,
+              data.rank,
+              data.leaguePoints,
+              data.wins,
+              data.losses,
+              data.hotStreak,
+              data.veteran,
+              data.freshBlood,
+              data.inactive
+            );
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        util.fail(res, []);
       }
     });
   } else {
@@ -245,14 +235,11 @@ router.post("/spectatorV4", async (req, res) => {
   const url = `https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${encryptedSummonerId}`;
 
   util.riotRes(url, (success, data) => {
-    switch (success) {
-      case true:
-        util.success(res, data);
-        console.log(data);
-        return;
-      case false:
-        util.fail(res, {});
-        return;
+    if (success) {
+      util.success(res, data);
+      console.log(data);
+    } else {
+      util.fail(res, {});
     }
   });
 });
@@ -268,14 +255,14 @@ router.post("/matchV5", (req, res) => {
 
     const newData = data.slice(count, count + 10);
 
-    if (success === true) {
+    if (success) {
       newData.map((matchId) => {
         const fullUrl2 = `${url2}${matchId}`;
 
         util.riotRes(fullUrl2, (success, data) => {
           let detail = {};
 
-          if (success === true) {
+          if (success) {
             const game = data.info;
             const participants = game.participants;
 
@@ -291,6 +278,7 @@ router.post("/matchV5", (req, res) => {
             const participantData = participants.map((summ) => {
               const participant = {
                 summonerName: summ.summonerName,
+                summonerId: summ.summonerId,
                 teamId: summ.teamId,
                 win: summ.win,
                 summonerLevel: summ.summonerLevel,

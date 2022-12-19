@@ -1,12 +1,12 @@
 import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
 import Loading from "./loading.js";
-import { SummonerInfoContext } from "./summonerInfo";
-import resourceUtil from "util/resourceUtil.js";
-import calcUtil from "util/calcUtil.js";
+import resourceUtil from "client/util/resourceUtil.js";
+import calcUtil from "client/util/calcUtil.js";
+import { sumInfoContext } from "client/context/sumInfoContext.jsx";
 
 const Ingame = () => {
-  const summonerInfo = useContext(SummonerInfoContext);
+  const { summonerInfo } = useContext(sumInfoContext);
   const [ingameInfo, setIngameInfo] = useState({});
   const [summRankInfo, setSummRankInfo] = useState([]);
   const [bannedChampImg, setBannedChampImg] = useState([]);

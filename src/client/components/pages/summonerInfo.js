@@ -1,14 +1,13 @@
-import { Fragment, React, useEffect, useState, createContext } from "react";
+import { Fragment, React, useEffect, useState } from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Loading from "./loading.js";
-import resourceUtil from "util/resourceUtil.js";
-import calcUtil from "util/calcUtil.js";
-import MatchHistoy from "./matchHistoy.js";
+import resourceUtil from "client/util/resourceUtil.js";
+import calcUtil from "client/util/calcUtil.js";
+import { sumInfoContext } from "client/context/sumInfoContext.jsx";
+import { hisInfoContext } from "client/context/hisInfoContext.jsx";
 
 // TODO: 코드 최적화
-
-export const SummonerInfoContext = createContext({});
 
 const ResultPage = () => {
   const navigate = useNavigate();
@@ -17,9 +16,37 @@ const ResultPage = () => {
   const [soloLeagueInfo, setSoloLeagueInfo] = useState({ tier: "UNRANKED" });
   const [flexLeagueInfo, setFlexLeagueInfo] = useState({ tier: "UNRANKED" });
   const [historyInfo, setHistoryInfo] = useState([]);
-  const [rankCount, setRankCount] = useState(0);
   const [champMasteryInfo, setChampMasteryInfo] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const goToMain = () => {
+    navigate(`/summoner/${summonerName}`);
+  };
+
+  const goToIngameInfo = () => {
+    navigate(`/summoner/${summonerName}/ingame`);
+  };
+
+  const queueType = (arr) => {
+    arr.forEach((rank) => {
+      switch (rank.queueType) {
+        case "RANKED_FLEX_SR":
+          setFlexLeagueInfo(rank);
+          break;
+        case "RANKED_SOLO_5x5":
+          setSoloLeagueInfo(rank);
+          break;
+      }
+    });
+  };
+
+  const getChampName = (num) => {
+    if (champMasteryInfo.length <= num) {
+      return null;
+    }
+
+    return resourceUtil.champNumToName(champMasteryInfo[num].championId);
+  };
 
   const updateHistory = async () => {
     const updatedInfoRaw = await axios.post("/api/update", { encryptedSummonerId: summonerInfo.id });
@@ -32,22 +59,14 @@ const ResultPage = () => {
 
     setSummonerInfo(updatedInfo.data[0][0]);
 
-    updatedInfo.data[1].forEach((rank) => {
-      switch (rank.queueType) {
-        case "RANKED_FLEX_SR":
-          setFlexLeagueInfo(rank);
-          break;
-        case "RANKED_SOLO_5x5":
-          setSoloLeagueInfo(rank);
-          break;
-      }
-    });
+    queueType(updatedInfo.data[1]);
 
     alert("갱신되었습니다");
   };
 
-  const convertHistoryInfo = (history) => {
+  const convertHistoryInfo = (history, id) => {
     let convertResult = [];
+    let myData = {};
 
     history.forEach((game) => {
       const gameData = game.gameData;
@@ -91,6 +110,10 @@ const ResultPage = () => {
       };
 
       for (let participant of game.participantData) {
+        if (participant.summonerId === id) {
+          myData = participant;
+        }
+
         if (participant.teamId === 100) {
           blueTeamParticipant.push(participant);
 
@@ -126,41 +149,17 @@ const ResultPage = () => {
       redTeam.participant = redTeamParticipant;
       redTeam.statistic = redTeamStatistic;
 
-      convertResult.push({ gameData, blueTeam, redTeam });
+      convertResult.push({ gameData, blueTeam, redTeam, myData });
     });
 
     return convertResult;
   };
 
-  const goToMain = () => {
-    navigate(`/summoner/${summonerName}`);
-  };
-
-  const goToIngameInfo = () => {
-    navigate(`/summoner/${summonerName}/ingame`);
-  };
-
-  const getChampName = (num) => {
-    if (champMasteryInfo.length <= num) {
-      return null;
-    }
-
-    return resourceUtil.champNumToName(champMasteryInfo[num].championId);
-  };
-
-  const addHistory = (arr) => {
-    const data = arr.map((his, idx) => {
-      return <MatchHistoy key={idx} history={his} summoner={summonerInfo}></MatchHistoy>;
-    });
-
-    return data;
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       let infoResult;
-
-      setRankCount(0);
+      let encryptedSummonerId;
+      let puuid;
 
       try {
         const infoResultRaw = await axios.post("/api/summonerV4", { summonerName });
@@ -172,6 +171,9 @@ const ResultPage = () => {
           return;
         }
 
+        encryptedSummonerId = infoResult.data[0].id;
+        puuid = infoResult.data[0].puuid;
+
         setSummonerInfo(infoResult.data[0]);
       } catch (err) {
         console.log(err);
@@ -180,9 +182,9 @@ const ResultPage = () => {
       }
 
       Promise.allSettled([
-        axios.post("/api/masteryV4", { encryptedSummonerId: infoResult.data[0].id }),
-        axios.post("/api/leagueV4", { encryptedSummonerId: infoResult.data[0].id }),
-        axios.post("/api/matchV5", { puuid: infoResult.data[0].puuid, start: 0, end: 100, count: 0 }),
+        axios.post("/api/masteryV4", { encryptedSummonerId }),
+        axios.post("/api/leagueV4", { encryptedSummonerId }),
+        axios.post("/api/matchV5", { puuid, start: 0, end: 100, count: 0 }),
       ])
         .then((res) => {
           const champResult = res[0].value.data;
@@ -192,20 +194,9 @@ const ResultPage = () => {
           calcUtil.asc(historyInfo.data);
 
           setChampMasteryInfo(champResult.data);
-          setHistoryInfo(convertHistoryInfo(historyInfo.data));
+          queueType(rankResult.data);
+          setHistoryInfo(convertHistoryInfo(historyInfo.data, encryptedSummonerId));
 
-          rankResult.data.forEach((rank) => {
-            switch (rank.queueType) {
-              case "RANKED_FLEX_SR":
-                setFlexLeagueInfo(rank);
-                break;
-              case "RANKED_SOLO_5x5":
-                setSoloLeagueInfo(rank);
-                break;
-              default:
-                break;
-            }
-          });
           setLoading(false);
         })
         .catch((err) => {
@@ -227,16 +218,16 @@ const ResultPage = () => {
               <Loading />
             ) : (
               <Fragment>
-                <div id="summoner">
-                  <div id="summoner-info1">
-                    <div className="summoner-detail">
-                      <div className="profile-icon-box">
-                        <img id="profile-icon" src={resourceUtil.profileIconImg(summonerInfo.profileIconId, resourceUtil.ddragonVersion())} alt="profile"></img>
+                <div id="profile">
+                  <div id="profile-1">
+                    <div id="profile-1-1">
+                      <div>
+                        <img id="profile-1-1-img" src={resourceUtil.profileIconImg(summonerInfo.profileIconId, resourceUtil.ddragonVersion())} alt="profile"></img>
                       </div>
-                      <div className="profile-info-box">
-                        <div className="profile-info-box-1">{summonerInfo.name}</div>
-                        <div className="profile-info-box-2">KR</div>
-                        <div className="profile-info-box-3">{summonerInfo.summonerLevel} LV</div>
+                      <div className="profile-detail">
+                        <div className="profile-detail-1">{summonerInfo.name}</div>
+                        <div className="profile-detail-2">KR</div>
+                        <div className="profile-detail-3">{summonerInfo.summonerLevel} LV</div>
                       </div>
                     </div>
                     <div id="nav">
@@ -251,59 +242,59 @@ const ResultPage = () => {
                       </button>
                     </div>
                   </div>
-                  <div id="summoner-info2">
-                    <div id="summoner-info2-rank">
-                      <div className="summoner-rank-detail">
-                        <div className="rank-icon-box">
-                          <div className="rank-info-box-1">솔로랭크</div>
-                          <img className="rank-emblem" src={resourceUtil.rankEmblem1(soloLeagueInfo.tier)} alt="rank emblem"></img>
+                  <div id="profile-2">
+                    <div id="profile-2-1">
+                      <div className="profile-rank-detail">
+                        <div className="profile-rank-detail-1">
+                          <div className="profile-rank-detail-2-1">솔로랭크</div>
+                          <img className="profile-rank-detail-1-img1" src={resourceUtil.rankEmblem1(soloLeagueInfo.tier)} alt="rank emblem"></img>
                         </div>
-                        <div className="rank-info-box">
+                        <div className="profile-rank-detail-2">
                           {soloLeagueInfo.tier === "UNRANKED" ? (
-                            <div className="rank-info-box-unranked">{soloLeagueInfo.tier}</div>
+                            <div className="profile-rank-detail-2-unranked">{soloLeagueInfo.tier}</div>
                           ) : (
                             <Fragment>
-                              <div className="rank-info-box-2">{calcUtil.tier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</div>
-                              <div className="rank-info-box-3">{soloLeagueInfo.leaguePoints}LP</div>
+                              <div className="profile-rank-detail-2-2">{calcUtil.tier(soloLeagueInfo.tier, soloLeagueInfo.rank)}</div>
+                              <div className="profile-rank-detail-2-3">{soloLeagueInfo.leaguePoints}LP</div>
                               <div>
-                                <div className="rank-info-box-4">
-                                  <div className="rank-info-box-4-1">{soloLeagueInfo.wins}W </div>
-                                  <div className="rank-info-box-4-2">{soloLeagueInfo.losses}L</div>
+                                <div className="profile-rank-detail-2-4">
+                                  <div className="profile-rank-detail-2-4-1">{soloLeagueInfo.wins}W </div>
+                                  <div className="profile-rank-detail-2-4-2">{soloLeagueInfo.losses}L</div>
                                 </div>
-                                <div className="rank-info-box-5">승률 {calcUtil.winRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
+                                <div className="profile-rank-detail-2-5">승률 {calcUtil.winRate(soloLeagueInfo.wins, soloLeagueInfo.losses)}%</div>
                               </div>
                             </Fragment>
                           )}
                         </div>
                       </div>
-                      <div className="summoner-rank-detail">
-                        <div className="rank-icon-box">
-                          <div className="rank-info-box-1">자유랭크</div>
-                          <img className="rank-emblem" src={resourceUtil.rankEmblem1(flexLeagueInfo.tier)} alt="rank emblem"></img>
+                      <div className="profile-rank-detail">
+                        <div className="profile-rank-detail-1">
+                          <div className="profile-rank-detail-2-1">자유랭크</div>
+                          <img className="profile-rank-detail-1-img1" src={resourceUtil.rankEmblem1(flexLeagueInfo.tier)} alt="rank emblem"></img>
                         </div>
-                        <div className="rank-info-box">
+                        <div className="profile-rank-detail-2">
                           {flexLeagueInfo.tier === "UNRANKED" ? (
-                            <div className="rank-info-box-unranked">{flexLeagueInfo.tier}</div>
+                            <div className="profile-rank-detail-2-unranked">{flexLeagueInfo.tier}</div>
                           ) : (
                             <Fragment>
-                              <div className="rank-info-box-2">{calcUtil.tier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</div>
-                              <div className="rank-info-box-3">{flexLeagueInfo.leaguePoints}LP</div>
+                              <div className="profile-rank-detail-2-2">{calcUtil.tier(flexLeagueInfo.tier, flexLeagueInfo.rank)}</div>
+                              <div className="profile-rank-detail-2-3">{flexLeagueInfo.leaguePoints}LP</div>
                               <div>
-                                <div className="rank-info-box-4">
-                                  <div className="rank-info-box-4-1">{flexLeagueInfo.wins}W</div>
-                                  <div className="rank-info-box-4-2">{flexLeagueInfo.losses}L</div>
+                                <div className="profile-rank-detail-2-4">
+                                  <div className="profile-rank-detail-2-4-1">{flexLeagueInfo.wins}W</div>
+                                  <div className="profile-rank-detail-2-4-2">{flexLeagueInfo.losses}L</div>
                                 </div>
-                                <div className="rank-info-box-5">승률 {calcUtil.winRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
+                                <div className="profile-rank-detail-2-5">승률 {calcUtil.winRate(flexLeagueInfo.wins, flexLeagueInfo.losses)}%</div>
                               </div>
                             </Fragment>
                           )}
                         </div>
                       </div>
                     </div>
-                    <div id="summoner-info2-champ">
-                      <div className="champ-mastery">
-                        <img className="champ-mastery-img1" src={resourceUtil.champImg(getChampName(1))} alt="champion"></img>
-                        <div className="champ-mastery-info">
+                    <div id="profile-2-2">
+                      <div className="profile-champ-detail">
+                        <img className="profile-champ-detail-img1" src={resourceUtil.champImg(getChampName(1))} alt="champion"></img>
+                        <div className="profile-champ-detail-info">
                           {champMasteryInfo[1] !== undefined ? (
                             <Fragment>
                               <div>{getChampName(1)}</div>
@@ -315,9 +306,9 @@ const ResultPage = () => {
                           )}
                         </div>
                       </div>
-                      <div className="champ-mastery">
-                        <img className="champ-mastery-img2" src={resourceUtil.champImg(getChampName(0))} alt="champion"></img>
-                        <div className="champ-mastery-info">
+                      <div className="profile-champ-detail">
+                        <img className="profile-champ-detail-img2" src={resourceUtil.champImg(getChampName(0))} alt="champion"></img>
+                        <div className="profile-champ-detail-info">
                           {champMasteryInfo[0] !== undefined ? (
                             <Fragment>
                               <div>{getChampName(0)}</div>
@@ -329,9 +320,9 @@ const ResultPage = () => {
                           )}
                         </div>
                       </div>
-                      <div className="champ-mastery">
-                        <img className="champ-mastery-img1" src={resourceUtil.champImg(getChampName(2))} alt="champion"></img>
-                        <div className="champ-mastery-info">
+                      <div className="profile-champ-detail">
+                        <img className="profile-champ-detail-img1" src={resourceUtil.champImg(getChampName(2))} alt="champion"></img>
+                        <div className="profile-champ-detail-info">
                           {champMasteryInfo[2] !== undefined ? (
                             <Fragment>
                               <div>{getChampName(2)}</div>
@@ -346,36 +337,14 @@ const ResultPage = () => {
                     </div>
                   </div>
                 </div>
-                <div id="match">
-                  <div id="match-statistic">게임통계</div>
-                  <div id="match-history">{addHistory(historyInfo)}</div>
-                  <div id="match-add">
-                    <button
-                      id="btn-match-add"
-                      onClick={() => {
-                        axios
-                          .post("/api/matchV5", { puuid: summonerInfo.puuid, start: 0, end: 100, count: rankCount + 10 })
-                          .then((res) => {
-                            const data = res.data.data;
-                            calcUtil.asc(data);
-                            setHistoryInfo(historyInfo.concat(convertHistoryInfo(data)));
-                            setRankCount(rankCount + 10);
-                          })
-                          .catch((err) => {
-                            console.log(err);
-                          });
-                      }}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
+                <sumInfoContext.Provider value={{ summonerInfo }}>
+                  <hisInfoContext.Provider value={{ historyInfo, setHistoryInfo, convertHistoryInfo }}>
+                    <Outlet />
+                  </hisInfoContext.Provider>
+                </sumInfoContext.Provider>
               </Fragment>
             )}
           </Fragment>
-          <SummonerInfoContext.Provider value={summonerInfo}>
-            <Outlet />
-          </SummonerInfoContext.Provider>
         </div>
       </div>
     </Fragment>
