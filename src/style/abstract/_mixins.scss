@@ -33,10 +33,12 @@
 }
 
 @mixin champMasteryImg($width) {
-  width: $width;
-  border-radius: 20px;
-  border: none;
+  @include square($width);
+
+  border-radius: 50%;
+  border: 6px solid rgb(203, 172, 101);
   margin-top: 10%;
+  overflow: hidden;
 }
 
 @mixin matchBox($color) {

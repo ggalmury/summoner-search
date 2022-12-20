@@ -2,10 +2,10 @@ import { Fragment, React, useEffect, useState } from "react";
 import { useParams, useNavigate, Outlet } from "react-router-dom";
 import axios from "axios";
 import Loading from "./loading.js";
-import resourceUtil from "client/util/resourceUtil.js";
-import calcUtil from "client/util/calcUtil.js";
-import { sumInfoContext } from "client/context/sumInfoContext.jsx";
-import { hisInfoContext } from "client/context/hisInfoContext.jsx";
+import resourceUtil from "util/resourceUtil.js";
+import calcUtil from "util/calcUtil.js";
+import { sumInfoContext } from "context/sumInfoContext.jsx";
+import { hisInfoContext } from "context/hisInfoContext.jsx";
 
 // TODO: 코드 최적화
 
@@ -226,7 +226,10 @@ const ResultPage = () => {
                       </div>
                       <div className="profile-detail">
                         <div className="profile-detail-1">{summonerInfo.name}</div>
-                        <div className="profile-detail-2">KR</div>
+                        <div className="profile-detail-2">
+                          <div id="region">KR</div>
+                          <img id="flag" src="../images/kr.png"></img>
+                        </div>
                         <div className="profile-detail-3">{summonerInfo.summonerLevel} LV</div>
                       </div>
                     </div>
@@ -293,7 +296,16 @@ const ResultPage = () => {
                     </div>
                     <div id="profile-2-2">
                       <div className="profile-champ-detail">
-                        <img className="profile-champ-detail-img1" src={resourceUtil.champImg(getChampName(1))} alt="champion"></img>
+                        <div className="profile-champ-detail-img1">
+                          <img width={100} src={resourceUtil.champSquareImg(getChampName(1), resourceUtil.ddragonVersion())} alt="champion"></img>
+                        </div>
+                        {champMasteryInfo[1].championLevel > 1 ? (
+                          <div className="profile-champ-detail-mastery">
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[1].championLevel)}></img>
+                          </div>
+                        ) : (
+                          <Fragment></Fragment>
+                        )}
                         <div className="profile-champ-detail-info">
                           {champMasteryInfo[1] !== undefined ? (
                             <Fragment>
@@ -307,7 +319,16 @@ const ResultPage = () => {
                         </div>
                       </div>
                       <div className="profile-champ-detail">
-                        <img className="profile-champ-detail-img2" src={resourceUtil.champImg(getChampName(0))} alt="champion"></img>
+                        <div className="profile-champ-detail-img2">
+                          <img width={130} src={resourceUtil.champSquareImg(getChampName(0), resourceUtil.ddragonVersion())} alt="champion"></img>
+                        </div>
+                        {champMasteryInfo[0].championLevel > 1 ? (
+                          <div className="profile-champ-detail-mastery">
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[0].championLevel)}></img>
+                          </div>
+                        ) : (
+                          <Fragment></Fragment>
+                        )}
                         <div className="profile-champ-detail-info">
                           {champMasteryInfo[0] !== undefined ? (
                             <Fragment>
@@ -321,7 +342,16 @@ const ResultPage = () => {
                         </div>
                       </div>
                       <div className="profile-champ-detail">
-                        <img className="profile-champ-detail-img1" src={resourceUtil.champImg(getChampName(2))} alt="champion"></img>
+                        <div className="profile-champ-detail-img1">
+                          <img width={100} src={resourceUtil.champSquareImg(getChampName(2), resourceUtil.ddragonVersion())} alt="champion"></img>
+                        </div>
+                        {champMasteryInfo[2].championLevel > 1 ? (
+                          <div className="profile-champ-detail-mastery">
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[2].championLevel)}></img>
+                          </div>
+                        ) : (
+                          <Fragment></Fragment>
+                        )}
                         <div className="profile-champ-detail-info">
                           {champMasteryInfo[2] !== undefined ? (
                             <Fragment>

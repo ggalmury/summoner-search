@@ -52,8 +52,19 @@
         }
 
         &-2 {
-          font-size: 1em;
+          display: flex;
           line-height: 50px;
+
+          #region {
+            font-size: 1em;
+          }
+
+          #flag {
+            width: 30px;
+            height: 30px;
+            margin-top: 10px;
+            margin-left: 5px;
+          }
         }
 
         &-3 {
@@ -165,19 +176,30 @@
 }
 
 .profile-champ-detail {
+  @include centering;
+
+  display: flex;
+  flex-direction: column;
   width: 200px;
-  margin-top: 15px;
+  height: 100%;
 
   &-img1 {
-    @include champMasteryImg(70px);
+    @include champMasteryImg(100px);
   }
 
   &-img2 {
-    @include champMasteryImg(90px);
+    @include champMasteryImg(130px);
+  }
+
+  &-mastery {
+    position: relative;
+    bottom: 19px;
+    height: 0;
   }
 
   &-info {
-    width: 100%;
+    font-size: 0.8em;
+    margin-top: 50px;
   }
 }
 

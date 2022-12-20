@@ -1,7 +1,7 @@
 import { React } from "react";
 import { useNavigate } from "react-router-dom";
-import resourceUtil from "client/util/resourceUtil.js";
-import calcUtil from "client/util/calcUtil.js";
+import resourceUtil from "../../util/resourceUtil.js";
+import calcUtil from "../../util/calcUtil.js";
 
 const MatchDetail = (props) => {
   const navigate = useNavigate();

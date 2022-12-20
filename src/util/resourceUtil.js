@@ -31,6 +31,10 @@ module.exports = {
     return `https://ddragon.bangingheads.net/cdn/latest/img/item/${itemId}.png`;
   },
 
+  champMasteryLv: (level) => {
+    return `${process.env.PUBLIC_URL}/images/champ_mastery/mastery_level${level}.png`;
+  },
+
   rankEmblem1: (tier) => {
     return `${process.env.PUBLIC_URL}/images/rank_emblems1/Emblem_${tier}.png`;
   },

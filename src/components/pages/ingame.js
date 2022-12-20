@@ -1,9 +1,9 @@
 import { React, useEffect, useState, useContext, Fragment } from "react";
 import axios from "axios";
 import Loading from "./loading.js";
-import resourceUtil from "client/util/resourceUtil.js";
-import calcUtil from "client/util/calcUtil.js";
-import { sumInfoContext } from "client/context/sumInfoContext.jsx";
+import resourceUtil from "util/resourceUtil.js";
+import calcUtil from "util/calcUtil.js";
+import { sumInfoContext } from "context/sumInfoContext.jsx";
 
 const Ingame = () => {
   const { summonerInfo } = useContext(sumInfoContext);

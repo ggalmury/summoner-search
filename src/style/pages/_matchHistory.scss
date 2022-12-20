@@ -1,11 +1,21 @@
 #match {
-  &-statistic {
-    height: 350px;
-    background-color: white;
-  }
+  @include centering;
+
+  display: flex;
+  flex-direction: column;
 
   &-statistic {
     display: flex;
+    width: 950px;
+    background-color: $info-box;
+    margin-bottom: 7px;
+
+    .chart-group {
+      @include centering;
+
+      display: flex;
+      flex-direction: column;
+    }
 
     .chart-box-1 {
       @include centering;
@@ -20,6 +30,77 @@
 
       &-2 {
         display: flex;
+        flex-direction: column;
+
+        &-vod {
+          display: flex;
+          justify-content: center;
+          font-size: 1.1em;
+          line-height: 50px;
+
+          &-v {
+            color: $victory;
+          }
+
+          &-d {
+            color: $defeat;
+          }
+        }
+
+        &-empty {
+          display: flex;
+          align-items: center;
+          height: 100px;
+        }
+      }
+    }
+
+    .chart-box-2 {
+      @include centering;
+
+      display: flex;
+      flex-direction: column;
+
+      &-1 {
+        font-size: 1.1em;
+        line-height: 30px;
+      }
+
+      &-2 {
+        font-size: 1.2em;
+        line-height: 30px;
+      }
+
+      &-3 {
+        font-size: 1em;
+        line-height: 30px;
+      }
+    }
+
+    .chart-box-3 {
+      @include centering;
+
+      display: flex;
+      flex-grow: 1;
+
+      &-1 {
+        display: flex;
+        font-size: 1em;
+      }
+
+      &-2 {
+        @include centering;
+
+        display: flex;
+        flex-direction: column;
+        width: 120px;
+
+        &-vod {
+          display: flex;
+          justify-content: center;
+          font-size: 0.8em;
+          line-height: 30px;
+        }
       }
     }
   }
@@ -31,7 +112,7 @@
     flex-direction: column;
 
     .win {
-      @include matchBox($blue);
+      @include matchBox($victory);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -40,7 +121,7 @@
     }
 
     .lose {
-      @include matchBox($red);
+      @include matchBox($defeat);
 
       .history-summ-1-vod {
         font-size: 1.2em;
@@ -238,7 +319,8 @@
     @include centering;
 
     display: flex;
-    height: 70px;
+    width: 1100px;
+    height: 50px;
     background-color: white;
   }
 }

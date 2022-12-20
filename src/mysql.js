@@ -1,4 +1,3 @@
-// mysql2 -> promise 기반 (await) /callback 기반 (callback 함수를 통해 가져올 수 있음)
 const mysql = require("mysql2/promise");
 const mysqlConfig = {
   host: process.env.DB_HOST,

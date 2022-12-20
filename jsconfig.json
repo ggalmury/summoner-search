@@ -2,5 +2,5 @@
   "compilerOptions": {
     "baseUrl": "src"
   },
-  "include": ["src", "src/setupProxy.js"]
+  "include": ["src", "src/setupProxy.js", "server", "server"]
 }
