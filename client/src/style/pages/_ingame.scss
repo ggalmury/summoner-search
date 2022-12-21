@@ -1,0 +1,168 @@
+#ingame-box {
+  @include infoBox;
+
+  display: flex;
+  flex-direction: column;
+  width: 664px;
+  height: 550px;
+  overflow: hidden;
+
+  .ingame-status {
+    display: flex;
+    font-size: 1.1em;
+    height: 30px;
+    align-items: center;
+    justify-content: flex-start;
+
+    #now-gaming {
+      font-size: 0.9em;
+      text-indent: 30px;
+      margin-left: 260px;
+    }
+
+    #game-detail {
+      display: flex;
+      margin-right: 40px;
+
+      &-type {
+        font-size: 0.8em;
+        text-indent: 14px;
+
+        &::after {
+          content: "|";
+          float: right;
+          margin-right: 10px;
+        }
+      }
+
+      &-map {
+        font-size: 0.8em;
+        text-indent: 4px;
+      }
+    }
+  }
+
+  #ingame-info {
+    display: flex;
+    flex-direction: column;
+
+    #team-b {
+      display: flex;
+      flex-direction: column;
+      height: 260px;
+
+      &-h {
+        color: $blue;
+      }
+    }
+
+    #team-r {
+      display: flex;
+      flex-direction: column;
+      height: 260px;
+
+      &-h {
+        color: $red;
+      }
+    }
+  }
+}
+
+.banned-champ-list {
+  display: flex;
+  padding: 5px;
+
+  .banned-champ {
+    width: 30px;
+    padding: 5px;
+
+    &-img {
+      width: 30px;
+    }
+  }
+}
+
+.ingame-tb {
+  display: table;
+
+  tbody {
+    display: table-row-group;
+  }
+
+  // &-th0 {
+  //   width: 40px;
+  // }
+
+  &-th1 {
+    width: 150px;
+  }
+
+  // &-th2 {
+  //   width: 150px;
+  // }
+
+  // &-th3 {
+  //   width: 120px;
+  // }
+
+  &-tr2 {
+    @include centering;
+  }
+
+  &-champ-b {
+    width: 25px;
+    border-left: 4px solid $blue;
+
+    &-img {
+      width: 25px;
+      margin-top: 5px;
+    }
+  }
+
+  &-champ-r {
+    width: 25px;
+    border-left: 4px solid $red;
+
+    &-img {
+      width: 25px;
+      margin-top: 5px;
+    }
+  }
+
+  &-spell {
+    width: 14px;
+
+    .spell-box {
+      height: 15px;
+    }
+
+    .spell-img {
+      width: 100%;
+      border-radius: 100px;
+    }
+  }
+
+  &-name {
+    font-size: 0.75em;
+    text-align: left;
+    text-indent: 6px;
+  }
+
+  &-rank {
+    font-size: 0.7em;
+    width: 35px;
+
+    &-img {
+      width: 30px;
+    }
+  }
+
+  &-lp {
+    width: 100px;
+    font-size: 0.4em;
+  }
+
+  &-winrate {
+    font-size: 0.8em;
+  }
+}

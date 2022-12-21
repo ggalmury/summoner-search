@@ -1,0 +1,52 @@
+{
+  "name": "ggclone",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.1.2",
+    "chart.js": "^4.1.1",
+    "concurrently": "^7.4.0",
+    "dotenv": "^16.0.3",
+    "http-proxy-middleware": "^2.0.6",
+    "node-sass": "^7.0.3",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.0.1",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.2",
+    "react-scripts": "^5.0.1",
+    "react-spinners": "^0.13.6",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "client": "react-scripts start",
+    "server": "cd .. && cd server && nodemon server.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "dev": "concurrently \"npm run client\" \"npm run server\""
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
