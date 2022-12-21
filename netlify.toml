@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/proxy/*"
-  to = "http://localhost:3000/:splat"
-  status = 200
-  force = true
