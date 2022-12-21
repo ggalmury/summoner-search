@@ -77,7 +77,7 @@ const Ingame = () => {
       console.log("render");
 
       try {
-        const ingameResultRaw = await axios.post("/api/spectatorV4", { encryptedSummonerId: summonerInfo.id });
+        const ingameResultRaw = await axios.post(`${util.proxy()}/api/spectatorV4`, { encryptedSummonerId: summonerInfo.id });
         ingameResult = ingameResultRaw.data;
 
         setIngameInfo(ingameResult);

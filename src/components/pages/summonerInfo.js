@@ -4,6 +4,7 @@ import axios from "axios";
 import Loading from "./loading.js";
 import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
+import util from "util/util.js";
 import { sumInfoContext } from "context/sumInfoContext.jsx";
 import { hisInfoContext } from "context/hisInfoContext.jsx";
 
@@ -49,7 +50,7 @@ const ResultPage = () => {
   };
 
   const updateHistory = async () => {
-    const updatedInfoRaw = await axios.post("/api/update", { encryptedSummonerId: summonerInfo.id });
+    const updatedInfoRaw = await axios.post(`${util.proxy()}/api/update`, { encryptedSummonerId: summonerInfo.id });
     const updatedInfo = updatedInfoRaw.data;
 
     if (updatedInfo.success === undefined) {
@@ -162,7 +163,7 @@ const ResultPage = () => {
       let puuid;
 
       try {
-        const infoResultRaw = await axios.post("/api/summonerV4", { summonerName });
+        const infoResultRaw = await axios.post(`${util.proxy()}/api/summonerV4`, { summonerName });
         infoResult = infoResultRaw.data;
 
         if (infoResult.success === false) {
@@ -182,9 +183,9 @@ const ResultPage = () => {
       }
 
       Promise.allSettled([
-        axios.post("/api/masteryV4", { encryptedSummonerId }),
-        axios.post("/api/leagueV4", { encryptedSummonerId }),
-        axios.post("/api/matchV5", { puuid, start: 0, end: 100, count: 0 }),
+        axios.post(`${util.proxy()}/api/masteryV4`, { encryptedSummonerId }),
+        axios.post(`${util.proxy()}/api/leagueV4`, { encryptedSummonerId }),
+        axios.post(`${util.proxy()}/api/matchV5`, { puuid, start: 0, end: 100, count: 0 }),
       ])
         .then((res) => {
           const champResult = res[0].value.data;

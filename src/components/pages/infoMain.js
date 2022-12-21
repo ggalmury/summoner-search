@@ -196,7 +196,7 @@ const InfoMain = () => {
             e.preventDefault();
 
             axios
-              .post("/api/matchV5", { puuid: summonerInfo.puuid, start: 0, end: 100, count: rankCount + 10 })
+              .post(`${util.proxy()}/api/matchV5`, { puuid: summonerInfo.puuid, start: 0, end: 100, count: rankCount + 10 })
               .then((res) => {
                 const data = res.data.data;
                 calcUtil.asc(data);
