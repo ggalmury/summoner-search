@@ -6,6 +6,7 @@ import MatchHistoy from "./matchHistoy.js";
 import PieChart from "../charts/PieChart.js";
 import DoughnutChart from "../charts/Doughnut.js";
 import calcUtil from "util/calcUtil.js";
+import util from "util/util.js";
 
 const InfoMain = () => {
   const [rankCount, setRankCount] = useState(0);

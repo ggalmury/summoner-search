@@ -3,6 +3,7 @@ import axios from "axios";
 import Loading from "./loading.js";
 import resourceUtil from "util/resourceUtil.js";
 import calcUtil from "util/calcUtil.js";
+import util from "util/util.js";
 import { sumInfoContext } from "context/sumInfoContext.jsx";
 
 const Ingame = () => {
