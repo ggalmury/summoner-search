@@ -44,7 +44,7 @@ const Ingame = () => {
     const newArr = await Promise.all(
       list.map(async (participant) => {
         try {
-          const rankDataRaw = await axios.post("/api/leagueV4", { encryptedSummonerId: participant.summonerId });
+          const rankDataRaw = await axios.post(`${util.proxy()}/api/leagueV4`, { encryptedSummonerId: participant.summonerId });
           const rankData = rankDataRaw.data.data;
 
           for (let detail of rankData) {
