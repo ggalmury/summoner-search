@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/api", sumInfo);
 
-app.use(cors({ origin: ["https://wardgg.netlify.app/"], methods: "GET,POST,HEAD", preflightContinue: false, credentials: true }));
+app.use(cors({ origin: ["https://wardgg.netlify.app"], methods: "GET,POST,HEAD", preflightContinue: false, credentials: true }));
 
 app.get("/", (_, res) => {
   res.send({ hello: "hello world" });
