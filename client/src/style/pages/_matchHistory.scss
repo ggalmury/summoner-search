@@ -6,9 +6,10 @@
 
   &-statistic {
     display: flex;
-    width: 950px;
-    background-color: $info-box;
+    width: 100%;
+    background-color: $main-color;
     margin-bottom: 7px;
+    border-radius: 20px;
 
     .chart-group {
       @include centering;
@@ -110,31 +111,35 @@
 
     display: flex;
     flex-direction: column;
+    width: 100%;
 
     .win {
-      @include matchBox($victory);
+      @include matchBox($victory, $blue);
 
       .history-summ-1-vod {
         font-size: 1.2em;
         color: $blue;
+        font-weight: bold;
       }
     }
 
     .lose {
-      @include matchBox($defeat);
+      @include matchBox($defeat, $red);
 
       .history-summ-1-vod {
         font-size: 1.2em;
         color: $red;
+        font-weight: bold;
       }
     }
 
     .draw {
-      @include matchBox($gray);
+      @include matchBox($gray, $main-color);
 
       .history-summ-1-vod {
         font-size: 1.2em;
-        color: $gray;
+        color: black;
+        font-weight: bold;
       }
     }
 
@@ -183,12 +188,12 @@
 
           &-img-1 {
             @include square(60px);
-            border-radius: $border-rad1;
+            border-radius: $rad;
           }
 
           &-img-2 {
             @include square(27px);
-            border-radius: $border-rad1;
+            border-radius: $rad;
           }
         }
 
@@ -279,7 +284,7 @@
           @include square(30px);
 
           padding: 1px;
-          border-radius: $border-rad1;
+          border-radius: $rad;
         }
       }
 
@@ -300,7 +305,7 @@
           &-img {
             @include square(15px);
 
-            border-radius: $border-rad1;
+            border-radius: $rad;
           }
 
           &-name {

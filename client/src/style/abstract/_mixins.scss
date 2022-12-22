@@ -28,7 +28,7 @@
 }
 
 @mixin infoBox {
-  background-color: $info-box;
+  background-color: $main-color;
   border: none;
 }
 
@@ -41,14 +41,15 @@
   overflow: hidden;
 }
 
-@mixin matchBox($color) {
+@mixin matchBox($box-color, $border-color) {
   @include centering();
 
   display: flex;
-  width: 1000px;
+  width: 100%;
   height: 120px;
-  background-color: white;
-  border-left: 10px solid $color;
+  background-color: $box-color;
+  border-left: 10px solid $border-color;
   margin-top: 7px;
   margin-bottom: 7px;
+  border-radius: $rad;
 }

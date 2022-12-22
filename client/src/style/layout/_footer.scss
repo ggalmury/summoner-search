@@ -1,8 +1,17 @@
 #footer {
+  display: flex;
   height: 170px;
-  background-color: rgba(0, 0, 0, 0.39);
+  background-color: $sub-color1;
   margin-top: auto;
   font-size: 0.4em;
+  justify-content: center;
+  align-items: center;
+
+  #copyright {
+    width: 1100px;
+    border-top: 1px solid white;
+    padding: 20px;
+  }
 }
 
 // @include mobile {
