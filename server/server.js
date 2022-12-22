@@ -9,13 +9,13 @@ const app = express();
 const port = 4000;
 const path = require("path");
 
+app.use(cors({ origin: ["https://wardgg.netlify.app"], methods: "GET,POST,HEAD", preflightContinue: false, credentials: true }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/api", sumInfo);
-
-app.use(cors({ origin: ["https://wardgg.netlify.app"], methods: "GET,POST,HEAD", preflightContinue: false, credentials: true }));
 
 app.get("/", (_, res) => {
   res.send({ hello: "hello world" });
