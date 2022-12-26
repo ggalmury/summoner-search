@@ -7,11 +7,13 @@ import PieChart from "../charts/PieChart.js";
 import DoughnutChart from "../charts/Doughnut.js";
 import calcUtil from "util/calcUtil.js";
 import util from "util/util.js";
+import { ClipLoader } from "react-spinners";
 
 const InfoMain = () => {
   const [rankCount, setRankCount] = useState(0);
   const { summonerInfo } = useContext(sumInfoContext);
   const { historyInfo, setHistoryInfo, convertHistoryInfo } = useContext(hisInfoContext);
+  const [loading, setLoading] = useState(false);
 
   const addHistory = (arr) => {
     const data = arr.map((his, idx) => {
@@ -19,6 +21,23 @@ const InfoMain = () => {
     });
 
     return data;
+  };
+
+  const loadingHistory = () => {
+    setLoading(true);
+
+    axios
+      .post(`${util.env()}/api/matchV5`, { puuid: summonerInfo.puuid, start: 0, end: 100, count: rankCount + 10 })
+      .then((res) => {
+        const data = res.data.data;
+        calcUtil.asc(data);
+        setHistoryInfo(historyInfo.concat(convertHistoryInfo(data, summonerInfo.id)));
+        setRankCount(rankCount + 10);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const myDataStatistics = () => {
@@ -103,6 +122,8 @@ const InfoMain = () => {
         case 450:
           statGroup(aram);
           break;
+        default:
+          return undefined;
       }
 
       statGroup(total);
@@ -172,7 +193,7 @@ const InfoMain = () => {
                   ) : (
                     <Fragment>
                       <div className="chart-box-1-2-empty">
-                        <img width={60} src="../images/sad_poro.png"></img>
+                        <img width={60} src="../images/sad_poro.png" alt="정보 없음"></img>
                       </div>
                       <div className="chart-box-3-2-vod">전적이 없어요</div>
                     </Fragment>
@@ -191,26 +212,13 @@ const InfoMain = () => {
       <div id="match-statistic">{myDataStatistics()}</div>
       <div id="match-history">{addHistory(historyInfo)}</div>
       <div id="match-add">
-        <button
-          id="btn-match-add"
-          onClick={(e) => {
-            e.preventDefault();
-
-            axios
-              .post(`${util.proxy()}/api/matchV5`, { puuid: summonerInfo.puuid, start: 0, end: 100, count: rankCount + 10 })
-              .then((res) => {
-                const data = res.data.data;
-                calcUtil.asc(data);
-                setHistoryInfo(historyInfo.concat(convertHistoryInfo(data, summonerInfo.id)));
-                setRankCount(rankCount + 10);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          }}
-        >
-          +
-        </button>
+        {loading ? (
+          <ClipLoader />
+        ) : (
+          <button id="btn-match-add" onClick={loadingHistory}>
+            +
+          </button>
+        )}
       </div>
     </div>
   );

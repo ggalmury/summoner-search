@@ -37,6 +37,8 @@ const ResultPage = () => {
         case "RANKED_SOLO_5x5":
           setSoloLeagueInfo(rank);
           break;
+        default:
+          return undefined;
       }
     });
   };
@@ -50,7 +52,7 @@ const ResultPage = () => {
   };
 
   const updateHistory = async () => {
-    const updatedInfoRaw = await axios.post(`${util.proxy()}/api/update`, { encryptedSummonerId: summonerInfo.id });
+    const updatedInfoRaw = await axios.post(`${util.env()}/api/update`, { encryptedSummonerId: summonerInfo.id });
     const updatedInfo = updatedInfoRaw.data;
 
     if (updatedInfo.success === undefined) {
@@ -84,7 +86,7 @@ const ResultPage = () => {
         totalAssist: 0,
 
         totalBaronKills: 0,
-        totalDargonKills: 0,
+        totalDragonKills: 0,
         totalTurretKills: 0,
 
         totalDamageDealt: 0,
@@ -100,7 +102,7 @@ const ResultPage = () => {
         totalAssist: 0,
 
         totalBaronKills: 0,
-        totalDargonKills: 0,
+        totalDragonKills: 0,
         totalTurretKills: 0,
 
         totalDamageDealt: 0,
@@ -157,13 +159,15 @@ const ResultPage = () => {
   };
 
   useEffect(() => {
+    const btn = document.getElementById("btn-search");
+
     const fetchData = async () => {
       let infoResult;
       let encryptedSummonerId;
       let puuid;
 
       try {
-        const infoResultRaw = await axios.post(`${util.proxy()}/api/summonerV4`, { summonerName });
+        const infoResultRaw = await axios.post(`${util.env()}/api/summonerV4`, { summonerName });
         infoResult = infoResultRaw.data;
 
         if (infoResult.success === false) {
@@ -183,9 +187,9 @@ const ResultPage = () => {
       }
 
       Promise.allSettled([
-        axios.post(`${util.proxy()}/api/masteryV4`, { encryptedSummonerId }),
-        axios.post(`${util.proxy()}/api/leagueV4`, { encryptedSummonerId }),
-        axios.post(`${util.proxy()}/api/matchV5`, { puuid, start: 0, end: 100, count: 0 }),
+        axios.post(`${util.env()}/api/masteryV4`, { encryptedSummonerId }),
+        axios.post(`${util.env()}/api/leagueV4`, { encryptedSummonerId }),
+        axios.post(`${util.env()}/api/matchV5`, { puuid, start: 0, end: 100, count: 0 }),
       ])
         .then((res) => {
           const champResult = res[0].value.data;
@@ -198,6 +202,7 @@ const ResultPage = () => {
           queueType(rankResult.data);
           setHistoryInfo(convertHistoryInfo(historyInfo.data, encryptedSummonerId));
 
+          btn.disabled = false;
           setLoading(false);
         })
         .catch((err) => {
@@ -206,6 +211,7 @@ const ResultPage = () => {
         });
     };
 
+    btn.disabled = true;
     setLoading(true);
     fetchData();
   }, [summonerName]);
@@ -229,7 +235,7 @@ const ResultPage = () => {
                         <div className="profile-detail-1">{summonerInfo.name}</div>
                         <div className="profile-detail-2">
                           <div id="region">KR</div>
-                          <img id="flag" src="../images/kr.png"></img>
+                          <img id="flag" src="../images/kr.png" alt="이미지"></img>
                         </div>
                         <div className="profile-detail-3">{summonerInfo.summonerLevel} LV</div>
                       </div>
@@ -302,7 +308,7 @@ const ResultPage = () => {
                         </div>
                         {champMasteryInfo[1].championLevel > 1 ? (
                           <div className="profile-champ-detail-mastery">
-                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[1].championLevel)}></img>
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[1].championLevel)} alt="이미지"></img>
                           </div>
                         ) : (
                           <Fragment></Fragment>
@@ -321,11 +327,11 @@ const ResultPage = () => {
                       </div>
                       <div className="profile-champ-detail">
                         <div className="profile-champ-detail-img2">
-                          <img width={130} src={resourceUtil.champSquareImg(getChampName(0), resourceUtil.ddragonVersion())} alt="champion"></img>
+                          <img width={130} src={resourceUtil.champSquareImg(getChampName(0), resourceUtil.ddragonVersion())} alt="이미지"></img>
                         </div>
                         {champMasteryInfo[0].championLevel > 1 ? (
                           <div className="profile-champ-detail-mastery">
-                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[0].championLevel)}></img>
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[0].championLevel)} alt="이미지"></img>
                           </div>
                         ) : (
                           <Fragment></Fragment>
@@ -344,11 +350,11 @@ const ResultPage = () => {
                       </div>
                       <div className="profile-champ-detail">
                         <div className="profile-champ-detail-img1">
-                          <img width={100} src={resourceUtil.champSquareImg(getChampName(2), resourceUtil.ddragonVersion())} alt="champion"></img>
+                          <img width={100} src={resourceUtil.champSquareImg(getChampName(2), resourceUtil.ddragonVersion())} alt="이미지"></img>
                         </div>
                         {champMasteryInfo[2].championLevel > 1 ? (
                           <div className="profile-champ-detail-mastery">
-                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[2].championLevel)}></img>
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[2].championLevel)} alt="이미지"></img>
                           </div>
                         ) : (
                           <Fragment></Fragment>

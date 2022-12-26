@@ -34,7 +34,7 @@ const Header = () => {
           <input id="summoner-id-search" placeholder="소환사명 입력" value={summonerName} onChange={searchUserName}></input>
         </div>
         <div>
-          <button className="btn-search" onClick={userData}>
+          <button id="btn-search" onClick={userData} disabled="">
             검색
           </button>
         </div>

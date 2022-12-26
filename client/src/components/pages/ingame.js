@@ -18,7 +18,7 @@ const Ingame = () => {
     const champName = resourceUtil.champNumToName(id);
 
     if (id === undefined || id === -1) {
-      return `${process.env.PUBLIC_URL}/images/random-champion.png`;
+      return `${process.env.PUBLIC_URL}/images/icon-helmet.png`;
     }
 
     return resourceUtil.champSquareImg(champName, ddversion);
@@ -44,7 +44,7 @@ const Ingame = () => {
     const newArr = await Promise.all(
       list.map(async (participant) => {
         try {
-          const rankDataRaw = await axios.post(`${util.proxy()}/api/leagueV4`, { encryptedSummonerId: participant.summonerId });
+          const rankDataRaw = await axios.post(`${util.env()}/api/leagueV4`, { encryptedSummonerId: participant.summonerId });
           const rankData = rankDataRaw.data.data;
 
           for (let detail of rankData) {
@@ -75,10 +75,10 @@ const Ingame = () => {
   useEffect(() => {
     const fetchData = async () => {
       let ingameResult = {};
-      console.log("render");
+      console.log(summonerInfo.id);
 
       try {
-        const ingameResultRaw = await axios.post(`${util.proxy()}/api/spectatorV4`, { encryptedSummonerId: summonerInfo.id });
+        const ingameResultRaw = await axios.post(`${util.env()}/api/spectatorV4`, { encryptedSummonerId: summonerInfo.id });
         ingameResult = ingameResultRaw.data;
 
         setIngameInfo(ingameResult);
@@ -96,7 +96,7 @@ const Ingame = () => {
 
     setLoading(true);
     fetchData();
-  }, [summonerInfo]);
+  }, []);
 
   return (
     <Fragment>
@@ -123,7 +123,7 @@ const Ingame = () => {
 
                       return (
                         <div className="banned-champ" key={idx}>
-                          <img className="banned-champ-img" src={value}></img>
+                          <img className="banned-champ-img" src={value} alt="이미지"></img>
                         </div>
                       );
                     })}
@@ -151,16 +151,16 @@ const Ingame = () => {
                           <tr className="ingame-tb-tr2" key={idx}>
                             <td className="ingame-tb-champ-b">
                               <div>
-                                <img className="ingame-tb-champ-b-img" src={getChampSquareImg(value.championId)}></img>
+                                <img className="ingame-tb-champ-b-img" src={getChampSquareImg(value.championId)} alt="이미지"></img>
                               </div>
                             </td>
                             <td className="ingame-tb-spell">
                               <div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell1Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell1Id)} alt="이미지"></img>
                                 </div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell2Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell2Id)} alt="이미지"></img>
                                 </div>
                               </div>
                             </td>
@@ -171,7 +171,7 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2(value.rank.tier)}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2(value.rank.tier)} alt="이미지"></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
@@ -188,7 +188,7 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2("UNRANKED")}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2("UNRANKED")} alt="이미지"></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
@@ -227,16 +227,16 @@ const Ingame = () => {
                           <tr className="ingame-tb-tr2" key={idx}>
                             <td className="ingame-tb-champ-r">
                               <div>
-                                <img className="ingame-tb-champ-r-img" src={getChampSquareImg(value.championId)}></img>
+                                <img className="ingame-tb-champ-r-img" src={getChampSquareImg(value.championId)} alt="이미지"></img>
                               </div>
                             </td>
                             <td className="ingame-tb-spell">
                               <div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell1Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell1Id)} alt="이미지"></img>
                                 </div>
                                 <div className="spell-box">
-                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell2Id)}></img>
+                                  <img className="spell-img" src={resourceUtil.summonerSpellImg(value.spell2Id)} alt="이미지"></img>
                                 </div>
                               </div>
                             </td>
@@ -247,7 +247,7 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2(value.rank.tier)}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2(value.rank.tier)} alt="이미지"></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
@@ -264,7 +264,7 @@ const Ingame = () => {
                               <Fragment>
                                 <td className="ingame-tb-rank">
                                   <div>
-                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2("UNRANKED")}></img>
+                                    <img className="ingame-tb-rank-img" src={resourceUtil.rankEmblem2("UNRANKED")} alt="이미지"></img>
                                   </div>
                                 </td>
                                 <td className="ingame-tb-lp">
@@ -286,7 +286,7 @@ const Ingame = () => {
 
                       return (
                         <div className="banned-champ" key={idx}>
-                          <img className="banned-champ-img" src={value}></img>
+                          <img className="banned-champ-img" src={value} alt="이미지"></img>
                         </div>
                       );
                     })}

@@ -229,7 +229,7 @@ router.post("/update", (req, res) => {
     });
 });
 
-router.post("/spectatorV4", async (req, res) => {
+router.post("/spectatorV4", (req, res) => {
   const { encryptedSummonerId } = req.body;
   const url = `https://kr.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/${encryptedSummonerId}`;
 
@@ -264,6 +264,7 @@ router.post("/matchV5", (req, res) => {
           if (success) {
             const game = data.info;
             const participants = game.participants;
+            const teams = game.teams;
 
             const gameData = {
               gameDuration: game.gameDuration,
@@ -288,7 +289,7 @@ router.post("/matchV5", (req, res) => {
                 perksSub: summ.perks.styles[1].style,
                 totalDamageDealtToChampions: summ.totalDamageDealtToChampions,
                 totalDamageTaken: summ.totalDamageTaken,
-                totalMinionsKilled: summ.totalMinionsKilled,
+                totalMinionsKilled: summ.totalMinionsKilled + summ.neutralMinionsKilled,
 
                 lane: summ.lane,
                 championId: summ.championId,
