@@ -1,4 +1,4 @@
-import { Fragment, React } from "react";
+import { Fragment, React, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import resourceUtil from "../../util/resourceUtil.js";
 import calcUtil from "../../util/calcUtil.js";
@@ -6,33 +6,52 @@ import calcUtil from "../../util/calcUtil.js";
 const MatchDetail = (props) => {
   const navigate = useNavigate();
   const history = props.history;
+  const [isGraph, setIsGraph] = useState(false);
+  const [chartType, setChartType] = useState("그래프");
 
   const blueTeamStat = history.blueTeam.statistic;
   const redTeamstat = history.redTeam.statistic;
 
-  let high;
+  let high = {};
 
-  const highestDamage = () => {
-    let damages = [];
+  const highestStat = () => {
+    let totalArr = [];
+    let damageDealtArr = [];
+    let damageTakenArr = [];
+    let goldEarnedArr = [];
+    let minionKilledArr = [];
 
     history.blueTeam.participant.forEach((participant) => {
-      damages.push(participant.totalDamageDealtToChampions);
+      damageDealtArr.push(participant.totalDamageDealt);
+      damageTakenArr.push(participant.totalDamageTaken);
+      goldEarnedArr.push(participant.goldEarned);
+      minionKilledArr.push(participant.totalMinionsKilled);
     });
 
     history.redTeam.participant.forEach((participant) => {
-      damages.push(participant.totalDamageDealtToChampions);
+      damageDealtArr.push(participant.totalDamageDealt);
+      damageTakenArr.push(participant.totalDamageTaken);
+      goldEarnedArr.push(participant.goldEarned);
+      minionKilledArr.push(participant.totalMinionsKilled);
     });
 
-    damages.sort((a, b) => {
-      if (a > b) return 1;
-      if (a === b) return 0;
-      if (a < b) return -1;
-    });
+    totalArr.push(damageDealtArr, damageTakenArr, goldEarnedArr, minionKilledArr);
 
-    high = damages[damages.length - 1];
+    for (let arr of totalArr) {
+      arr.sort((a, b) => {
+        if (a > b) return 1;
+        if (a === b) return 0;
+        if (a < b) return -1;
+      });
+    }
+
+    high.damageDealt = totalArr[0][damageDealtArr.length - 1];
+    high.damageTaken = totalArr[1][damageTakenArr.length - 1];
+    high.goldEarned = totalArr[2][goldEarnedArr.length - 1];
+    high.minionKilled = totalArr[3][minionKilledArr.length - 1];
   };
 
-  highestDamage();
+  highestStat();
 
   const renderDetail = (team) => {
     const participants = team.participant;
@@ -61,7 +80,7 @@ const MatchDetail = (props) => {
       const kda = calcUtil.kdaRate(kills, deaths, assists);
       const killPart = Math.floor(((kills + assists) / team.statistic.totalKill) * 100);
 
-      const damageDealt = participant.totalDamageDealtToChampions;
+      const damageDealt = participant.totalDamageDealt;
       const damageTaken = participant.totalDamageTaken;
 
       const normalWard = participant.wardsPlaced;
@@ -70,6 +89,7 @@ const MatchDetail = (props) => {
 
       const minionKill = participant.totalMinionsKilled;
       const minionPerMinute = (participant.totalMinionsKilled / calcUtil.timeCalc(history.gameData.gameDuration).min).toFixed(1);
+      const goldEarned = participant.goldEarned;
 
       const itemImg = participant.items.map((item) => {
         return resourceUtil.itemIng(item);
@@ -82,15 +102,16 @@ const MatchDetail = (props) => {
       return (
         <Fragment key={idx}>
           <tr className="match-tr-2">
-            <td>
+            <td className="match-tr-2-c">
               <div>
-                <img className="match-tr-2-img1" src={champImg} alt="이미지"></img>
+                <img className="match-tr-2-img1" src={champImg} alt=""></img>
+                <div>{champLevel} LV</div>
               </div>
             </td>
             <td className="match-tr-2-sp">
               <div className="match-tr-2-sp-d">
-                <img className="match-tr-2-img2" src={spellImg(participant.summoner1Id)} alt="이미지"></img>
-                <img className="match-tr-2-img2" src={spellImg(participant.summoner2Id)} alt="이미지"></img>
+                <img className="match-tr-2-img2" src={spellImg(participant.summoner1Id)} alt=""></img>
+                <img className="match-tr-2-img2" src={spellImg(participant.summoner2Id)} alt=""></img>
               </div>
             </td>
             <td>
@@ -109,35 +130,66 @@ const MatchDetail = (props) => {
                 {summonerName}
               </div>
             </td>
-            <td>
-              <div>
-                <div>
-                  {kills} / {deaths} / {assists} ({killPart || 0}%)
-                </div>
-                <div>{kda}</div>
-              </div>
-            </td>
-            <td className="match-tr-2-damage">
-              <div>
-                <progress max={high} min={0} value={damageDealt}></progress>
-                <div className="match-tr-2-damage-num">+ {damageDealt.toLocaleString()}</div>
-              </div>
-            </td>
-            <td>
-              <div>
-                {normalWard} / {detectorWard}
-              </div>
-              <div>{destroyWard}</div>
-            </td>
-            <td>
-              <div>{minionKill}</div>
-              <div>{minionPerMinute} / 분</div>
-            </td>
-            <td>
-              {itemImg.map((item, idx) => {
-                return <img className="match-tr-2-img3" key={idx} src={item} alt=""></img>;
-              })}
-            </td>
+            {isGraph ? (
+              <Fragment>
+                <td className="match-tr-2-graph">
+                  <div>
+                    <progress max={high.damageDealt} min={0} value={damageDealt}></progress>
+                    <div className="match-tr-2-damage-num">+ {damageDealt.toLocaleString()}</div>
+                  </div>
+                </td>
+                <td className="match-tr-2-graph">
+                  <div>
+                    <progress max={high.damageTaken} min={0} value={damageTaken}></progress>
+                    <div className="match-tr-2-damage-num">+ {damageTaken.toLocaleString()}</div>
+                  </div>
+                </td>
+                <td className="match-tr-2-graph">
+                  <div>
+                    <progress max={high.goldEarned} min={0} value={goldEarned}></progress>
+                    <div className="match-tr-2-damage-num">+ {goldEarned.toLocaleString()}</div>
+                  </div>
+                </td>
+                <td className="match-tr-2-graph">
+                  <div>
+                    <progress max={high.minionKilled} min={0} value={minionKill}></progress>
+                    <div className="match-tr-2-damage-num">+ {minionKill.toLocaleString()}</div>
+                  </div>
+                </td>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <td>
+                  <div>
+                    <div>
+                      {kills} / {deaths} / {assists} ({killPart || 0}%)
+                    </div>
+                    <div>{kda}</div>
+                  </div>
+                </td>
+                <td className="match-tr-2-damage">
+                  <div>
+                    <progress max={high.damageDealt} min={0} value={damageDealt}></progress>
+                    <div className="match-tr-2-damage-num">+ {damageDealt.toLocaleString()}</div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    {normalWard} / {detectorWard}
+                  </div>
+                  <div>{destroyWard}</div>
+                </td>
+                <td>
+                  <div>{minionKill}</div>
+                  <div>{minionPerMinute} / 분</div>
+                </td>
+                <td>
+                  {itemImg.map((item, idx) => {
+                    return <img className="match-tr-2-img3" key={idx} src={item} alt=""></img>;
+                  })}
+                </td>
+              </Fragment>
+            )}
           </tr>
         </Fragment>
       );
@@ -146,12 +198,24 @@ const MatchDetail = (props) => {
     return (
       <tbody>
         <tr className="match-tr-1">
-          <td colSpan={4}>{vod()}</td>
-          <td>KDA</td>
-          <td>피해량</td>
-          <td>와드</td>
-          <td>CS</td>
-          <td>아이템</td>
+          {isGraph ? (
+            <Fragment>
+              <td colSpan={4}>{vod()}</td>
+              <td>가한 데미지</td>
+              <td>받은 데미지</td>
+              <td>골드</td>
+              <td>미니언</td>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <td colSpan={4}>{vod()}</td>
+              <td>KDA</td>
+              <td>피해량</td>
+              <td>와드</td>
+              <td>CS</td>
+              <td>아이템</td>
+            </Fragment>
+          )}
         </tr>
         {data}
       </tbody>
@@ -182,6 +246,21 @@ const MatchDetail = (props) => {
             </div>
           </div>
         </div>
+        <button
+          className="btn-graph"
+          onClick={(e) => {
+            e.preventDefault();
+            if (chartType === "통계") {
+              setChartType("그래프");
+            } else {
+              setChartType("통계");
+            }
+
+            setIsGraph(!isGraph);
+          }}
+        >
+          {chartType}
+        </button>
         <div className="match-summary-1">
           <div className="match-summary-1-2">
             <img className="match-summary-1-2-img2" src={`${process.env.PUBLIC_URL}/images/ingame_assets/kills.png`} alt=""></img>

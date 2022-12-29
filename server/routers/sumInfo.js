@@ -287,7 +287,7 @@ router.post("/matchV5", (req, res) => {
                 assists: summ.assists,
                 perksMain: summ.perks.styles[0].selections[0].perk,
                 perksSub: summ.perks.styles[1].style,
-                totalDamageDealtToChampions: summ.totalDamageDealtToChampions,
+                totalDamageDealt: summ.totalDamageDealtToChampions,
                 totalDamageTaken: summ.totalDamageTaken,
                 totalMinionsKilled: summ.totalMinionsKilled + summ.neutralMinionsKilled,
 

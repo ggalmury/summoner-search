@@ -42,6 +42,15 @@
   border: none;
 }
 
+.btn-graph {
+  border: 3px solid $mint;
+  width: 80px;
+  height: 30px;
+  background-color: $main-color;
+  color: white;
+  font-size: 0.8em;
+}
+
 // @include mobile {
 //   .btn {
 //     &-category {

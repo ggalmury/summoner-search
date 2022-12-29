@@ -17,7 +17,7 @@ module.exports = {
 
   champSquareImg: (name, version) => {
     if (name === undefined) {
-      return undefined;
+      return `${process.env.PUBLIC_URL}/images/icon-helmet.png`;
     }
 
     return `http://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${name}.png`;

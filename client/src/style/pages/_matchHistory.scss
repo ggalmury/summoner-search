@@ -112,6 +112,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    color: black;
 
     .win {
       @include matchBox($victory, $blue);

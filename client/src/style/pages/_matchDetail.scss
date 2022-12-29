@@ -5,11 +5,11 @@
 }
 
 .red {
-  background-color: rgb(174, 48, 60);
+  background-color: $red-team;
 }
 
 .blue {
-  background-color: rgb(67, 148, 167);
+  background-color: $blue-team;
 }
 
 .match-tr-1 {
@@ -38,6 +38,10 @@
   &-img3 {
     @include square(30px);
     padding: 1px;
+  }
+
+  &-c {
+    font-size: 0.8em;
   }
 
   &-sp {
@@ -74,9 +78,24 @@
       font-size: 0.8em;
     }
   }
+
+  &-graph {
+    progress {
+      width: 136px;
+      height: 13px;
+      background-color: white;
+      margin-top: 10px;
+
+      &::-webkit-progress-value {
+        background-color: $main-color;
+      }
+    }
+  }
 }
 
 .match-summary {
+  @include centering;
+
   display: flex;
   height: 45px;
   background-color: rgb(197, 197, 197);
@@ -84,6 +103,7 @@
 
   &-1 {
     @include centering;
+
     display: flex;
     flex-grow: 1;
 

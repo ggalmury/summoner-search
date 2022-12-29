@@ -139,7 +139,7 @@ const ResultPage = () => {
           redTeamStatistic.totalBaronKills += participant.baronKills;
           redTeamStatistic.totalDargonKills += participant.dragonKills;
           redTeamStatistic.totalTurretKills += participant.turretKills;
-          redTeamStatistic.totalDamageDealt += participant.totalDamageDealtToChampions;
+          redTeamStatistic.totalDamageDealt += participant.totalDamageDealt;
           redTeamStatistic.totalDamageTaken += participant.totalDamageTaken;
           redTeamStatistic.totalGold += participant.goldEarned;
           redTeamStatistic.totalMinionKill += participant.totalMinionsKilled;

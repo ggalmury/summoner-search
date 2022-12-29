@@ -53,3 +53,14 @@
   margin-bottom: 7px;
   border-radius: $rad;
 }
+
+@mixin ingameBox($box-color) {
+  display: flex;
+  flex-direction: column;
+  width: 605px;
+  background-color: $box-color;
+
+  &-h {
+    color: black;
+  }
+}
