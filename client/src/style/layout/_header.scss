@@ -31,35 +31,23 @@
   }
 }
 
-// @include mobile {
-//   #header {
-//     @include centering;
+@include mobile {
+  #header {
+    flex-direction: column;
+    height: 150px;
 
-//     display: flex;
-//     flex-direction: column;
-//     height: 150px;
-//     padding: 20px;
+    #web-title {
+      font-size: 2em;
+      margin: 0;
+      cursor: none;
+    }
 
-//     #web-title {
-//       padding: 20px;
-//       font-size: 2em;
-//       cursor: none;
-//     }
+    #search-box {
+      display: flex;
 
-//     #search-box {
-//       display: flex;
-
-//       #summoner-id-search {
-//         width: 280px;
-//         height: 50px;
-//         background-color: white;
-//         font-size: 1em;
-//         text-align: center;
-//         border: none;
-//         border-top-left-radius: 15px;
-//         border-bottom-left-radius: 15px;
-//         text-indent: 50px;
-//       }
-//     }
-//   }
-// }
+      #summoner-id-search {
+        width: 280px;
+      }
+    }
+  }
+}

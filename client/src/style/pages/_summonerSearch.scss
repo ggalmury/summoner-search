@@ -5,11 +5,11 @@
   flex: 1;
 }
 
-// @include mobile {
-//   #search-page {
-//     @include centering;
+@include mobile {
+  #search-page {
+    @include centering;
 
-//     display: flex;
-//     flex: 1;
-//   }
-// }
+    display: flex;
+    flex: 1;
+  }
+}

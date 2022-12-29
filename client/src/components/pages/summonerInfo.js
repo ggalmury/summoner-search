@@ -303,8 +303,8 @@ const ResultPage = () => {
                     </div>
                     <div id="profile-2-2">
                       <div className="profile-champ-detail">
-                        <div className="profile-champ-detail-img1">
-                          <img width={100} src={resourceUtil.champSquareImg(getChampName(1), resourceUtil.ddragonVersion())} alt="champion"></img>
+                        <div className="profile-champ-detail-champ1">
+                          <img src={resourceUtil.champSquareImg(getChampName(1), resourceUtil.ddragonVersion())} alt="champion"></img>
                         </div>
                         {champMasteryInfo[1].championLevel > 1 ? (
                           <div className="profile-champ-detail-mastery">
@@ -326,12 +326,12 @@ const ResultPage = () => {
                         </div>
                       </div>
                       <div className="profile-champ-detail">
-                        <div className="profile-champ-detail-img2">
-                          <img width={130} src={resourceUtil.champSquareImg(getChampName(0), resourceUtil.ddragonVersion())} alt="이미지"></img>
+                        <div className="profile-champ-detail-champ2">
+                          <img src={resourceUtil.champSquareImg(getChampName(0), resourceUtil.ddragonVersion())} alt=""></img>
                         </div>
                         {champMasteryInfo[0].championLevel > 1 ? (
                           <div className="profile-champ-detail-mastery">
-                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[0].championLevel)} alt="이미지"></img>
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[0].championLevel)} alt=""></img>
                           </div>
                         ) : (
                           <Fragment></Fragment>
@@ -349,12 +349,12 @@ const ResultPage = () => {
                         </div>
                       </div>
                       <div className="profile-champ-detail">
-                        <div className="profile-champ-detail-img1">
-                          <img width={100} src={resourceUtil.champSquareImg(getChampName(2), resourceUtil.ddragonVersion())} alt="이미지"></img>
+                        <div className="profile-champ-detail-champ1">
+                          <img className="profile-champ-detail-img1" src={resourceUtil.champSquareImg(getChampName(2), resourceUtil.ddragonVersion())} alt=""></img>
                         </div>
                         {champMasteryInfo[2].championLevel > 1 ? (
                           <div className="profile-champ-detail-mastery">
-                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[2].championLevel)} alt="이미지"></img>
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[2].championLevel)} alt=""></img>
                           </div>
                         ) : (
                           <Fragment></Fragment>

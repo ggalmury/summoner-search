@@ -32,11 +32,11 @@
   border: none;
 }
 
-@mixin champMasteryImg($width) {
+@mixin champMasteryImg($width, $border) {
   @include square($width);
 
   border-radius: 50%;
-  border: 6px solid rgb(203, 172, 101);
+  border: $border solid rgb(203, 172, 101);
   margin-top: 10%;
   overflow: hidden;
 }

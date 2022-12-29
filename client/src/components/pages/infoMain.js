@@ -153,7 +153,7 @@ const InfoMain = () => {
             {total.gameCount !== 0 ? (
               <Fragment>
                 <div>
-                  <PieChart width={200} chartData={expData(total)} />
+                  <PieChart width={150} chartData={expData(total)} />
                 </div>
                 <div className="chart-box-1-2-vod">
                   <div>{total.gameCount}전</div>&nbsp;
@@ -182,7 +182,7 @@ const InfoMain = () => {
                   {game.gameCount !== 0 ? (
                     <Fragment>
                       <div>
-                        <DoughnutChart width={100} chartData={expData(game)} />
+                        <DoughnutChart width={80} chartData={expData(game)} />
                       </div>
                       <div className="chart-box-3-2-vod">
                         <div>{game.gameCount}전</div>&nbsp;

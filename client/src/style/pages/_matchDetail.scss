@@ -24,7 +24,7 @@
 
 .match-tr-2 {
   font-size: 0.8em;
-  color: white;
+  color: black;
 
   &-img1 {
     @include square(35px);
@@ -137,6 +137,129 @@
         width: 20px;
         margin-right: 10px;
         filter: opacity(1) drop-shadow(0 0 0 red);
+      }
+    }
+  }
+}
+
+@include mobile {
+  .match-detail-tb {
+    width: 100%;
+  }
+
+  .match-tr-1 {
+    background-color: $main-color;
+    color: white;
+    height: 35px;
+
+    td {
+      font-size: 0.7em;
+    }
+
+    &-damage {
+      display: none;
+    }
+  }
+
+  .match-tr-2 {
+    font-size: 0.8em;
+    color: black;
+
+    &-img1 {
+      @include square(30px);
+    }
+
+    &-img2 {
+      @include square(12px);
+      padding: 1px;
+    }
+
+    &-img3 {
+      @include square(16px);
+      padding: 1px;
+    }
+
+    &-c {
+      font-size: 0.7em;
+    }
+
+    &-sp {
+      width: 14px;
+
+      &-d {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    &-name {
+      width: 40px;
+      font-size: 0.7em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    &-kda {
+      font-size: 0.6em;
+      width: 70px;
+    }
+
+    &-damage {
+      display: none;
+    }
+
+    &-ward {
+      width: 45px;
+      font-size: 0.6em;
+    }
+
+    &-cs {
+      width: 45px;
+      font-size: 0.6em;
+    }
+
+    &-graph {
+      color: white;
+
+      progress {
+        width: 65px;
+        height: 13px;
+        background-color: white;
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .match-summary {
+    @include centering;
+
+    display: flex;
+    height: 45px;
+    background-color: rgb(197, 197, 197);
+    color: black;
+
+    &-1 {
+      @include centering;
+
+      display: flex;
+      flex-grow: 1;
+
+      &-1 {
+        @include centering;
+        display: flex;
+
+        &-img1 {
+          width: 15px;
+        }
+
+        &-num {
+          width: 20px;
+        }
+      }
+
+      &-2 {
+        display: none;
       }
     }
   }

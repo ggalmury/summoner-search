@@ -120,19 +120,19 @@ const MatchHistoy = (props) => {
               </div>
               <div className="spell-box">
                 <div className="spell-box-1">
-                  <img className="history-summ-2-1-img-2" src={spellImg(myData.summoner1Id)}></img>
+                  <img src={spellImg(myData.summoner1Id)}></img>
                 </div>
                 <div className="spell-box-1">
-                  <img className="history-summ-2-1-img-2" src={spellImg(myData.summoner2Id)}></img>
+                  <img src={spellImg(myData.summoner2Id)}></img>
                 </div>
               </div>
             </div>
             <div className="history-summ-2-2">
               <div className="rune-box-1">
-                <img className="history-summ-2-2-img-1" src={mainPerkImg}></img>
+                <img src={mainPerkImg}></img>
               </div>
               <div className="rune-box-2">
-                <img className="history-summ-2-2-img-2" src={subPerkImg}></img>
+                <img src={subPerkImg}></img>
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@ const MatchHistoy = (props) => {
             ></button>
           </div>
         </div>
-        <div>{isDetail === true ? <MatchDetail history={game}></MatchDetail> : <Fragment></Fragment>}</div>
+        <div className="table-location">{isDetail === true ? <MatchDetail history={game}></MatchDetail> : <Fragment></Fragment>}</div>
       </Fragment>
     );
   };

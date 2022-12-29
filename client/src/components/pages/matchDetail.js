@@ -159,7 +159,7 @@ const MatchDetail = (props) => {
               </Fragment>
             ) : (
               <Fragment>
-                <td>
+                <td className="match-tr-2-kda">
                   <div>
                     <div>
                       {kills} / {deaths} / {assists} ({killPart || 0}%)
@@ -173,13 +173,13 @@ const MatchDetail = (props) => {
                     <div className="match-tr-2-damage-num">+ {damageDealt.toLocaleString()}</div>
                   </div>
                 </td>
-                <td>
+                <td className="match-tr-2-ward">
                   <div>
                     {normalWard} / {detectorWard}
                   </div>
                   <div>{destroyWard}</div>
                 </td>
-                <td>
+                <td className="match-tr-2-cs">
                   <div>{minionKill}</div>
                   <div>{minionPerMinute} / 분</div>
                 </td>
@@ -210,7 +210,7 @@ const MatchDetail = (props) => {
             <Fragment>
               <td colSpan={4}>{vod()}</td>
               <td>KDA</td>
-              <td>피해량</td>
+              <td className="match-tr-1-damage">피해량</td>
               <td>와드</td>
               <td>CS</td>
               <td>아이템</td>
@@ -223,7 +223,7 @@ const MatchDetail = (props) => {
   };
 
   return (
-    <div>
+    <Fragment>
       <table className="match-detail-tb blue">{renderDetail(history.blueTeam)}</table>
       <div className="match-summary">
         <div className="match-summary-1">
@@ -283,7 +283,7 @@ const MatchDetail = (props) => {
         </div>
       </div>
       <table className="match-detail-tb red">{renderDetail(history.redTeam)}</table>
-    </div>
+    </Fragment>
   );
 };
 
