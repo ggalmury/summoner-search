@@ -134,9 +134,9 @@ const InfoMain = () => {
         labels: [],
         datasets: [
           {
-            labels: ["승리", "패배"],
-            data: [type.wins, type.losses],
-            backgroundColor: ["rgba(118, 179, 224)", "rgb(222, 110, 123)"],
+            labels: ["패배", "승리"],
+            data: [type.losses, type.wins],
+            backgroundColor: ["rgb(222, 110, 123)", "rgba(118, 179, 224)"],
             borderWidth: 1,
           },
         ],
@@ -182,7 +182,7 @@ const InfoMain = () => {
                   {game.gameCount !== 0 ? (
                     <Fragment>
                       <div>
-                        <DoughnutChart width={80} chartData={expData(game)} />
+                        <DoughnutChart width={100} chartData={expData(game)} />
                       </div>
                       <div className="chart-box-3-2-vod">
                         <div>{game.gameCount}전</div>&nbsp;

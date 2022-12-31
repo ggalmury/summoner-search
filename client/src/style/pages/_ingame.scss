@@ -73,7 +73,7 @@
     width: 30px;
     padding: 5px;
 
-    &-img {
+    img {
       width: 30px;
     }
   }
@@ -109,7 +109,7 @@
   &-champ-blue {
     border-left: 6px solid $blue;
 
-    &-img {
+    img {
       width: 35px;
       margin-top: 5px;
     }
@@ -118,7 +118,7 @@
   &-champ-red {
     border-left: 6px solid $red;
 
-    &-img {
+    img {
       width: 35px;
       margin-top: 5px;
     }
@@ -141,12 +141,13 @@
     font-size: 0.8em;
     text-align: left;
     text-indent: 6px;
+    cursor: pointer;
   }
 
   &-rank {
     font-size: 0.8em;
 
-    &-img {
+    img {
       width: 35px;
     }
   }
@@ -157,5 +158,156 @@
 
   &-winrate {
     font-size: 0.8em;
+  }
+}
+
+@include mobile {
+  #ingame-box {
+    height: 700px;
+
+    #ingame-status {
+      font-size: 0.7em;
+      height: 50px;
+
+      &-1 {
+        &-type {
+          width: 130px;
+          font-size: 0.8em;
+          text-indent: 10px;
+
+          &::after {
+            float: none;
+            margin-right: 0;
+            margin-left: 13px;
+          }
+        }
+
+        &-map {
+          font-size: 0.8em;
+          text-indent: 0;
+          width: 55px;
+        }
+      }
+
+      &-2 {
+        font-size: 1.1em;
+        margin-left: 100px;
+      }
+    }
+
+    .ingame-detail {
+      flex-direction: column;
+
+      .ingame-info {
+        @include centering;
+
+        display: flex;
+        flex: 1;
+
+        #team-blue {
+          @include ingameBox($blue-team);
+        }
+
+        #team-red {
+          @include ingameBox($red-team);
+        }
+      }
+    }
+  }
+
+  .banned-champ-list {
+    display: flex;
+    padding: 5px;
+    background-color: $main-color;
+
+    .banned-champ {
+      width: 20px;
+      padding: 3px;
+
+      img {
+        width: 20px;
+      }
+    }
+  }
+
+  .ingame-tb {
+    display: table;
+
+    tbody {
+      display: table-row-group;
+    }
+
+    // &-th0 {
+    //   width: 40px;
+    // }
+
+    &-th1 {
+      width: 80px;
+    }
+
+    // &-th2 {
+    //   width: 150px;
+    // }
+
+    // &-th3 {
+    //   width: 120px;
+    // }
+
+    &-tr2 {
+      height: 50px;
+    }
+
+    &-champ-blue {
+      border-left: 6px solid $blue;
+
+      img {
+        width: 25px;
+        margin-top: 5px;
+      }
+    }
+
+    &-champ-red {
+      border-left: 6px solid $red;
+
+      img {
+        width: 25px;
+        margin-top: 5px;
+      }
+    }
+
+    &-spell {
+      width: 12px;
+
+      .spell-box {
+        height: 18px;
+      }
+
+      .spell-img {
+        width: 100%;
+      }
+    }
+
+    &-name {
+      font-size: 0.6em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    &-rank {
+      font-size: 0.6em;
+
+      img {
+        width: 28px;
+      }
+    }
+
+    &-lp {
+      font-size: 0.6em;
+    }
+
+    &-winrate {
+      font-size: 0.6em;
+    }
   }
 }

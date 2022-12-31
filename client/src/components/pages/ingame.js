@@ -1,4 +1,5 @@
-import { React, useEffect, useState, useContext, Fragment, ReactDOM } from "react";
+import { React, useEffect, useState, useContext, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./loading.js";
 import resourceUtil from "util/resourceUtil.js";
@@ -7,6 +8,7 @@ import util from "util/util.js";
 import { sumInfoContext } from "context/sumInfoContext.jsx";
 
 const Ingame = () => {
+  const navigate = useNavigate();
   const { summonerInfo } = useContext(sumInfoContext);
   const [ingameInfo, setIngameInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -144,7 +146,7 @@ const Ingame = () => {
           {bannedChamps.map((value, idx) => {
             return (
               <div className="banned-champ" key={idx}>
-                <img className="banned-champ-img" src={champImg(value.championId)} alt="이미지"></img>
+                <img src={champImg(value.championId)} alt="이미지"></img>
               </div>
             );
           })}
@@ -168,7 +170,7 @@ const Ingame = () => {
                 <tr className="ingame-tb-tr2" key={idx}>
                   <td className={`ingame-tb-champ-${teamName}`}>
                     <div>
-                      <img className={`ingame-tb-champ-${teamName}-img`} src={getChampSquareImg(value.championId)} alt="이미지"></img>
+                      <img src={getChampSquareImg(value.championId)} alt="이미지"></img>
                     </div>
                   </td>
                   <td className="ingame-tb-spell">
@@ -182,7 +184,13 @@ const Ingame = () => {
                     </div>
                   </td>
                   <td className="ingame-tb-name">
-                    <div>{value.summonerName}</div>
+                    <div
+                      onClick={() => {
+                        navigate(`/summoner/${value.summonerName}`);
+                      }}
+                    >
+                      {value.summonerName}
+                    </div>
                   </td>
                   {value.rank !== undefined ? (
                     <Fragment>

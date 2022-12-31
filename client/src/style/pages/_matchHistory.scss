@@ -358,18 +358,24 @@
 
     &-history {
       .win {
+        width: 370px;
+
         .history-summ-1-vod {
           font-size: 0.8em;
         }
       }
 
       .lose {
+        width: 370px;
+
         .history-summ-1-vod {
           font-size: 0.8em;
         }
       }
 
       .draw {
+        width: 370px;
+
         .history-summ-1-vod {
           font-size: 0.8em;
         }
@@ -377,7 +383,7 @@
 
       .history-summ {
         &-1 {
-          width: 130px;
+          width: 150px;
 
           &-game {
             font-size: 0.6em;
@@ -438,6 +444,7 @@
 
         &-3 {
           width: 110px;
+
           &-1 {
             font-size: 0.5em;
           }

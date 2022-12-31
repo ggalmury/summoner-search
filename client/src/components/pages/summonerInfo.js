@@ -228,9 +228,7 @@ const ResultPage = () => {
                 <div id="profile">
                   <div id="profile-1">
                     <div id="profile-1-1">
-                      <div>
-                        <img id="profile-1-1-img" src={resourceUtil.profileIconImg(summonerInfo.profileIconId, resourceUtil.ddragonVersion())} alt="profile"></img>
-                      </div>
+                      <img id="profile-1-1-img" src={resourceUtil.profileIconImg(summonerInfo.profileIconId, resourceUtil.ddragonVersion())} alt="profile"></img>
                       <div className="profile-detail">
                         <div className="profile-detail-1">{summonerInfo.name}</div>
                         <div className="profile-detail-2">
@@ -257,7 +255,7 @@ const ResultPage = () => {
                       <div className="profile-rank-detail">
                         <div className="profile-rank-detail-1">
                           <div className="profile-rank-detail-2-1">솔로랭크</div>
-                          <img className="profile-rank-detail-1-img1" src={resourceUtil.rankEmblem1(soloLeagueInfo.tier)} alt="rank emblem"></img>
+                          <img src={resourceUtil.rankEmblem1(soloLeagueInfo.tier)} alt="rank emblem"></img>
                         </div>
                         <div className="profile-rank-detail-2">
                           {soloLeagueInfo.tier === "UNRANKED" ? (
@@ -280,7 +278,7 @@ const ResultPage = () => {
                       <div className="profile-rank-detail">
                         <div className="profile-rank-detail-1">
                           <div className="profile-rank-detail-2-1">자유랭크</div>
-                          <img className="profile-rank-detail-1-img1" src={resourceUtil.rankEmblem1(flexLeagueInfo.tier)} alt="rank emblem"></img>
+                          <img src={resourceUtil.rankEmblem1(flexLeagueInfo.tier)} alt="rank emblem"></img>
                         </div>
                         <div className="profile-rank-detail-2">
                           {flexLeagueInfo.tier === "UNRANKED" ? (
@@ -304,11 +302,11 @@ const ResultPage = () => {
                     <div id="profile-2-2">
                       <div className="profile-champ-detail">
                         <div className="profile-champ-detail-champ1">
-                          <img src={resourceUtil.champSquareImg(getChampName(1), resourceUtil.ddragonVersion())} alt="champion"></img>
+                          <img src={resourceUtil.champSquareImg(getChampName(1), resourceUtil.ddragonVersion())} alt=""></img>
                         </div>
                         {champMasteryInfo[1].championLevel > 1 ? (
                           <div className="profile-champ-detail-mastery">
-                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[1].championLevel)} alt="이미지"></img>
+                            <img src={resourceUtil.champMasteryLv(champMasteryInfo[1].championLevel)} alt=""></img>
                           </div>
                         ) : (
                           <Fragment></Fragment>
@@ -317,8 +315,7 @@ const ResultPage = () => {
                           {champMasteryInfo[1] !== undefined ? (
                             <Fragment>
                               <div>{getChampName(1)}</div>
-                              <div>{champMasteryInfo[1].championLevel} LV</div>
-                              <div>{champMasteryInfo[1].championPoints} P</div>
+                              <div>{champMasteryInfo[1].championPoints.toLocaleString()} P</div>
                             </Fragment>
                           ) : (
                             <div>no result</div>
@@ -340,8 +337,7 @@ const ResultPage = () => {
                           {champMasteryInfo[0] !== undefined ? (
                             <Fragment>
                               <div>{getChampName(0)}</div>
-                              <div>{champMasteryInfo[0].championLevel} LV</div>
-                              <div>{champMasteryInfo[0].championPoints} P</div>
+                              <div>{champMasteryInfo[0].championPoints.toLocaleString()} P</div>
                             </Fragment>
                           ) : (
                             <div>no result</div>
@@ -363,8 +359,7 @@ const ResultPage = () => {
                           {champMasteryInfo[2] !== undefined ? (
                             <Fragment>
                               <div>{getChampName(2)}</div>
-                              <div>{champMasteryInfo[2].championLevel} LV</div>
-                              <div>{champMasteryInfo[2].championPoints} P</div>
+                              <div>{champMasteryInfo[2].championPoints.toLocaleString()} P</div>
                             </Fragment>
                           ) : (
                             <div>no result</div>
